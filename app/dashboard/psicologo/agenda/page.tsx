@@ -7,6 +7,8 @@ import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
 
 export default function PsicologoAgendaPage() {
+  console.log("Agenda page loaded successfully")
+
   const sesionesHoy = [
     { id: 1, paciente: "María González", hora: "09:00", duracion: 50, estado: "confirmada", tipo: "virtual" },
     { id: 2, paciente: "Carlos Rodríguez", hora: "10:30", duracion: 50, estado: "pendiente", tipo: "virtual" },
@@ -31,6 +33,7 @@ export default function PsicologoAgendaPage() {
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">Mi Agenda</h1>
                 <p className="text-gray-600">Gestiona tus citas y horarios</p>
+                <p className="text-xs text-blue-600 mt-1">✓ Página de Agenda cargada correctamente</p>
               </div>
               <div className="flex items-center space-x-4">
                 <Button variant="outline">

@@ -53,6 +53,10 @@ export function Navigation({ userType }: NavigationProps) {
       .slice(0, 2)
   }
 
+  const handleNavClick = (href: string, label: string) => {
+    console.log(`Navigation clicked: ${label} -> ${href}`)
+  }
+
   return (
     <nav className="w-64 bg-white border-r min-h-screen">
       <div className="p-6">
@@ -82,13 +86,14 @@ export function Navigation({ userType }: NavigationProps) {
             const isActive = pathname === item.href
 
             return (
-              <Link key={item.href} href={item.href}>
+              <Link key={item.href} href={item.href} onClick={() => handleNavClick(item.href, item.label)}>
                 <Button
                   variant={isActive ? "default" : "ghost"}
                   className={cn("w-full justify-start", isActive && "bg-blue-600 text-white hover:bg-blue-700")}
                 >
                   <IconComponent className="h-4 w-4 mr-3" />
                   {item.label}
+                  {item.href.includes("/agenda") && <span className="ml-auto text-xs">📅</span>}
                 </Button>
               </Link>
             )
