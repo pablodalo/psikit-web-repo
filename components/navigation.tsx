@@ -96,10 +96,16 @@ export function Navigation({ userType }: NavigationProps) {
         </div>
 
         <div className="mt-8 pt-8 border-t space-y-2">
-          <Button variant="ghost" className="w-full justify-start">
-            <Bell className="h-4 w-4 mr-3" />
-            Notificaciones
-          </Button>
+          <Link
+            href={
+              userType === "psicologo" ? "/dashboard/psicologo/notificaciones" : "/dashboard/paciente/notificaciones"
+            }
+          >
+            <Button variant="ghost" className="w-full justify-start">
+              <Bell className="h-4 w-4 mr-3" />
+              Notificaciones
+            </Button>
+          </Link>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -109,16 +115,24 @@ export function Navigation({ userType }: NavigationProps) {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-56">
-              <DropdownMenuItem>
-                <User className="h-4 w-4 mr-2" />
-                Perfil
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Settings className="h-4 w-4 mr-2" />
-                Configuración
-              </DropdownMenuItem>
+              <Link href={userType === "psicologo" ? "/dashboard/psicologo/perfil" : "/dashboard/paciente/perfil"}>
+                <DropdownMenuItem className="flex items-center">
+                  <User className="h-4 w-4 mr-2" />
+                  Perfil
+                </DropdownMenuItem>
+              </Link>
+              <Link
+                href={
+                  userType === "psicologo" ? "/dashboard/psicologo/configuracion" : "/dashboard/paciente/configuracion"
+                }
+              >
+                <DropdownMenuItem className="flex items-center">
+                  <Settings className="h-4 w-4 mr-2" />
+                  Configuración
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout} className="text-red-600">
+              <DropdownMenuItem onClick={logout} className="text-red-600 flex items-center">
                 <LogOut className="h-4 w-4 mr-2" />
                 Cerrar Sesión
               </DropdownMenuItem>
