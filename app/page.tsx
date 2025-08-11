@@ -93,7 +93,7 @@ export default function HomePage() {
                 <CardTitle>Pagos Integrados</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">Gestión de pagos con Mercado Pago y facturación</p>
+                <p className="text-gray-600">Gestión de pagos y facturación integrada</p>
               </CardContent>
             </Card>
 
