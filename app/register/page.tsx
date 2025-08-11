@@ -230,25 +230,34 @@ export default function RegisterPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="terms"
-                      checked={formData.acceptTerms}
-                      onCheckedChange={(checked) => handleInputChange("acceptTerms", checked as boolean)}
-                    />
-                    <Label htmlFor="terms" className="text-sm">
-                      Acepto los{" "}
-                      <Link href="/terminos" className="text-blue-600 hover:underline">
-                        términos y condiciones
-                      </Link>{" "}
-                      y la{" "}
-                      <Link href="/privacidad" className="text-blue-600 hover:underline">
-                        política de privacidad
-                      </Link>
-                    </Label>
+                  <div className="bg-gray-50 p-4 rounded-lg border">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="terms"
+                        checked={formData.acceptTerms}
+                        onCheckedChange={(checked) => handleInputChange("acceptTerms", checked as boolean)}
+                        className="mt-1"
+                      />
+                      <div className="flex-1">
+                        <Label htmlFor="terms" className="text-sm leading-relaxed cursor-pointer">
+                          Al crear tu cuenta, confirmas que has leído y aceptas nuestros{" "}
+                          <Link href="/terminos" className="text-blue-600 hover:text-blue-800 underline font-medium">
+                            Términos y Condiciones
+                          </Link>{" "}
+                          y nuestra{" "}
+                          <Link href="/privacidad" className="text-blue-600 hover:text-blue-800 underline font-medium">
+                            Política de Privacidad
+                          </Link>
+                          .
+                        </Label>
+                        <p className="text-xs text-gray-500 mt-2">
+                          También aceptas recibir comunicaciones relacionadas con tu cuenta y servicios profesionales.
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button type="submit" className="w-full" disabled={isLoading || !formData.acceptTerms}>
                     {isLoading ? "Creando cuenta..." : "Crear Cuenta Profesional"}
                   </Button>
                 </form>
@@ -338,25 +347,34 @@ export default function RegisterPage() {
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="terms-paciente"
-                      checked={formData.acceptTerms}
-                      onCheckedChange={(checked) => handleInputChange("acceptTerms", checked as boolean)}
-                    />
-                    <Label htmlFor="terms-paciente" className="text-sm">
-                      Acepto los{" "}
-                      <Link href="/terminos" className="text-blue-600 hover:underline">
-                        términos y condiciones
-                      </Link>{" "}
-                      y la{" "}
-                      <Link href="/privacidad" className="text-blue-600 hover:underline">
-                        política de privacidad
-                      </Link>
-                    </Label>
+                  <div className="bg-gray-50 p-4 rounded-lg border">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="terms-paciente"
+                        checked={formData.acceptTerms}
+                        onCheckedChange={(checked) => handleInputChange("acceptTerms", checked as boolean)}
+                        className="mt-1"
+                      />
+                      <div className="flex-1">
+                        <Label htmlFor="terms-paciente" className="text-sm leading-relaxed cursor-pointer">
+                          Al crear tu cuenta, confirmas que has leído y aceptas nuestros{" "}
+                          <Link href="/terminos" className="text-blue-600 hover:text-blue-800 underline font-medium">
+                            Términos y Condiciones
+                          </Link>{" "}
+                          y nuestra{" "}
+                          <Link href="/privacidad" className="text-blue-600 hover:text-blue-800 underline font-medium">
+                            Política de Privacidad
+                          </Link>
+                          .
+                        </Label>
+                        <p className="text-xs text-gray-500 mt-2">
+                          También aceptas recibir comunicaciones relacionadas con tu cuenta y cuidado de salud mental.
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button type="submit" className="w-full" disabled={isLoading || !formData.acceptTerms}>
                     {isLoading ? "Creando cuenta..." : "Crear Cuenta de Paciente"}
                   </Button>
                 </form>
