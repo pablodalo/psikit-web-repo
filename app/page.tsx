@@ -1,10 +1,34 @@
+"use client"
+
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Brain, Calendar, Users, FileText, CreditCard, Video, Shield, Globe } from "lucide-react"
+import { useAuth } from "@/contexts/auth-context"
+import { useEffect } from "react"
 
 export default function HomePage() {
+  const { user } = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (user?.isAuthenticated) {
+      if (user.userType === "psicologo") {
+        router.push("/dashboard/psicologo")
+      } else {
+        router.push("/dashboard/paciente")
+      }
+    }
+  }, [user, router])
+
+  const handleUserTypeSelection = (userType: "psicologo" | "paciente") => {
+    // Store the intended user type and redirect to login
+    localStorage.setItem("intendedUserType", userType)
+    router.push("/login")
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
@@ -38,16 +62,16 @@ export default function HomePage() {
             clínica, pagos y mucho más en un solo lugar.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/dashboard/psicologo">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                Soy Psicólogo
-              </Button>
-            </Link>
-            <Link href="/dashboard/paciente">
-              <Button size="lg" variant="outline">
-                Soy Paciente
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              className="bg-blue-600 hover:bg-blue-700"
+              onClick={() => handleUserTypeSelection("psicologo")}
+            >
+              Soy Psicólogo
+            </Button>
+            <Button size="lg" variant="outline" onClick={() => handleUserTypeSelection("paciente")}>
+              Soy Paciente
+            </Button>
           </div>
         </div>
       </section>
@@ -93,7 +117,7 @@ export default function HomePage() {
                 <CardTitle>Pagos Integrados</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">Gestión de pagos y facturación integrada</p>
+                <p className="text-gray-600">Gestión de pagos con Mercado Pago y facturación</p>
               </CardContent>
             </Card>
 

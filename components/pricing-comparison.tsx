@@ -161,8 +161,8 @@ export function PricingComparison() {
             </CardHeader>
             <CardContent>
               <p className="text-gray-600">
-                Aceptamos tarjetas de crédito/débito y transferencias bancarias. Los pagos son procesados de forma
-                segura.
+                Aceptamos tarjetas de crédito/débito, transferencias bancarias y Mercado Pago. Los pagos son procesados
+                de forma segura.
               </p>
             </CardContent>
           </Card>
