@@ -230,29 +230,43 @@ export default function RegisterPage() {
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 p-4 rounded-lg border">
-                    <div className="flex items-start space-x-3">
+                  <div className="bg-blue-50 border border-blue-200 p-5 rounded-lg">
+                    <div className="flex items-start space-x-4">
                       <Checkbox
                         id="terms"
                         checked={formData.acceptTerms}
                         onCheckedChange={(checked) => handleInputChange("acceptTerms", checked as boolean)}
-                        className="mt-1"
+                        className="mt-0.5 flex-shrink-0"
                       />
-                      <div className="flex-1">
-                        <Label htmlFor="terms" className="text-sm leading-relaxed cursor-pointer">
-                          Al crear tu cuenta, confirmas que has leído y aceptas nuestros{" "}
-                          <Link href="/terminos" className="text-blue-600 hover:text-blue-800 underline font-medium">
-                            Términos y Condiciones
-                          </Link>{" "}
-                          y nuestra{" "}
-                          <Link href="/privacidad" className="text-blue-600 hover:text-blue-800 underline font-medium">
-                            Política de Privacidad
-                          </Link>
-                          .
-                        </Label>
-                        <p className="text-xs text-gray-500 mt-2">
-                          También aceptas recibir comunicaciones relacionadas con tu cuenta y servicios profesionales.
-                        </p>
+                      <div className="flex-1 space-y-3">
+                        <div>
+                          <Label
+                            htmlFor="terms"
+                            className="text-base font-medium text-gray-900 cursor-pointer block leading-relaxed"
+                          >
+                            Acepto los términos y condiciones
+                          </Label>
+                          <p className="text-sm text-gray-700 mt-2 leading-relaxed">
+                            Al crear tu cuenta, confirmas que has leído y aceptas nuestros{" "}
+                            <Link href="/terminos" className="text-blue-600 hover:text-blue-800 underline font-medium">
+                              Términos y Condiciones
+                            </Link>{" "}
+                            y nuestra{" "}
+                            <Link
+                              href="/privacidad"
+                              className="text-blue-600 hover:text-blue-800 underline font-medium"
+                            >
+                              Política de Privacidad
+                            </Link>
+                            .
+                          </p>
+                        </div>
+                        <div className="border-t border-blue-200 pt-3">
+                          <p className="text-xs text-gray-600 leading-relaxed">
+                            También aceptas recibir comunicaciones importantes relacionadas con tu cuenta y servicios
+                            profesionales.
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -347,29 +361,43 @@ export default function RegisterPage() {
                     </div>
                   </div>
 
-                  <div className="bg-gray-50 p-4 rounded-lg border">
-                    <div className="flex items-start space-x-3">
+                  <div className="bg-blue-50 border border-blue-200 p-5 rounded-lg">
+                    <div className="flex items-start space-x-4">
                       <Checkbox
                         id="terms-paciente"
                         checked={formData.acceptTerms}
                         onCheckedChange={(checked) => handleInputChange("acceptTerms", checked as boolean)}
-                        className="mt-1"
+                        className="mt-0.5 flex-shrink-0"
                       />
-                      <div className="flex-1">
-                        <Label htmlFor="terms-paciente" className="text-sm leading-relaxed cursor-pointer">
-                          Al crear tu cuenta, confirmas que has leído y aceptas nuestros{" "}
-                          <Link href="/terminos" className="text-blue-600 hover:text-blue-800 underline font-medium">
-                            Términos y Condiciones
-                          </Link>{" "}
-                          y nuestra{" "}
-                          <Link href="/privacidad" className="text-blue-600 hover:text-blue-800 underline font-medium">
-                            Política de Privacidad
-                          </Link>
-                          .
-                        </Label>
-                        <p className="text-xs text-gray-500 mt-2">
-                          También aceptas recibir comunicaciones relacionadas con tu cuenta y cuidado de salud mental.
-                        </p>
+                      <div className="flex-1 space-y-3">
+                        <div>
+                          <Label
+                            htmlFor="terms-paciente"
+                            className="text-base font-medium text-gray-900 cursor-pointer block leading-relaxed"
+                          >
+                            Acepto los términos y condiciones
+                          </Label>
+                          <p className="text-sm text-gray-700 mt-2 leading-relaxed">
+                            Al crear tu cuenta, confirmas que has leído y aceptas nuestros{" "}
+                            <Link href="/terminos" className="text-blue-600 hover:text-blue-800 underline font-medium">
+                              Términos y Condiciones
+                            </Link>{" "}
+                            y nuestra{" "}
+                            <Link
+                              href="/privacidad"
+                              className="text-blue-600 hover:text-blue-800 underline font-medium"
+                            >
+                              Política de Privacidad
+                            </Link>
+                            .
+                          </p>
+                        </div>
+                        <div className="border-t border-blue-200 pt-3">
+                          <p className="text-xs text-gray-600 leading-relaxed">
+                            También aceptas recibir comunicaciones importantes relacionadas con tu cuenta y cuidado de
+                            salud mental.
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
