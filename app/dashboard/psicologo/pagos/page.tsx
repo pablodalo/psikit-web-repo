@@ -111,17 +111,19 @@ export default function PsicologoPagosPage() {
                 <CardContent>
                   <div className="space-y-4">
                     {pagosPendientes.map((pago) => (
-                      <div key={pago.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div>
-                          <p className="font-medium">{pago.paciente}</p>
-                          <p className="text-sm text-gray-600">
+                      <div key={pago.id} className="flex items-start justify-between p-4 border rounded-lg">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-gray-900">{pago.paciente}</p>
+                          <p className="text-sm text-gray-600 mt-1">
                             ${pago.monto} - {pago.sesiones} sesión(es)
                           </p>
-                          <p className="text-xs text-gray-500">Vence: {pago.fecha}</p>
+                          <p className="text-xs text-gray-500 mt-1">Vence: {pago.fecha}</p>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 ml-4 flex-shrink-0">
                           <Badge variant={pago.estado === "vencido" ? "destructive" : "secondary"}>{pago.estado}</Badge>
-                          <Button size="sm">Enviar Recordatorio</Button>
+                          <Button size="sm" className="whitespace-nowrap">
+                            Enviar Recordatorio
+                          </Button>
                         </div>
                       </div>
                     ))}
@@ -145,15 +147,15 @@ export default function PsicologoPagosPage() {
                 <CardContent>
                   <div className="space-y-4">
                     {historialPagos.map((pago) => (
-                      <div key={pago.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div>
-                          <p className="font-medium">{pago.paciente}</p>
-                          <p className="text-sm text-gray-600">
+                      <div key={pago.id} className="flex items-start justify-between p-4 border rounded-lg">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-gray-900">{pago.paciente}</p>
+                          <p className="text-sm text-gray-600 mt-1">
                             ${pago.monto} - {pago.metodo}
                           </p>
-                          <p className="text-xs text-gray-500">{pago.fecha}</p>
+                          <p className="text-xs text-gray-500 mt-1">{pago.fecha}</p>
                         </div>
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 ml-4 flex-shrink-0">
                           <Badge className="bg-green-100 text-green-800">{pago.estado}</Badge>
                           <Button size="sm" variant="outline">
                             <Download className="h-4 w-4" />
