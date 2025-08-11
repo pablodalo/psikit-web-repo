@@ -36,8 +36,16 @@ export function PaymentForm({ amount, description, onSuccess, onError }: Payment
     setLoading(true)
 
     try {
-      // Crear token de tarjeta
-      const cardToken = await mercadoPago.createCardToken(formData)
+      const cardToken = await mercadoPago.createCardToken({
+        number: formData.cardNumber,
+        holderName: formData.holderName,
+        expirationMonth: formData.expirationMonth,
+        expirationYear: formData.expirationYear,
+        securityCode: formData.securityCode,
+        identificationType: formData.identificationType,
+        identificationNumber: formData.identificationNumber,
+        email: formData.email,
+      })
 
       // Procesar pago
       const paymentResult = await mercadoPago.processPayment({
