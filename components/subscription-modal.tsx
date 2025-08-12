@@ -430,9 +430,26 @@ export function SubscriptionModal({
 
         <div className="px-6 py-4 border-t bg-gray-50">
           {step === "details" ? (
-            <Button onClick={() => setStep("form")} className="w-full h-12 text-lg font-medium">
-              Continuar con la suscripción
-            </Button>
+            <div className="space-y-3">
+              {selectedPlan.price === 0 ? (
+                <Button onClick={() => setStep("form")} className="w-full h-12 text-lg font-medium">
+                  Activar Plan Gratuito
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    onClick={handleMercadoPagoSubscription}
+                    className="w-full h-12 text-lg font-medium bg-blue-600 hover:bg-blue-700"
+                  >
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    Pagar Ahora con MercadoPago
+                  </Button>
+                  <Button variant="outline" onClick={() => setStep("form")} className="w-full h-10 text-sm">
+                    Completar datos profesionales primero
+                  </Button>
+                </>
+              )}
+            </div>
           ) : (
             <div className="flex space-x-3">
               <Button variant="outline" onClick={() => setStep("details")} className="flex-1 h-12">
