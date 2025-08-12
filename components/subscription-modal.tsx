@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
-import { Check, Star, CreditCard, Building, User, ArrowLeft } from "lucide-react"
+import { Check, Star, CreditCard, Building, User, ArrowLeft, X } from "lucide-react"
 import { type PricingPlan, pricingManager } from "@/lib/pricing-config"
 
 interface SubscriptionModalProps {
@@ -123,100 +123,114 @@ export function SubscriptionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[95vh] overflow-hidden p-0">
-        <DialogHeader className="px-6 py-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
-          <DialogTitle className="flex items-center justify-between text-xl font-semibold text-gray-900">
-            <div className="flex items-center space-x-3">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden p-0 bg-white">
+        <DialogHeader className="px-8 py-6 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
               {selectedPlan.popular && (
-                <Badge className="bg-blue-600 text-white px-2 py-1">
-                  <Star className="h-3 w-3 mr-1" />
+                <Badge className="bg-blue-600 text-white px-3 py-1">
+                  <Star className="h-4 w-4 mr-1" />
                   Popular
                 </Badge>
               )}
-              <span>Plan {selectedPlan.name}</span>
+              <DialogTitle className="text-2xl font-bold text-gray-900">Plan {selectedPlan.name}</DialogTitle>
             </div>
-          </DialogTitle>
+            <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </DialogHeader>
 
         <div className="overflow-y-auto flex-1">
           {step === "details" ? (
-            <div className="p-6 space-y-6">
-              <div className="text-center space-y-4">
-                <div className="space-y-2">
-                  <h3 className="text-2xl font-bold text-gray-900">{selectedPlan.name}</h3>
-                  <p className="text-gray-600 text-lg">{selectedPlan.description}</p>
-                </div>
+            /* Improved details layout with better spacing */
+            <div className="p-8">
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Left Column - Plan Info */}
+                <div className="space-y-6">
+                  <div className="text-center space-y-4">
+                    <h3 className="text-3xl font-bold text-gray-900">{selectedPlan.name}</h3>
+                    <p className="text-gray-600 text-lg leading-relaxed">{selectedPlan.description}</p>
 
-                <div className="bg-white border-2 border-blue-100 rounded-xl p-6 space-y-3">
-                  <div className="text-4xl font-bold text-blue-600">{pricing.price}</div>
-                  {pricing.originalPrice && (
-                    <div className="space-y-1">
-                      <div className="text-lg text-gray-500 line-through">{pricing.originalPrice}</div>
-                      {pricing.savings && <div className="text-green-600 font-medium">Ahorras {pricing.savings}</div>}
+                    <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-2xl p-6 space-y-3">
+                      <div className="text-5xl font-bold text-blue-600">{pricing.price}</div>
+                      {pricing.originalPrice && (
+                        <div className="space-y-2">
+                          <div className="text-xl text-gray-500 line-through">{pricing.originalPrice}</div>
+                          {pricing.savings && (
+                            <div className="text-green-600 font-semibold text-lg">Ahorras {pricing.savings}</div>
+                          )}
+                        </div>
+                      )}
+                      {isAnnual && pricing.total && (
+                        <div className="text-gray-700 font-medium text-lg">Total anual: {pricing.total}</div>
+                      )}
                     </div>
-                  )}
-                  {isAnnual && pricing.total && (
-                    <div className="text-gray-600 font-medium">Total anual: {pricing.total}</div>
-                  )}
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="text-lg font-semibold text-gray-900 border-b pb-2">Características incluidas</h4>
-                <div className="grid gap-3">
-                  {selectedPlan.features.map((feature, index) => (
-                    <div key={index} className="flex items-start space-x-3 p-2 rounded-lg hover:bg-gray-50">
-                      <Check className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-gray-700 leading-relaxed">{feature}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {selectedPlan.maxPatients !== "unlimited" && (
-                  <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
-                    <p className="text-blue-800 font-medium">
-                      Límite de pacientes: Hasta {selectedPlan.maxPatients} pacientes
-                    </p>
                   </div>
-                )}
-              </div>
 
-              <div className="bg-green-50 border border-green-200 p-4 rounded-lg space-y-3">
-                <h4 className="font-semibold text-green-800">Beneficios inmediatos</h4>
-                <ul className="text-green-700 space-y-2">
-                  <li className="flex items-center space-x-2">
-                    <Check className="h-4 w-4 text-green-600" />
-                    <span>Acceso instantáneo a todas las funciones</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <Check className="h-4 w-4 text-green-600" />
-                    <span>Sin permanencia ni costos ocultos</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <Check className="h-4 w-4 text-green-600" />
-                    <span>Soporte técnico incluido</span>
-                  </li>
-                  <li className="flex items-center space-x-2">
-                    <Check className="h-4 w-4 text-green-600" />
-                    <span>Cancela cuando quieras</span>
-                  </li>
-                </ul>
+                  {selectedPlan.maxPatients !== "unlimited" && (
+                    <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl">
+                      <p className="text-blue-800 font-medium text-center">
+                        Límite: Hasta {selectedPlan.maxPatients} pacientes
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Right Column - Features */}
+                <div className="space-y-6">
+                  <div>
+                    <h4 className="text-xl font-bold text-gray-900 mb-4">Características incluidas</h4>
+                    <div className="space-y-3">
+                      {selectedPlan.features.map((feature, index) => (
+                        <div key={index} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50">
+                          <Check className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700 leading-relaxed">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="bg-green-50 border border-green-200 p-6 rounded-xl">
+                    <h4 className="font-bold text-green-800 mb-3">Beneficios inmediatos</h4>
+                    <ul className="text-green-700 space-y-2">
+                      <li className="flex items-center space-x-2">
+                        <Check className="h-4 w-4 text-green-600" />
+                        <span>Acceso instantáneo</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <Check className="h-4 w-4 text-green-600" />
+                        <span>Sin permanencia</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <Check className="h-4 w-4 text-green-600" />
+                        <span>Soporte incluido</span>
+                      </li>
+                      <li className="flex items-center space-x-2">
+                        <Check className="h-4 w-4 text-green-600" />
+                        <span>Cancela cuando quieras</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
           ) : (
-            <div className="p-6 space-y-6">
-              <div className="flex items-center space-x-3 pb-4 border-b">
+            /* Improved form layout */
+            <div className="p-8 space-y-6">
+              <div className="flex items-center space-x-4 pb-6 border-b">
                 <Button variant="ghost" size="sm" onClick={() => setStep("details")} className="p-2">
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900">Datos Profesionales</h3>
+                  <h3 className="text-2xl font-bold text-gray-900">Datos Profesionales</h3>
                   <p className="text-gray-600">Completa tu información para activar la suscripción</p>
                 </div>
               </div>
 
+              {/* ... existing form code ... */}
               <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
                       Nombre *
@@ -226,7 +240,7 @@ export function SubscriptionModal({
                       value={formData.firstName}
                       onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                       placeholder="Tu nombre"
-                      className="h-10"
+                      className="h-12"
                     />
                   </div>
                   <div className="space-y-2">
@@ -238,12 +252,12 @@ export function SubscriptionModal({
                       value={formData.lastName}
                       onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                       placeholder="Tu apellido"
-                      className="h-10"
+                      className="h-12"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="email" className="text-sm font-medium text-gray-700">
                       Email *
@@ -254,7 +268,7 @@ export function SubscriptionModal({
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="tu@email.com"
-                      className="h-10"
+                      className="h-12"
                     />
                   </div>
                   <div className="space-y-2">
@@ -266,12 +280,12 @@ export function SubscriptionModal({
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="+54 11 1234-5678"
-                      className="h-10"
+                      className="h-12"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor="licenseNumber" className="text-sm font-medium text-gray-700">
                       Matrícula Profesional *
@@ -281,7 +295,7 @@ export function SubscriptionModal({
                       value={formData.licenseNumber}
                       onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value })}
                       placeholder="MP 12345"
-                      className="h-10"
+                      className="h-12"
                     />
                   </div>
                   <div className="space-y-2">
@@ -292,7 +306,7 @@ export function SubscriptionModal({
                       value={formData.specialty}
                       onValueChange={(value) => setFormData({ ...formData, specialty: value })}
                     >
-                      <SelectTrigger className="h-10">
+                      <SelectTrigger className="h-12">
                         <SelectValue placeholder="Selecciona tu especialidad" />
                       </SelectTrigger>
                       <SelectContent>
@@ -317,36 +331,36 @@ export function SubscriptionModal({
                     value={formData.institution}
                     onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
                     placeholder="Nombre de tu consultorio o institución"
-                    className="h-10"
+                    className="h-12"
                   />
                 </div>
 
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <Label className="text-sm font-medium text-gray-700">Tipo de facturación</Label>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-4">
                     <Button
                       type="button"
                       variant={formData.billingType === "individual" ? "default" : "outline"}
                       onClick={() => setFormData({ ...formData, billingType: "individual" })}
-                      className="h-12 justify-start"
+                      className="h-14 justify-start"
                     >
-                      <User className="h-4 w-4 mr-2" />
+                      <User className="h-5 w-5 mr-3" />
                       Individual
                     </Button>
                     <Button
                       type="button"
                       variant={formData.billingType === "business" ? "default" : "outline"}
                       onClick={() => setFormData({ ...formData, billingType: "business" })}
-                      className="h-12 justify-start"
+                      className="h-14 justify-start"
                     >
-                      <Building className="h-4 w-4 mr-2" />
+                      <Building className="h-5 w-5 mr-3" />
                       Empresa
                     </Button>
                   </div>
                 </div>
 
                 {formData.billingType === "business" && (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-gray-50 rounded-xl">
                     <div className="space-y-2">
                       <Label htmlFor="businessName" className="text-sm font-medium text-gray-700">
                         Razón Social
@@ -356,7 +370,7 @@ export function SubscriptionModal({
                         value={formData.businessName}
                         onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
                         placeholder="Nombre de la empresa"
-                        className="h-10"
+                        className="h-12"
                       />
                     </div>
                     <div className="space-y-2">
@@ -368,16 +382,16 @@ export function SubscriptionModal({
                         value={formData.taxId}
                         onChange={(e) => setFormData({ ...formData, taxId: e.target.value })}
                         placeholder="20-12345678-9"
-                        className="h-10"
+                        className="h-12"
                       />
                     </div>
                   </div>
                 )}
 
-                <div className="space-y-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <h4 className="font-medium text-blue-900">Términos y Condiciones</h4>
+                <div className="space-y-4 p-6 bg-blue-50 rounded-xl border border-blue-200">
+                  <h4 className="font-semibold text-blue-900 text-lg">Términos y Condiciones</h4>
 
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <div className="flex items-start space-x-3">
                       <Checkbox
                         id="acceptTerms"
@@ -428,38 +442,39 @@ export function SubscriptionModal({
           )}
         </div>
 
-        <div className="px-6 py-4 border-t bg-gray-50">
+        <div className="px-8 py-6 border-t bg-white">
           {step === "details" ? (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {selectedPlan.price === 0 ? (
-                <Button onClick={() => setStep("form")} className="w-full h-12 text-lg font-medium">
+                <Button onClick={() => setStep("form")} className="w-full h-14 text-lg font-semibold">
                   Activar Plan Gratuito
                 </Button>
               ) : (
-                <>
+                <div className="space-y-3">
                   <Button
                     onClick={handleMercadoPagoSubscription}
-                    className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-200"
+                    className="w-full h-16 text-xl font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 border-2 border-blue-700"
                   >
-                    <CreditCard className="h-5 w-5 mr-3" />💳 Pagar Ahora con MercadoPago - {pricing.total}
+                    <CreditCard className="h-6 w-6 mr-3" />
+                    PAGAR CON MERCADOPAGO - {pricing.total}
                   </Button>
-                  <Button variant="outline" onClick={() => setStep("form")} className="w-full h-10 text-sm">
-                    O completar datos profesionales primero
+                  <Button variant="outline" onClick={() => setStep("form")} className="w-full h-12 text-base border-2">
+                    Completar datos profesionales primero
                   </Button>
-                </>
+                </div>
               )}
             </div>
           ) : (
-            <div className="flex space-x-3">
-              <Button variant="outline" onClick={() => setStep("details")} className="flex-1 h-12">
+            <div className="flex space-x-4">
+              <Button variant="outline" onClick={() => setStep("details")} className="flex-1 h-14 text-lg">
                 Volver
               </Button>
               <Button
                 onClick={handleMercadoPagoSubscription}
                 disabled={!isFormValid()}
-                className="flex-1 h-12 text-lg font-medium bg-blue-600 hover:bg-blue-700"
+                className="flex-1 h-14 text-lg font-semibold bg-blue-600 hover:bg-blue-700"
               >
-                <CreditCard className="h-4 w-4 mr-2" />
+                <CreditCard className="h-5 w-5 mr-2" />
                 Pagar con MercadoPago
               </Button>
             </div>
