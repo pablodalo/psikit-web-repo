@@ -10,11 +10,16 @@ import { useAuth } from "@/contexts/auth-context"
 import { PricingSection } from "@/components/pricing-section"
 
 export default function HomePage() {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const router = useRouter()
 
   const handleUserTypeSelection = (userType: "psicologo" | "paciente") => {
     console.log("Selected user type:", userType)
+
+    if (user?.isAuthenticated) {
+      logout()
+    }
+
     localStorage.setItem("intendedUserType", userType)
     console.log("Stored in localStorage:", localStorage.getItem("intendedUserType"))
     router.push("/login")
