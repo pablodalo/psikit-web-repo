@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
-import { Check, Star, CreditCard, ArrowLeft } from "lucide-react"
+import { Check, Star, CreditCard, ArrowLeft, X } from "lucide-react"
 import { type PricingPlan, pricingManager } from "@/lib/pricing-config"
 
 interface SubscriptionModalProps {
@@ -123,8 +123,8 @@ export function SubscriptionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[95vh] overflow-hidden p-0 bg-white">
-        <DialogHeader className="px-6 py-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden p-0 bg-white">
+        <DialogHeader className="px-6 py-4 border-b bg-gray-50">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               {selectedPlan.popular && (
@@ -133,49 +133,47 @@ export function SubscriptionModal({
                   Popular
                 </Badge>
               )}
-              <DialogTitle className="text-xl font-bold text-gray-900">Plan {selectedPlan.name}</DialogTitle>
+              <DialogTitle className="text-xl font-semibold text-gray-900">Plan {selectedPlan.name}</DialogTitle>
             </div>
+            <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
+              <X className="h-4 w-4" />
+            </Button>
           </div>
         </DialogHeader>
 
         <div className="overflow-y-auto flex-1">
           {step === "details" ? (
-            /* Single column layout to prevent overlap */
-            <div className="p-6 space-y-6">
-              {/* Plan Info */}
-              <div className="text-center space-y-4">
-                <h3 className="text-2xl font-bold text-gray-900">{selectedPlan.name}</h3>
-                <p className="text-gray-600 leading-relaxed">{selectedPlan.description}</p>
+            <div className="p-6">
+              <div className="text-center mb-8">
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedPlan.name}</h3>
+                <p className="text-gray-600 mb-6">{selectedPlan.description}</p>
 
-                <div className="bg-blue-50 border-2 border-blue-200 rounded-xl p-6 space-y-2">
-                  <div className="text-4xl font-bold text-blue-600">{pricing.price}</div>
+                <div className="inline-block bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                  <div className="text-3xl font-bold text-blue-600 mb-2">{pricing.price}</div>
                   {pricing.originalPrice && (
-                    <div className="text-lg text-gray-500 line-through">{pricing.originalPrice}</div>
+                    <div className="text-sm text-gray-500 line-through mb-1">{pricing.originalPrice}</div>
                   )}
-                  {pricing.savings && <div className="text-green-600 font-semibold">Ahorras {pricing.savings}</div>}
-                  {isAnnual && pricing.total && (
-                    <div className="text-gray-700 font-medium">Total anual: {pricing.total}</div>
+                  {pricing.savings && (
+                    <div className="text-sm text-green-600 font-medium">Ahorras {pricing.savings}</div>
                   )}
                 </div>
               </div>
 
-              {/* Features */}
-              <div>
-                <h4 className="text-lg font-bold text-gray-900 mb-4">Características incluidas</h4>
-                <div className="space-y-2">
+              <div className="mb-8">
+                <h4 className="text-lg font-semibold text-gray-900 mb-4">Características incluidas</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {selectedPlan.features.map((feature, index) => (
-                    <div key={index} className="flex items-start space-x-3 p-2 rounded-lg">
-                      <Check className="h-4 w-4 text-green-600 mt-1 flex-shrink-0" />
-                      <span className="text-gray-700 text-sm">{feature}</span>
+                    <div key={index} className="flex items-start space-x-3">
+                      <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-sm text-gray-700">{feature}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Benefits */}
-              <div className="bg-green-50 border border-green-200 p-4 rounded-xl">
-                <h4 className="font-bold text-green-800 mb-2">Beneficios</h4>
-                <div className="grid grid-cols-2 gap-2 text-sm text-green-700">
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h4 className="font-semibold text-green-800 mb-3">Beneficios adicionales</h4>
+                <div className="grid grid-cols-2 gap-3 text-sm text-green-700">
                   <div className="flex items-center space-x-2">
                     <Check className="h-3 w-3" />
                     <span>Acceso instantáneo</span>
@@ -196,22 +194,21 @@ export function SubscriptionModal({
               </div>
             </div>
           ) : (
-            /* Form step - simplified */
-            <div className="p-6 space-y-4">
-              <div className="flex items-center space-x-3 pb-4 border-b">
+            <div className="p-6">
+              <div className="flex items-center space-x-3 pb-4 mb-6 border-b">
                 <Button variant="ghost" size="sm" onClick={() => setStep("details")} className="p-2">
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
                 <div>
-                  <h3 className="text-xl font-bold text-gray-900">Datos Profesionales</h3>
-                  <p className="text-gray-600 text-sm">Completa tu información</p>
+                  <h3 className="text-xl font-semibold text-gray-900">Datos Profesionales</h3>
+                  <p className="text-sm text-gray-600">Completa tu información para continuar</p>
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName" className="text-sm font-medium">
+                    <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
                       Nombre *
                     </Label>
                     <Input
@@ -223,7 +220,7 @@ export function SubscriptionModal({
                     />
                   </div>
                   <div>
-                    <Label htmlFor="lastName" className="text-sm font-medium">
+                    <Label htmlFor="lastName" className="text-sm font-medium text-gray-700">
                       Apellido *
                     </Label>
                     <Input
@@ -236,9 +233,9 @@ export function SubscriptionModal({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="email" className="text-sm font-medium">
+                    <Label htmlFor="email" className="text-sm font-medium text-gray-700">
                       Email *
                     </Label>
                     <Input
@@ -251,7 +248,7 @@ export function SubscriptionModal({
                     />
                   </div>
                   <div>
-                    <Label htmlFor="phone" className="text-sm font-medium">
+                    <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
                       Teléfono *
                     </Label>
                     <Input
@@ -264,9 +261,9 @@ export function SubscriptionModal({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="licenseNumber" className="text-sm font-medium">
+                    <Label htmlFor="licenseNumber" className="text-sm font-medium text-gray-700">
                       Matrícula *
                     </Label>
                     <Input
@@ -278,7 +275,7 @@ export function SubscriptionModal({
                     />
                   </div>
                   <div>
-                    <Label htmlFor="specialty" className="text-sm font-medium">
+                    <Label htmlFor="specialty" className="text-sm font-medium text-gray-700">
                       Especialidad *
                     </Label>
                     <Select
@@ -286,7 +283,7 @@ export function SubscriptionModal({
                       onValueChange={(value) => setFormData({ ...formData, specialty: value })}
                     >
                       <SelectTrigger className="mt-1">
-                        <SelectValue placeholder="Selecciona" />
+                        <SelectValue placeholder="Selecciona tu especialidad" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="psicologia-clinica">Psicología Clínica</SelectItem>
@@ -301,40 +298,40 @@ export function SubscriptionModal({
                   </div>
                 </div>
 
-                {/* Terms */}
-                <div className="space-y-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                  <h4 className="font-semibold text-blue-900">Términos y Condiciones</h4>
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <h4 className="font-semibold text-gray-900 mb-3">Términos y Condiciones</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="acceptTerms"
+                        checked={formData.acceptTerms}
+                        onCheckedChange={(checked) => setFormData({ ...formData, acceptTerms: checked as boolean })}
+                        className="mt-0.5"
+                      />
+                      <Label htmlFor="acceptTerms" className="text-sm text-gray-700 leading-relaxed">
+                        Acepto los{" "}
+                        <a href="/terminos" className="text-blue-600 hover:underline font-medium">
+                          Términos y Condiciones
+                        </a>{" "}
+                        *
+                      </Label>
+                    </div>
 
-                  <div className="flex items-start space-x-2">
-                    <Checkbox
-                      id="acceptTerms"
-                      checked={formData.acceptTerms}
-                      onCheckedChange={(checked) => setFormData({ ...formData, acceptTerms: checked as boolean })}
-                      className="mt-1"
-                    />
-                    <Label htmlFor="acceptTerms" className="text-sm text-gray-700">
-                      Acepto los{" "}
-                      <a href="/terminos" className="text-blue-600 hover:underline">
-                        Términos y Condiciones
-                      </a>{" "}
-                      *
-                    </Label>
-                  </div>
-
-                  <div className="flex items-start space-x-2">
-                    <Checkbox
-                      id="acceptPrivacy"
-                      checked={formData.acceptPrivacy}
-                      onCheckedChange={(checked) => setFormData({ ...formData, acceptPrivacy: checked as boolean })}
-                      className="mt-1"
-                    />
-                    <Label htmlFor="acceptPrivacy" className="text-sm text-gray-700">
-                      Acepto la{" "}
-                      <a href="/privacidad" className="text-blue-600 hover:underline">
-                        Política de Privacidad
-                      </a>{" "}
-                      *
-                    </Label>
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="acceptPrivacy"
+                        checked={formData.acceptPrivacy}
+                        onCheckedChange={(checked) => setFormData({ ...formData, acceptPrivacy: checked as boolean })}
+                        className="mt-0.5"
+                      />
+                      <Label htmlFor="acceptPrivacy" className="text-sm text-gray-700 leading-relaxed">
+                        Acepto la{" "}
+                        <a href="/privacidad" className="text-blue-600 hover:underline font-medium">
+                          Política de Privacidad
+                        </a>{" "}
+                        *
+                      </Label>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -342,23 +339,24 @@ export function SubscriptionModal({
           )}
         </div>
 
-        <div className="px-6 py-4 border-t bg-white">
+        <div className="px-6 py-4 border-t bg-gray-50">
           {step === "details" ? (
             <div className="space-y-3">
               {selectedPlan.price === 0 ? (
-                <Button onClick={() => setStep("form")} className="w-full h-12 text-lg font-semibold">
+                <Button onClick={() => setStep("form")} className="w-full h-12 text-base font-semibold">
                   Activar Plan Gratuito
                 </Button>
               ) : (
                 <>
                   <Button
                     onClick={handleMercadoPagoSubscription}
-                    className="w-full h-16 text-xl font-black bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-2xl border-2 border-blue-500 transform hover:scale-105 transition-all duration-200"
+                    className="w-full h-12 text-base font-semibold bg-blue-600 hover:bg-blue-700 text-white"
                   >
-                    <CreditCard className="h-6 w-6 mr-3" />💳 PAGAR CON MERCADOPAGO - {pricing.total}
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    Pagar con MercadoPago - {pricing.total}
                   </Button>
                   <Button variant="outline" onClick={() => setStep("form")} className="w-full h-10 text-sm">
-                    Completar datos primero
+                    Completar datos profesionales primero
                   </Button>
                 </>
               )}
@@ -371,7 +369,7 @@ export function SubscriptionModal({
               <Button
                 onClick={handleMercadoPagoSubscription}
                 disabled={!isFormValid()}
-                className="flex-1 h-12 font-semibold bg-blue-600 hover:bg-blue-700"
+                className="flex-1 h-12 font-semibold bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
               >
                 <CreditCard className="h-4 w-4 mr-2" />
                 Pagar - {pricing.total}
