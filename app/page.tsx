@@ -14,15 +14,6 @@ export default function HomePage() {
   const router = useRouter()
 
   const handleUserTypeSelection = (userType: "psicologo" | "paciente") => {
-    if (user?.isAuthenticated) {
-      if (user.userType === "psicologo") {
-        router.push("/dashboard/psicologo")
-      } else {
-        router.push("/dashboard/paciente")
-      }
-      return
-    }
-
     localStorage.setItem("intendedUserType", userType)
     router.push("/login")
   }
@@ -73,10 +64,10 @@ export default function HomePage() {
               className="bg-blue-600 hover:bg-blue-700"
               onClick={() => handleUserTypeSelection("psicologo")}
             >
-              {user?.isAuthenticated && user.userType === "psicologo" ? "Ir al Dashboard" : "Soy Psicólogo"}
+              Soy Psicólogo
             </Button>
             <Button size="lg" variant="outline" onClick={() => handleUserTypeSelection("paciente")}>
-              {user?.isAuthenticated && user.userType === "paciente" ? "Ir al Dashboard" : "Soy Paciente"}
+              Soy Paciente
             </Button>
           </div>
         </div>
