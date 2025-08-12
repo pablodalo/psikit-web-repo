@@ -132,7 +132,7 @@ export function SubscriptionModal({
                 Popular
               </Badge>
             )}
-            <DialogTitle className="text-xl font-semibold text-gray-900">Plan {selectedPlan.name}</DialogTitle>
+            <DialogTitle className="text-lg font-semibold text-gray-900">Plan {selectedPlan.name}</DialogTitle>
           </div>
         </DialogHeader>
 
@@ -140,11 +140,11 @@ export function SubscriptionModal({
           {step === "details" ? (
             <div className="p-6">
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedPlan.name}</h3>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">{selectedPlan.name}</h3>
                 <p className="text-gray-600 mb-6">{selectedPlan.description}</p>
 
                 <div className="inline-block bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-                  <div className="text-3xl font-bold text-blue-600 mb-2">{pricing.price}</div>
+                  <div className="text-2xl font-bold text-blue-600 mb-2">{pricing.price}</div>
                   {pricing.originalPrice && (
                     <div className="text-sm text-gray-500 line-through mb-1">{pricing.originalPrice}</div>
                   )}
@@ -155,7 +155,7 @@ export function SubscriptionModal({
               </div>
 
               <div className="mb-8">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4">Características incluidas</h4>
+                <h4 className="text-base font-semibold text-gray-900 mb-4">Características incluidas</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {selectedPlan.features.map((feature, index) => (
                     <div key={index} className="flex items-start space-x-3">
@@ -195,7 +195,7 @@ export function SubscriptionModal({
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900">Datos Profesionales</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">Datos Profesionales</h3>
                   <p className="text-sm text-gray-600">Completa tu información para continuar</p>
                 </div>
               </div>
@@ -351,12 +351,12 @@ export function SubscriptionModal({
                           <CreditCard className="h-5 w-5" />
                         </div>
                         <div>
-                          <h4 className="font-semibold text-lg">Pago Seguro</h4>
+                          <h4 className="font-semibold">Pago Seguro</h4>
                           <p className="text-blue-100 text-sm">Procesado por MercadoPago</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold">{pricing.total}</div>
+                        <div className="text-xl font-bold">{pricing.total}</div>
                         {pricing.originalPrice && (
                           <div className="text-blue-200 text-sm line-through">{pricing.originalPrice}</div>
                         )}
