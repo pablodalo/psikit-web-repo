@@ -356,10 +356,9 @@ export function SubscriptionModal({
                 <>
                   <Button
                     onClick={handleMercadoPagoSubscription}
-                    className="w-full h-14 text-lg font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
+                    className="w-full h-16 text-xl font-black bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-2xl border-2 border-blue-500 transform hover:scale-105 transition-all duration-200"
                   >
-                    <CreditCard className="h-5 w-5 mr-2" />
-                    PAGAR CON MERCADOPAGO - {pricing.total}
+                    <CreditCard className="h-6 w-6 mr-3" />💳 PAGAR CON MERCADOPAGO - {pricing.total}
                   </Button>
                   <Button variant="outline" onClick={() => setStep("form")} className="w-full h-10 text-sm">
                     Completar datos primero
