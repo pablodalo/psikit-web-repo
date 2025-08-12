@@ -2,7 +2,6 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -14,17 +13,16 @@ export default function HomePage() {
   const { user } = useAuth()
   const router = useRouter()
 
-  useEffect(() => {
+  const handleUserTypeSelection = (userType: "psicologo" | "paciente") => {
     if (user?.isAuthenticated) {
       if (user.userType === "psicologo") {
         router.push("/dashboard/psicologo")
       } else {
         router.push("/dashboard/paciente")
       }
+      return
     }
-  }, [user, router])
 
-  const handleUserTypeSelection = (userType: "psicologo" | "paciente") => {
     localStorage.setItem("intendedUserType", userType)
     router.push("/login")
   }
@@ -39,12 +37,20 @@ export default function HomePage() {
             <span className="text-2xl font-bold text-gray-900">PsiKit</span>
           </div>
           <div className="flex items-center space-x-4">
-            <Link href="/login">
-              <Button variant="ghost">Iniciar Sesión</Button>
-            </Link>
-            <Link href="/register">
-              <Button>Registrarse</Button>
-            </Link>
+            {user?.isAuthenticated ? (
+              <Link href={user.userType === "psicologo" ? "/dashboard/psicologo" : "/dashboard/paciente"}>
+                <Button>Ir al Dashboard</Button>
+              </Link>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="ghost">Iniciar Sesión</Button>
+                </Link>
+                <Link href="/register">
+                  <Button>Registrarse</Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
@@ -67,10 +73,10 @@ export default function HomePage() {
               className="bg-blue-600 hover:bg-blue-700"
               onClick={() => handleUserTypeSelection("psicologo")}
             >
-              Soy Psicólogo
+              {user?.isAuthenticated && user.userType === "psicologo" ? "Ir al Dashboard" : "Soy Psicólogo"}
             </Button>
             <Button size="lg" variant="outline" onClick={() => handleUserTypeSelection("paciente")}>
-              Soy Paciente
+              {user?.isAuthenticated && user.userType === "paciente" ? "Ir al Dashboard" : "Soy Paciente"}
             </Button>
           </div>
         </div>
