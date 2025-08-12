@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -13,17 +14,17 @@ export default function HomePage() {
   const { user } = useAuth()
   const router = useRouter()
 
-  const handleUserTypeSelection = (userType: "psicologo" | "paciente") => {
+  useEffect(() => {
     if (user?.isAuthenticated) {
       if (user.userType === "psicologo") {
         router.push("/dashboard/psicologo")
       } else {
         router.push("/dashboard/paciente")
       }
-      return
     }
+  }, [user, router])
 
-    // Store the intended user type and redirect to login
+  const handleUserTypeSelection = (userType: "psicologo" | "paciente") => {
     localStorage.setItem("intendedUserType", userType)
     router.push("/login")
   }
@@ -38,28 +39,12 @@ export default function HomePage() {
             <span className="text-2xl font-bold text-gray-900">PsiKit</span>
           </div>
           <div className="flex items-center space-x-4">
-            {user?.isAuthenticated ? (
-              <Button
-                onClick={() => {
-                  if (user.userType === "psicologo") {
-                    router.push("/dashboard/psicologo")
-                  } else {
-                    router.push("/dashboard/paciente")
-                  }
-                }}
-              >
-                Ir al Dashboard
-              </Button>
-            ) : (
-              <>
-                <Link href="/login">
-                  <Button variant="ghost">Iniciar Sesión</Button>
-                </Link>
-                <Link href="/register">
-                  <Button>Registrarse</Button>
-                </Link>
-              </>
-            )}
+            <Link href="/login">
+              <Button variant="ghost">Iniciar Sesión</Button>
+            </Link>
+            <Link href="/register">
+              <Button>Registrarse</Button>
+            </Link>
           </div>
         </div>
       </header>
