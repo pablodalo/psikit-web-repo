@@ -25,6 +25,7 @@ export default function LoginPage() {
   useEffect(() => {
     // If already authenticated, redirect to dashboard
     if (user?.isAuthenticated) {
+      console.log("User already authenticated:", user.userType)
       if (user.userType === "psicologo") {
         router.push("/dashboard/psicologo")
       } else {
@@ -34,12 +35,14 @@ export default function LoginPage() {
     }
 
     const intendedUserType = localStorage.getItem("intendedUserType")
+    console.log("Intended user type from localStorage:", intendedUserType)
     if (intendedUserType === "psicologo" || intendedUserType === "paciente") {
       setUserType(intendedUserType)
       localStorage.removeItem("intendedUserType")
     } else {
       setUserType("psicologo")
     }
+    console.log("Final userType set to:", intendedUserType || "psicologo")
   }, [user, router])
 
   const handleLogin = async (e: React.FormEvent) => {

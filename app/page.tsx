@@ -14,7 +14,9 @@ export default function HomePage() {
   const router = useRouter()
 
   const handleUserTypeSelection = (userType: "psicologo" | "paciente") => {
+    console.log("Selected user type:", userType)
     localStorage.setItem("intendedUserType", userType)
+    console.log("Stored in localStorage:", localStorage.getItem("intendedUserType"))
     router.push("/login")
   }
 
