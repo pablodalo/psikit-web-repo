@@ -7,24 +7,22 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Brain, Calendar, Users, FileText, CreditCard, Video, Shield, Globe } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
-import { useEffect } from "react"
 import { PricingSection } from "@/components/pricing-section"
 
 export default function HomePage() {
   const { user } = useAuth()
   const router = useRouter()
 
-  useEffect(() => {
+  const handleUserTypeSelection = (userType: "psicologo" | "paciente") => {
     if (user?.isAuthenticated) {
       if (user.userType === "psicologo") {
         router.push("/dashboard/psicologo")
       } else {
         router.push("/dashboard/paciente")
       }
+      return
     }
-  }, [user, router])
 
-  const handleUserTypeSelection = (userType: "psicologo" | "paciente") => {
     // Store the intended user type and redirect to login
     localStorage.setItem("intendedUserType", userType)
     router.push("/login")
@@ -40,12 +38,28 @@ export default function HomePage() {
             <span className="text-2xl font-bold text-gray-900">PsiKit</span>
           </div>
           <div className="flex items-center space-x-4">
-            <Link href="/login">
-              <Button variant="ghost">Iniciar Sesión</Button>
-            </Link>
-            <Link href="/register">
-              <Button>Registrarse</Button>
-            </Link>
+            {user?.isAuthenticated ? (
+              <Button
+                onClick={() => {
+                  if (user.userType === "psicologo") {
+                    router.push("/dashboard/psicologo")
+                  } else {
+                    router.push("/dashboard/paciente")
+                  }
+                }}
+              >
+                Ir al Dashboard
+              </Button>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="ghost">Iniciar Sesión</Button>
+                </Link>
+                <Link href="/register">
+                  <Button>Registrarse</Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
