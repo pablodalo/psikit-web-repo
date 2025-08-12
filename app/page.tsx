@@ -3,11 +3,12 @@
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Brain, Calendar, Users, FileText, CreditCard, Video, Shield, Globe } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { useEffect } from "react"
+import { PricingSection } from "@/components/pricing-section"
 
 export default function HomePage() {
   const { user } = useAuth()
@@ -169,55 +170,7 @@ export default function HomePage() {
         <div className="container mx-auto text-center">
           <h2 className="text-3xl font-bold mb-8">Membresías Flexibles</h2>
           <p className="text-gray-600 mb-8">Solo los profesionales pagan. Los pacientes acceden gratis siempre.</p>
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <Card>
-              <CardHeader>
-                <CardTitle>Básico</CardTitle>
-                <CardDescription>Hasta 10 pacientes</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold mb-4">Gratis</div>
-                <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Sesiones virtuales</li>
-                  <li>• Agenda básica</li>
-                  <li>• Historia clínica</li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="border-blue-500 border-2">
-              <CardHeader>
-                <Badge className="mb-2">Más Popular</Badge>
-                <CardTitle>Profesional</CardTitle>
-                <CardDescription>Hasta 50 pacientes</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold mb-4">$15/mes</div>
-                <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Todo lo del plan Básico</li>
-                  <li>• Tests psicológicos</li>
-                  <li>• Pagos integrados</li>
-                  <li>• Facturación automática</li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Premium</CardTitle>
-                <CardDescription>Pacientes ilimitados</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold mb-4">$25/mes</div>
-                <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Todo lo del plan Profesional</li>
-                  <li>• Comunidad profesional</li>
-                  <li>• Aula virtual</li>
-                  <li>• Soporte prioritario</li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
+          <PricingSection />
         </div>
       </section>
 
