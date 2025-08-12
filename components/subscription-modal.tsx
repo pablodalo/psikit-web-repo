@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
-import { Check, Star, X, CreditCard, Building, User, ArrowLeft } from "lucide-react"
+import { Check, Star, CreditCard, Building, User, ArrowLeft } from "lucide-react"
 import { type PricingPlan, pricingManager } from "@/lib/pricing-config"
 
 interface SubscriptionModalProps {
@@ -75,8 +75,8 @@ export function SubscriptionModal({
     }
 
     if (isAnnual) {
-      const monthlyPrice = selectedPlan.price
-      const annualPrice = Math.round(selectedPlan.price * 12 * 0.8)
+      const monthlyPrice = selectedPlan.id === "professional" ? 16.5 : selectedPlan.price
+      const annualPrice = Math.round(monthlyPrice * 12 * 0.8)
       return {
         price: `$${Math.round(annualPrice / 12)}/mes`,
         originalPrice: `$${monthlyPrice}/mes`,
@@ -85,15 +85,26 @@ export function SubscriptionModal({
       }
     }
 
-    return { price: `$${selectedPlan.price}/mes`, total: `$${selectedPlan.price}/mes` }
+    const displayPrice = selectedPlan.id === "professional" ? 16.5 : selectedPlan.price
+    return { price: `$${displayPrice}/mes`, total: `$${displayPrice}/mes` }
   }
 
   const pricing = formatPrice()
 
-  const handleSubscribe = () => {
-    // TODO: Integrate with MercadoPago in the future
-    console.log("Subscription data:", { plan: selectedPlan, formData, isAnnual })
-    alert("¡Suscripción procesada! En el futuro esto se conectará con MercadoPago.")
+  const handleMercadoPagoSubscription = () => {
+    const subscriptionData = {
+      plan: selectedPlan,
+      formData,
+      isAnnual,
+      pricing,
+    }
+
+    console.log("Redirecting to MercadoPago with data:", subscriptionData)
+
+    alert(
+      `Redirigiendo a MercadoPago para procesar el pago de ${pricing.total}. Esta funcionalidad se implementará próximamente.`,
+    )
+
     onClose()
   }
 
@@ -124,9 +135,6 @@ export function SubscriptionModal({
               )}
               <span>Plan {selectedPlan.name}</span>
             </div>
-            <Button variant="ghost" size="sm" onClick={onClose} className="hover:bg-white/50">
-              <X className="h-4 w-4" />
-            </Button>
           </DialogTitle>
         </DialogHeader>
 
@@ -430,9 +438,13 @@ export function SubscriptionModal({
               <Button variant="outline" onClick={() => setStep("details")} className="flex-1 h-12">
                 Volver
               </Button>
-              <Button onClick={handleSubscribe} disabled={!isFormValid()} className="flex-1 h-12 text-lg font-medium">
+              <Button
+                onClick={handleMercadoPagoSubscription}
+                disabled={!isFormValid()}
+                className="flex-1 h-12 text-lg font-medium bg-blue-600 hover:bg-blue-700"
+              >
                 <CreditCard className="h-4 w-4 mr-2" />
-                Suscribirse
+                Pagar con MercadoPago
               </Button>
             </div>
           )}
