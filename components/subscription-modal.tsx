@@ -439,13 +439,12 @@ export function SubscriptionModal({
                 <>
                   <Button
                     onClick={handleMercadoPagoSubscription}
-                    className="w-full h-12 text-lg font-medium bg-blue-600 hover:bg-blue-700"
+                    className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-200"
                   >
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    Pagar Ahora con MercadoPago
+                    <CreditCard className="h-5 w-5 mr-3" />💳 Pagar Ahora con MercadoPago - {pricing.total}
                   </Button>
                   <Button variant="outline" onClick={() => setStep("form")} className="w-full h-10 text-sm">
-                    Completar datos profesionales primero
+                    O completar datos profesionales primero
                   </Button>
                 </>
               )}
