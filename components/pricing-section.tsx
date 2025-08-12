@@ -101,26 +101,32 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
               return (
                 <Card
                   key={plan.id}
-                  className={`relative cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-102 ${
-                    plan.popular ? "border-blue-500 border-2 scale-105" : ""
-                  } ${compact ? "h-auto" : ""}`}
+                  className={`relative cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 transform ${
+                    plan.popular ? "border-blue-500 border-2 scale-105 shadow-lg" : "hover:border-blue-300"
+                  } ${compact ? "h-auto" : ""} group`}
                   onClick={() => handlePlanClick(plan)}
                 >
                   {plan.popular && (
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                      <Badge className="bg-blue-600 text-white px-4 py-1">
+                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                      <Badge className="bg-blue-600 text-white px-4 py-1 shadow-lg">
                         <Star className="h-3 w-3 mr-1" />
                         Más Popular
                       </Badge>
                     </div>
                   )}
 
-                  <CardHeader className="text-center pb-4">
-                    <CardTitle className="text-xl">{plan.name}</CardTitle>
-                    <CardDescription>{plan.description}</CardDescription>
+                  <div className="absolute inset-0 bg-blue-50 opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-lg pointer-events-none" />
+
+                  <CardHeader className="text-center pb-4 relative z-10">
+                    <CardTitle className="text-xl group-hover:text-blue-600 transition-colors">{plan.name}</CardTitle>
+                    <CardDescription className="group-hover:text-gray-700 transition-colors">
+                      {plan.description}
+                    </CardDescription>
 
                     <div className="py-4">
-                      <div className="text-3xl font-bold text-gray-900">{pricing.price}</div>
+                      <div className="text-3xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+                        {pricing.price}
+                      </div>
                       {pricing.originalPrice && (
                         <div className="text-sm text-gray-500">
                           <span className="line-through">{pricing.originalPrice}</span>
@@ -130,7 +136,7 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
                     </div>
                   </CardHeader>
 
-                  <CardContent className="space-y-4">
+                  <CardContent className="space-y-4 relative z-10">
                     <ul className="space-y-3">
                       {plan.features.slice(0, 4).map((feature, index) => (
                         <li key={index} className="flex items-start space-x-2">
@@ -139,7 +145,7 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
                         </li>
                       ))}
                       {plan.features.length > 4 && (
-                        <li className="text-sm text-blue-600 font-medium">
+                        <li className="text-sm text-blue-600 font-medium group-hover:text-blue-700 transition-colors">
                           +{plan.features.length - 4} características más
                         </li>
                       )}
@@ -147,7 +153,7 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
 
                     <div className="pt-4 space-y-2">
                       <Button
-                        className={`w-full ${plan.buttonVariant === "outline" ? "bg-transparent" : ""}`}
+                        className={`w-full transition-all duration-200 ${plan.buttonVariant === "outline" ? "bg-transparent group-hover:bg-blue-50" : "group-hover:shadow-lg"}`}
                         variant={plan.buttonVariant}
                         onClick={(e) => {
                           e.stopPropagation()
@@ -160,14 +166,14 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="w-full text-blue-600 hover:text-blue-700"
+                        className="w-full text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-all duration-200"
                         onClick={(e) => {
                           e.stopPropagation()
                           handlePlanClick(plan)
                         }}
                       >
                         Ver detalles completos
-                        <ArrowRight className="h-4 w-4 ml-1" />
+                        <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
                       </Button>
                     </div>
 
@@ -175,6 +181,12 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
                       <p className="text-xs text-gray-500 text-center">Hasta {plan.maxPatients} pacientes</p>
                     )}
                   </CardContent>
+
+                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <div className="bg-blue-600 text-white rounded-full p-1">
+                      <ArrowRight className="h-3 w-3" />
+                    </div>
+                  </div>
                 </Card>
               )
             })}
