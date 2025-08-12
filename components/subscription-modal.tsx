@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
-import { Check, Star, CreditCard, ArrowLeft, X } from "lucide-react"
+import { Check, Star, CreditCard, ArrowLeft } from "lucide-react"
 import { type PricingPlan, pricingManager } from "@/lib/pricing-config"
 
 interface SubscriptionModalProps {
@@ -123,25 +123,20 @@ export function SubscriptionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-hidden p-0 bg-white">
-        <DialogHeader className="px-6 py-4 border-b bg-gray-50">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              {selectedPlan.popular && (
-                <Badge className="bg-blue-600 text-white">
-                  <Star className="h-3 w-3 mr-1" />
-                  Popular
-                </Badge>
-              )}
-              <DialogTitle className="text-xl font-semibold text-gray-900">Plan {selectedPlan.name}</DialogTitle>
-            </div>
-            <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
-              <X className="h-4 w-4" />
-            </Button>
+      <DialogContent className="max-w-3xl h-[85vh] flex flex-col p-0 bg-white">
+        <DialogHeader className="px-6 py-4 border-b bg-gray-50 flex-shrink-0">
+          <div className="flex items-center space-x-3">
+            {selectedPlan.popular && (
+              <Badge className="bg-blue-600 text-white">
+                <Star className="h-3 w-3 mr-1" />
+                Popular
+              </Badge>
+            )}
+            <DialogTitle className="text-xl font-semibold text-gray-900">Plan {selectedPlan.name}</DialogTitle>
           </div>
         </DialogHeader>
 
-        <div className="overflow-y-auto flex-1">
+        <div className="flex-1 overflow-y-auto">
           {step === "details" ? (
             <div className="p-6">
               <div className="text-center mb-8">
@@ -171,24 +166,24 @@ export function SubscriptionModal({
                 </div>
               </div>
 
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
                 <h4 className="font-semibold text-green-800 mb-3">Beneficios adicionales</h4>
-                <div className="grid grid-cols-2 gap-3 text-sm text-green-700">
+                <div className="space-y-2">
                   <div className="flex items-center space-x-2">
-                    <Check className="h-3 w-3" />
-                    <span>Acceso instantáneo</span>
+                    <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                    <span className="text-sm text-green-700">Acceso instantáneo</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Check className="h-3 w-3" />
-                    <span>Sin permanencia</span>
+                    <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                    <span className="text-sm text-green-700">Sin permanencia</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Check className="h-3 w-3" />
-                    <span>Soporte incluido</span>
+                    <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                    <span className="text-sm text-green-700">Soporte incluido</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Check className="h-3 w-3" />
-                    <span>Cancela cuando quieras</span>
+                    <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
+                    <span className="text-sm text-green-700">Cancela cuando quieras</span>
                   </div>
                 </div>
               </div>
@@ -339,7 +334,7 @@ export function SubscriptionModal({
           )}
         </div>
 
-        <div className="px-6 py-4 border-t bg-gray-50">
+        <div className="px-6 py-4 border-t bg-gray-50 flex-shrink-0">
           {step === "details" ? (
             <div className="space-y-3">
               {selectedPlan.price === 0 ? (
@@ -350,10 +345,10 @@ export function SubscriptionModal({
                 <>
                   <Button
                     onClick={handleMercadoPagoSubscription}
-                    className="w-full h-12 text-base font-semibold bg-blue-600 hover:bg-blue-700 text-white"
+                    className="w-full h-14 text-lg font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
                   >
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    Pagar con MercadoPago - {pricing.total}
+                    <CreditCard className="h-5 w-5 mr-3" />
+                    PAGAR CON MERCADOPAGO - {pricing.total}
                   </Button>
                   <Button variant="outline" onClick={() => setStep("form")} className="w-full h-10 text-sm">
                     Completar datos profesionales primero
