@@ -45,7 +45,6 @@ export const pricingPlans: PricingPlan[] = [
       "Todo lo del plan Básico",
       "Tests psicológicos",
       "Pagos integrados",
-      "Facturación automática",
       "Grabación de sesiones",
       "Chat avanzado",
       "Reportes básicos",
