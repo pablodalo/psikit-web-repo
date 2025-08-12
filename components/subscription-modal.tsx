@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
-import { Check, Star, CreditCard, ArrowLeft } from "lucide-react"
+import { Check, Star, CreditCard, ArrowLeft, Shield, Clock } from "lucide-react"
 import { type PricingPlan, pricingManager } from "@/lib/pricing-config"
 
 interface SubscriptionModalProps {
@@ -336,23 +336,70 @@ export function SubscriptionModal({
 
         <div className="px-6 py-4 border-t bg-gray-50 flex-shrink-0">
           {step === "details" ? (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {selectedPlan.price === 0 ? (
                 <Button onClick={() => setStep("form")} className="w-full h-12 text-base font-semibold">
                   Activar Plan Gratuito
                 </Button>
               ) : (
                 <>
+                  {/* Payment Card */}
+                  <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white shadow-lg">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-2">
+                        <div className="bg-white/20 rounded-lg p-2">
+                          <CreditCard className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-lg">Pago Seguro</h4>
+                          <p className="text-blue-100 text-sm">Procesado por MercadoPago</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-2xl font-bold">{pricing.total}</div>
+                        {pricing.originalPrice && (
+                          <div className="text-blue-200 text-sm line-through">{pricing.originalPrice}</div>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between text-sm text-blue-100 mb-4">
+                      <div className="flex items-center space-x-1">
+                        <Shield className="h-4 w-4" />
+                        <span>Pago 100% seguro</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Clock className="h-4 w-4" />
+                        <span>Activación inmediata</span>
+                      </div>
+                    </div>
+
+                    <Button
+                      onClick={handleMercadoPagoSubscription}
+                      className="w-full h-12 bg-white text-blue-700 hover:bg-blue-50 font-bold text-lg shadow-md transition-all duration-200 hover:shadow-lg"
+                    >
+                      PAGAR AHORA CON MERCADOPAGO
+                    </Button>
+                  </div>
+
                   <Button
-                    onClick={handleMercadoPagoSubscription}
-                    className="w-full h-14 text-lg font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
+                    variant="outline"
+                    onClick={() => setStep("form")}
+                    className="w-full h-10 text-sm border-gray-300 hover:bg-gray-50"
                   >
-                    <CreditCard className="h-5 w-5 mr-3" />
-                    PAGAR CON MERCADOPAGO - {pricing.total}
-                  </Button>
-                  <Button variant="outline" onClick={() => setStep("form")} className="w-full h-10 text-sm">
                     Completar datos profesionales primero
                   </Button>
+
+                  <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
+                    <div className="flex items-center space-x-1">
+                      <Shield className="h-3 w-3" />
+                      <span>SSL Seguro</span>
+                    </div>
+                    <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
+                    <span>Sin permanencia</span>
+                    <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
+                    <span>Cancela cuando quieras</span>
+                  </div>
                 </>
               )}
             </div>
