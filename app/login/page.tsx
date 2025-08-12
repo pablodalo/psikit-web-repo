@@ -18,7 +18,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [userType, setUserType] = useState<"psicologo" | "paciente" | null>(null)
+  const [userType, setUserType] = useState<"psicologo" | "paciente">("psicologo")
   const router = useRouter()
   const { login, user } = useAuth()
 
@@ -36,18 +36,18 @@ export default function LoginPage() {
 
     const intendedUserType = localStorage.getItem("intendedUserType")
     console.log("Intended user type from localStorage:", intendedUserType)
-    if (intendedUserType === "psicologo" || intendedUserType === "paciente") {
-      setUserType(intendedUserType)
-      localStorage.removeItem("intendedUserType")
+    if (intendedUserType === "paciente") {
+      setUserType("paciente")
+      console.log("Setting userType to paciente")
     } else {
       setUserType("psicologo")
+      console.log("Setting userType to psicologo (default)")
     }
-    console.log("Final userType set to:", intendedUserType || "psicologo")
+    // Don't remove from localStorage yet - keep it until login is successful
   }, [user, router])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!userType) return
 
     setIsLoading(true)
 
@@ -60,9 +60,13 @@ export default function LoginPage() {
         isAuthenticated: true,
       }
 
+      console.log("Logging in with userData:", userData)
       login(userData)
 
+      localStorage.removeItem("intendedUserType")
+
       // Redirect to appropriate dashboard
+      console.log("Redirecting to dashboard for:", userType)
       if (userType === "psicologo") {
         router.push("/dashboard/psicologo")
       } else {
@@ -71,17 +75,6 @@ export default function LoginPage() {
 
       setIsLoading(false)
     }, 1500)
-  }
-
-  if (userType === null) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Cargando...</p>
-        </div>
-      </div>
-    )
   }
 
   return (

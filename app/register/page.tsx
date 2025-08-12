@@ -43,12 +43,16 @@ export default function RegisterPage() {
       return
     }
 
-    // Check for intended user type from landing page
     const intendedUserType = localStorage.getItem("intendedUserType")
-    if (intendedUserType === "psicologo" || intendedUserType === "paciente") {
-      setUserType(intendedUserType)
-      localStorage.removeItem("intendedUserType")
+    console.log("Registration - Intended user type from localStorage:", intendedUserType)
+    if (intendedUserType === "paciente") {
+      setUserType("paciente")
+      console.log("Registration - Setting userType to paciente")
+    } else {
+      setUserType("psicologo")
+      console.log("Registration - Setting userType to psicologo (default)")
     }
+    // Don't remove from localStorage yet - keep it until registration is successful
   }, [user, router])
 
   const handleInputChange = (field: string, value: string | boolean) => {
@@ -79,9 +83,13 @@ export default function RegisterPage() {
         isAuthenticated: true,
       }
 
+      console.log("Registration - Creating user with userData:", userData)
       login(userData)
 
+      localStorage.removeItem("intendedUserType")
+
       // Redirect to appropriate dashboard
+      console.log("Registration - Redirecting to dashboard for:", userType)
       if (userType === "psicologo") {
         router.push("/dashboard/psicologo")
       } else {

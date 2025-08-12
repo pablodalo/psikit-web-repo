@@ -32,6 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const userStr = localStorage.getItem("user")
         if (userStr) {
           const userData = JSON.parse(userStr)
+          console.log("Auth context - Found existing user:", userData)
           if (userData.isAuthenticated) {
             setUser(userData)
           }
@@ -48,13 +49,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const login = (userData: User) => {
+    console.log("Auth context - Logging in user:", userData)
     setUser(userData)
     localStorage.setItem("user", JSON.stringify(userData))
   }
 
   const logout = () => {
+    console.log("Auth context - Logging out user")
     setUser(null)
     localStorage.removeItem("user")
+    localStorage.removeItem("intendedUserType")
     window.location.href = "/"
   }
 
