@@ -18,7 +18,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [userType, setUserType] = useState<"psicologo" | "paciente">("psicologo")
+  const [userType, setUserType] = useState<"psicologo" | "paciente" | null>(null)
   const router = useRouter()
   const { login, user } = useAuth()
 
@@ -33,16 +33,19 @@ export default function LoginPage() {
       return
     }
 
-    // Check for intended user type from landing page
     const intendedUserType = localStorage.getItem("intendedUserType")
     if (intendedUserType === "psicologo" || intendedUserType === "paciente") {
       setUserType(intendedUserType)
       localStorage.removeItem("intendedUserType")
+    } else {
+      setUserType("psicologo")
     }
   }, [user, router])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!userType) return
+
     setIsLoading(true)
 
     // Simulate login process
@@ -65,6 +68,17 @@ export default function LoginPage() {
 
       setIsLoading(false)
     }, 1500)
+  }
+
+  if (userType === null) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Cargando...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
