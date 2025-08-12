@@ -8,8 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Check, Star, X, CreditCard, Building, User } from "lucide-react"
+import { Check, Star, X, CreditCard, Building, User, ArrowLeft } from "lucide-react"
 import { type PricingPlan, pricingManager } from "@/lib/pricing-config"
 
 interface SubscriptionModalProps {
@@ -113,161 +112,179 @@ export function SubscriptionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center justify-between">
-            <span>Plan {selectedPlan.name}</span>
-            <Button variant="ghost" size="sm" onClick={onClose}>
+      <DialogContent className="max-w-2xl max-h-[95vh] overflow-hidden p-0">
+        <DialogHeader className="px-6 py-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
+          <DialogTitle className="flex items-center justify-between text-xl font-semibold text-gray-900">
+            <div className="flex items-center space-x-3">
+              {selectedPlan.popular && (
+                <Badge className="bg-blue-600 text-white px-2 py-1">
+                  <Star className="h-3 w-3 mr-1" />
+                  Popular
+                </Badge>
+              )}
+              <span>Plan {selectedPlan.name}</span>
+            </div>
+            <Button variant="ghost" size="sm" onClick={onClose} className="hover:bg-white/50">
               <X className="h-4 w-4" />
             </Button>
           </DialogTitle>
         </DialogHeader>
 
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Plan Details */}
-          <div className="space-y-6">
-            <Card className={selectedPlan.popular ? "border-blue-500 border-2" : ""}>
-              {selectedPlan.popular && (
-                <div className="bg-blue-600 text-white text-center py-2 rounded-t-lg">
-                  <Badge className="bg-white text-blue-600">
-                    <Star className="h-3 w-3 mr-1" />
-                    Más Popular
-                  </Badge>
+        <div className="overflow-y-auto flex-1">
+          {step === "details" ? (
+            <div className="p-6 space-y-6">
+              <div className="text-center space-y-4">
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-bold text-gray-900">{selectedPlan.name}</h3>
+                  <p className="text-gray-600 text-lg">{selectedPlan.description}</p>
                 </div>
-              )}
 
-              <CardHeader className="text-center">
-                <CardTitle className="text-2xl">{selectedPlan.name}</CardTitle>
-                <p className="text-gray-600">{selectedPlan.description}</p>
-
-                <div className="py-4">
-                  <div className="text-4xl font-bold text-gray-900">{pricing.price}</div>
+                <div className="bg-white border-2 border-blue-100 rounded-xl p-6 space-y-3">
+                  <div className="text-4xl font-bold text-blue-600">{pricing.price}</div>
                   {pricing.originalPrice && (
-                    <div className="text-sm text-gray-500">
-                      <span className="line-through">{pricing.originalPrice}</span>
-                      {pricing.savings && <span className="text-green-600 ml-2">Ahorras {pricing.savings}</span>}
+                    <div className="space-y-1">
+                      <div className="text-lg text-gray-500 line-through">{pricing.originalPrice}</div>
+                      {pricing.savings && <div className="text-green-600 font-medium">Ahorras {pricing.savings}</div>}
                     </div>
                   )}
                   {isAnnual && pricing.total && (
-                    <div className="text-sm text-gray-600 mt-2">Total anual: {pricing.total}</div>
+                    <div className="text-gray-600 font-medium">Total anual: {pricing.total}</div>
                   )}
                 </div>
-              </CardHeader>
-
-              <CardContent>
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-gray-900">Características incluidas:</h4>
-                  <ul className="space-y-2">
-                    {selectedPlan.features.map((feature, index) => (
-                      <li key={index} className="flex items-start space-x-2">
-                        <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                        <span className="text-sm text-gray-600">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  {selectedPlan.maxPatients !== "unlimited" && (
-                    <div className="bg-blue-50 p-3 rounded-lg">
-                      <p className="text-sm text-blue-800">
-                        <strong>Límite de pacientes:</strong> Hasta {selectedPlan.maxPatients} pacientes
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Subscription Form */}
-          <div className="space-y-6">
-            {step === "details" ? (
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">¿Listo para comenzar?</h3>
-                <p className="text-gray-600">
-                  Completa tus datos profesionales para activar tu suscripción al plan {selectedPlan.name}.
-                </p>
-
-                <div className="bg-green-50 p-4 rounded-lg">
-                  <h4 className="font-medium text-green-800 mb-2">Beneficios inmediatos:</h4>
-                  <ul className="text-sm text-green-700 space-y-1">
-                    <li>• Acceso instantáneo a todas las funciones</li>
-                    <li>• Sin permanencia ni costos ocultos</li>
-                    <li>• Soporte técnico incluido</li>
-                    <li>• Cancela cuando quieras</li>
-                  </ul>
-                </div>
-
-                <Button onClick={() => setStep("form")} className="w-full" size="lg">
-                  Continuar con la suscripción
-                </Button>
               </div>
-            ) : (
-              <div className="space-y-6">
-                <h3 className="text-lg font-semibold flex items-center">
-                  <User className="h-5 w-5 mr-2" />
-                  Datos Profesionales
-                </h3>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="firstName">Nombre *</Label>
+              <div className="space-y-4">
+                <h4 className="text-lg font-semibold text-gray-900 border-b pb-2">Características incluidas</h4>
+                <div className="grid gap-3">
+                  {selectedPlan.features.map((feature, index) => (
+                    <div key={index} className="flex items-start space-x-3 p-2 rounded-lg hover:bg-gray-50">
+                      <Check className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      <span className="text-gray-700 leading-relaxed">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {selectedPlan.maxPatients !== "unlimited" && (
+                  <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+                    <p className="text-blue-800 font-medium">
+                      Límite de pacientes: Hasta {selectedPlan.maxPatients} pacientes
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-green-50 border border-green-200 p-4 rounded-lg space-y-3">
+                <h4 className="font-semibold text-green-800">Beneficios inmediatos</h4>
+                <ul className="text-green-700 space-y-2">
+                  <li className="flex items-center space-x-2">
+                    <Check className="h-4 w-4 text-green-600" />
+                    <span>Acceso instantáneo a todas las funciones</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <Check className="h-4 w-4 text-green-600" />
+                    <span>Sin permanencia ni costos ocultos</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <Check className="h-4 w-4 text-green-600" />
+                    <span>Soporte técnico incluido</span>
+                  </li>
+                  <li className="flex items-center space-x-2">
+                    <Check className="h-4 w-4 text-green-600" />
+                    <span>Cancela cuando quieras</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <div className="p-6 space-y-6">
+              <div className="flex items-center space-x-3 pb-4 border-b">
+                <Button variant="ghost" size="sm" onClick={() => setStep("details")} className="p-2">
+                  <ArrowLeft className="h-4 w-4" />
+                </Button>
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900">Datos Profesionales</h3>
+                  <p className="text-gray-600">Completa tu información para activar la suscripción</p>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
+                      Nombre *
+                    </Label>
                     <Input
                       id="firstName"
                       value={formData.firstName}
                       onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                       placeholder="Tu nombre"
+                      className="h-10"
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="lastName">Apellido *</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName" className="text-sm font-medium text-gray-700">
+                      Apellido *
+                    </Label>
                     <Input
                       id="lastName"
                       value={formData.lastName}
                       onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                       placeholder="Tu apellido"
+                      className="h-10"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="email">Email *</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                      Email *
+                    </Label>
                     <Input
                       id="email"
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="tu@email.com"
+                      className="h-10"
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="phone">Teléfono *</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                      Teléfono *
+                    </Label>
                     <Input
                       id="phone"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       placeholder="+54 11 1234-5678"
+                      className="h-10"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="licenseNumber">Matrícula Profesional *</Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="licenseNumber" className="text-sm font-medium text-gray-700">
+                      Matrícula Profesional *
+                    </Label>
                     <Input
                       id="licenseNumber"
                       value={formData.licenseNumber}
                       onChange={(e) => setFormData({ ...formData, licenseNumber: e.target.value })}
                       placeholder="MP 12345"
+                      className="h-10"
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="specialty">Especialidad *</Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="specialty" className="text-sm font-medium text-gray-700">
+                      Especialidad *
+                    </Label>
                     <Select
                       value={formData.specialty}
                       onValueChange={(value) => setFormData({ ...formData, specialty: value })}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="h-10">
                         <SelectValue placeholder="Selecciona tu especialidad" />
                       </SelectTrigger>
                       <SelectContent>
@@ -283,25 +300,27 @@ export function SubscriptionModal({
                   </div>
                 </div>
 
-                <div>
-                  <Label htmlFor="institution">Institución/Consultorio</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="institution" className="text-sm font-medium text-gray-700">
+                    Institución/Consultorio
+                  </Label>
                   <Input
                     id="institution"
                     value={formData.institution}
                     onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
                     placeholder="Nombre de tu consultorio o institución"
+                    className="h-10"
                   />
                 </div>
 
-                {/* Billing Type */}
-                <div className="space-y-4">
-                  <Label>Tipo de facturación</Label>
-                  <div className="flex space-x-4">
+                <div className="space-y-3">
+                  <Label className="text-sm font-medium text-gray-700">Tipo de facturación</Label>
+                  <div className="grid grid-cols-2 gap-3">
                     <Button
                       type="button"
                       variant={formData.billingType === "individual" ? "default" : "outline"}
                       onClick={() => setFormData({ ...formData, billingType: "individual" })}
-                      className="flex-1"
+                      className="h-12 justify-start"
                     >
                       <User className="h-4 w-4 mr-2" />
                       Individual
@@ -310,7 +329,7 @@ export function SubscriptionModal({
                       type="button"
                       variant={formData.billingType === "business" ? "default" : "outline"}
                       onClick={() => setFormData({ ...formData, billingType: "business" })}
-                      className="flex-1"
+                      className="h-12 justify-start"
                     >
                       <Building className="h-4 w-4 mr-2" />
                       Empresa
@@ -319,84 +338,104 @@ export function SubscriptionModal({
                 </div>
 
                 {formData.billingType === "business" && (
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="businessName">Razón Social</Label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
+                    <div className="space-y-2">
+                      <Label htmlFor="businessName" className="text-sm font-medium text-gray-700">
+                        Razón Social
+                      </Label>
                       <Input
                         id="businessName"
                         value={formData.businessName}
                         onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
                         placeholder="Nombre de la empresa"
+                        className="h-10"
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="taxId">CUIT/RUT</Label>
+                    <div className="space-y-2">
+                      <Label htmlFor="taxId" className="text-sm font-medium text-gray-700">
+                        CUIT/RUT
+                      </Label>
                       <Input
                         id="taxId"
                         value={formData.taxId}
                         onChange={(e) => setFormData({ ...formData, taxId: e.target.value })}
                         placeholder="20-12345678-9"
+                        className="h-10"
                       />
                     </div>
                   </div>
                 )}
 
-                {/* Terms and Conditions */}
-                <div className="space-y-4 border-t pt-4">
-                  <div className="flex items-start space-x-3">
-                    <Checkbox
-                      id="acceptTerms"
-                      checked={formData.acceptTerms}
-                      onCheckedChange={(checked) => setFormData({ ...formData, acceptTerms: checked as boolean })}
-                    />
-                    <Label htmlFor="acceptTerms" className="text-sm leading-relaxed">
-                      Acepto los{" "}
-                      <a href="/terminos" className="text-blue-600 hover:underline">
-                        Términos y Condiciones
-                      </a>{" "}
-                      de uso de la plataforma *
-                    </Label>
-                  </div>
+                <div className="space-y-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <h4 className="font-medium text-blue-900">Términos y Condiciones</h4>
 
-                  <div className="flex items-start space-x-3">
-                    <Checkbox
-                      id="acceptPrivacy"
-                      checked={formData.acceptPrivacy}
-                      onCheckedChange={(checked) => setFormData({ ...formData, acceptPrivacy: checked as boolean })}
-                    />
-                    <Label htmlFor="acceptPrivacy" className="text-sm leading-relaxed">
-                      Acepto la{" "}
-                      <a href="/privacidad" className="text-blue-600 hover:underline">
-                        Política de Privacidad
-                      </a>{" "}
-                      y el tratamiento de mis datos personales *
-                    </Label>
-                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="acceptTerms"
+                        checked={formData.acceptTerms}
+                        onCheckedChange={(checked) => setFormData({ ...formData, acceptTerms: checked as boolean })}
+                        className="mt-1"
+                      />
+                      <Label htmlFor="acceptTerms" className="text-sm leading-relaxed text-gray-700">
+                        Acepto los{" "}
+                        <a href="/terminos" className="text-blue-600 hover:underline font-medium">
+                          Términos y Condiciones
+                        </a>{" "}
+                        de uso de la plataforma *
+                      </Label>
+                    </div>
 
-                  <div className="flex items-start space-x-3">
-                    <Checkbox
-                      id="acceptMarketing"
-                      checked={formData.acceptMarketing}
-                      onCheckedChange={(checked) => setFormData({ ...formData, acceptMarketing: checked as boolean })}
-                    />
-                    <Label htmlFor="acceptMarketing" className="text-sm leading-relaxed">
-                      Acepto recibir comunicaciones comerciales y novedades de PsiKit
-                    </Label>
-                  </div>
-                </div>
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="acceptPrivacy"
+                        checked={formData.acceptPrivacy}
+                        onCheckedChange={(checked) => setFormData({ ...formData, acceptPrivacy: checked as boolean })}
+                        className="mt-1"
+                      />
+                      <Label htmlFor="acceptPrivacy" className="text-sm leading-relaxed text-gray-700">
+                        Acepto la{" "}
+                        <a href="/privacidad" className="text-blue-600 hover:underline font-medium">
+                          Política de Privacidad
+                        </a>{" "}
+                        y el tratamiento de mis datos personales *
+                      </Label>
+                    </div>
 
-                <div className="flex space-x-4">
-                  <Button variant="outline" onClick={() => setStep("details")} className="flex-1">
-                    Volver
-                  </Button>
-                  <Button onClick={handleSubscribe} disabled={!isFormValid()} className="flex-1">
-                    <CreditCard className="h-4 w-4 mr-2" />
-                    Suscribirse
-                  </Button>
+                    <div className="flex items-start space-x-3">
+                      <Checkbox
+                        id="acceptMarketing"
+                        checked={formData.acceptMarketing}
+                        onCheckedChange={(checked) => setFormData({ ...formData, acceptMarketing: checked as boolean })}
+                        className="mt-1"
+                      />
+                      <Label htmlFor="acceptMarketing" className="text-sm leading-relaxed text-gray-700">
+                        Acepto recibir comunicaciones comerciales y novedades de PsiKit
+                      </Label>
+                    </div>
+                  </div>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          )}
+        </div>
+
+        <div className="px-6 py-4 border-t bg-gray-50">
+          {step === "details" ? (
+            <Button onClick={() => setStep("form")} className="w-full h-12 text-lg font-medium">
+              Continuar con la suscripción
+            </Button>
+          ) : (
+            <div className="flex space-x-3">
+              <Button variant="outline" onClick={() => setStep("details")} className="flex-1 h-12">
+                Volver
+              </Button>
+              <Button onClick={handleSubscribe} disabled={!isFormValid()} className="flex-1 h-12 text-lg font-medium">
+                <CreditCard className="h-4 w-4 mr-2" />
+                Suscribirse
+              </Button>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>
