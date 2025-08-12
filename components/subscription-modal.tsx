@@ -123,16 +123,18 @@ export function SubscriptionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl h-[85vh] flex flex-col p-0 bg-white">
+      <DialogContent className="max-w-3xl h-[85vh] flex flex-col p-0 bg-white font-serif">
         <DialogHeader className="px-6 py-4 border-b bg-gray-50 flex-shrink-0">
           <div className="flex items-center space-x-3">
             {selectedPlan.popular && (
-              <Badge className="bg-blue-600 text-white">
+              <Badge className="bg-blue-600 text-white font-sans">
                 <Star className="h-3 w-3 mr-1" />
                 Popular
               </Badge>
             )}
-            <DialogTitle className="text-xl font-semibold text-gray-900">Plan {selectedPlan.name}</DialogTitle>
+            <DialogTitle className="text-xl font-semibold text-gray-900 font-serif">
+              Plan {selectedPlan.name}
+            </DialogTitle>
           </div>
         </DialogHeader>
 
@@ -140,50 +142,50 @@ export function SubscriptionModal({
           {step === "details" ? (
             <div className="p-6">
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedPlan.name}</h3>
-                <p className="text-gray-600 mb-6">{selectedPlan.description}</p>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2 font-serif">{selectedPlan.name}</h3>
+                <p className="text-gray-600 mb-6 font-serif">{selectedPlan.description}</p>
 
                 <div className="inline-block bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-                  <div className="text-3xl font-bold text-blue-600 mb-2">{pricing.price}</div>
+                  <div className="text-3xl font-bold text-blue-600 mb-2 font-serif">{pricing.price}</div>
                   {pricing.originalPrice && (
-                    <div className="text-sm text-gray-500 line-through mb-1">{pricing.originalPrice}</div>
+                    <div className="text-sm text-gray-500 line-through mb-1 font-serif">{pricing.originalPrice}</div>
                   )}
                   {pricing.savings && (
-                    <div className="text-sm text-green-600 font-medium">Ahorras {pricing.savings}</div>
+                    <div className="text-sm text-green-600 font-medium font-serif">Ahorras {pricing.savings}</div>
                   )}
                 </div>
               </div>
 
               <div className="mb-8">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4">Características incluidas</h4>
+                <h4 className="text-lg font-semibold text-gray-900 mb-4 font-serif">Características incluidas</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {selectedPlan.features.map((feature, index) => (
                     <div key={index} className="flex items-start space-x-3">
                       <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm text-gray-700">{feature}</span>
+                      <span className="text-sm text-gray-700 font-serif">{feature}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                <h4 className="font-semibold text-green-800 mb-3">Beneficios adicionales</h4>
+                <h4 className="font-semibold text-green-800 mb-3 font-serif">Beneficios adicionales</h4>
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
                     <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                    <span className="text-sm text-green-700">Acceso instantáneo</span>
+                    <span className="text-sm text-green-700 font-serif">Acceso instantáneo</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                    <span className="text-sm text-green-700">Sin permanencia</span>
+                    <span className="text-sm text-green-700 font-serif">Sin permanencia</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                    <span className="text-sm text-green-700">Soporte incluido</span>
+                    <span className="text-sm text-green-700 font-serif">Soporte incluido</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                    <span className="text-sm text-green-700">Cancela cuando quieras</span>
+                    <span className="text-sm text-green-700 font-serif">Cancela cuando quieras</span>
                   </div>
                 </div>
               </div>
@@ -195,15 +197,15 @@ export function SubscriptionModal({
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900">Datos Profesionales</h3>
-                  <p className="text-sm text-gray-600">Completa tu información para continuar</p>
+                  <h3 className="text-xl font-semibold text-gray-900 font-serif">Datos Profesionales</h3>
+                  <p className="text-sm text-gray-600 font-serif">Completa tu información para continuar</p>
                 </div>
               </div>
 
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="firstName" className="text-sm font-medium text-gray-700 font-serif">
                       Nombre *
                     </Label>
                     <Input
@@ -211,11 +213,11 @@ export function SubscriptionModal({
                       value={formData.firstName}
                       onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
                       placeholder="Tu nombre"
-                      className="mt-1"
+                      className="mt-1 font-serif"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="lastName" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="lastName" className="text-sm font-medium text-gray-700 font-serif">
                       Apellido *
                     </Label>
                     <Input
@@ -223,14 +225,14 @@ export function SubscriptionModal({
                       value={formData.lastName}
                       onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                       placeholder="Tu apellido"
-                      className="mt-1"
+                      className="mt-1 font-serif"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="email" className="text-sm font-medium text-gray-700 font-serif">
                       Email *
                     </Label>
                     <Input
@@ -243,7 +245,7 @@ export function SubscriptionModal({
                     />
                   </div>
                   <div>
-                    <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="phone" className="text-sm font-medium text-gray-700 font-serif">
                       Teléfono *
                     </Label>
                     <Input
@@ -258,7 +260,7 @@ export function SubscriptionModal({
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="licenseNumber" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="licenseNumber" className="text-sm font-medium text-gray-700 font-serif">
                       Matrícula *
                     </Label>
                     <Input
@@ -270,7 +272,7 @@ export function SubscriptionModal({
                     />
                   </div>
                   <div>
-                    <Label htmlFor="specialty" className="text-sm font-medium text-gray-700">
+                    <Label htmlFor="specialty" className="text-sm font-medium text-gray-700 font-serif">
                       Especialidad *
                     </Label>
                     <Select
@@ -294,7 +296,7 @@ export function SubscriptionModal({
                 </div>
 
                 <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">Términos y Condiciones</h4>
+                  <h4 className="font-semibold text-gray-900 mb-3 font-serif">Términos y Condiciones</h4>
                   <div className="space-y-3">
                     <div className="flex items-start space-x-3">
                       <Checkbox
@@ -303,7 +305,7 @@ export function SubscriptionModal({
                         onCheckedChange={(checked) => setFormData({ ...formData, acceptTerms: checked as boolean })}
                         className="mt-0.5"
                       />
-                      <Label htmlFor="acceptTerms" className="text-sm text-gray-700 leading-relaxed">
+                      <Label htmlFor="acceptTerms" className="text-sm text-gray-700 leading-relaxed font-serif">
                         Acepto los{" "}
                         <a href="/terminos" className="text-blue-600 hover:underline font-medium">
                           Términos y Condiciones
@@ -319,7 +321,7 @@ export function SubscriptionModal({
                         onCheckedChange={(checked) => setFormData({ ...formData, acceptPrivacy: checked as boolean })}
                         className="mt-0.5"
                       />
-                      <Label htmlFor="acceptPrivacy" className="text-sm text-gray-700 leading-relaxed">
+                      <Label htmlFor="acceptPrivacy" className="text-sm text-gray-700 leading-relaxed font-serif">
                         Acepto la{" "}
                         <a href="/privacidad" className="text-blue-600 hover:underline font-medium">
                           Política de Privacidad
@@ -338,12 +340,11 @@ export function SubscriptionModal({
           {step === "details" ? (
             <div className="space-y-4">
               {selectedPlan.price === 0 ? (
-                <Button onClick={() => setStep("form")} className="w-full h-12 text-base font-semibold">
+                <Button onClick={() => setStep("form")} className="w-full h-12 text-base font-semibold font-serif">
                   Activar Plan Gratuito
                 </Button>
               ) : (
                 <>
-                  {/* Payment Card */}
                   <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-6 text-white shadow-lg">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center space-x-2">
@@ -351,14 +352,14 @@ export function SubscriptionModal({
                           <CreditCard className="h-5 w-5" />
                         </div>
                         <div>
-                          <h4 className="font-semibold">Pago Seguro</h4>
-                          <p className="text-blue-100 text-sm">Procesado por MercadoPago</p>
+                          <h4 className="font-semibold font-serif">Pago Seguro</h4>
+                          <p className="text-blue-100 text-sm font-serif">Procesado por MercadoPago</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-2xl font-bold">{pricing.total}</div>
+                        <div className="text-2xl font-bold font-serif">{pricing.total}</div>
                         {pricing.originalPrice && (
-                          <div className="text-blue-200 text-sm line-through">{pricing.originalPrice}</div>
+                          <div className="text-blue-200 text-sm line-through font-serif">{pricing.originalPrice}</div>
                         )}
                       </div>
                     </div>
@@ -366,17 +367,17 @@ export function SubscriptionModal({
                     <div className="flex items-center justify-between text-sm text-blue-100 mb-4">
                       <div className="flex items-center space-x-1">
                         <Shield className="h-4 w-4" />
-                        <span>Pago 100% seguro</span>
+                        <span className="font-serif">Pago 100% seguro</span>
                       </div>
                       <div className="flex items-center space-x-1">
                         <Clock className="h-4 w-4" />
-                        <span>Activación inmediata</span>
+                        <span className="font-serif">Activación inmediata</span>
                       </div>
                     </div>
 
                     <Button
                       onClick={handleMercadoPagoSubscription}
-                      className="w-full h-12 bg-white text-blue-700 hover:bg-blue-50 font-bold text-lg shadow-md transition-all duration-200 hover:shadow-lg"
+                      className="w-full h-12 bg-white text-blue-700 hover:bg-blue-50 font-bold text-lg shadow-md transition-all duration-200 hover:shadow-lg font-serif"
                     >
                       PAGAR AHORA CON MERCADOPAGO
                     </Button>
@@ -385,7 +386,7 @@ export function SubscriptionModal({
                   <Button
                     variant="outline"
                     onClick={() => setStep("form")}
-                    className="w-full h-10 text-sm border-gray-300 hover:bg-gray-50"
+                    className="w-full h-10 text-sm border-gray-300 hover:bg-gray-50 font-serif"
                   >
                     Completar datos profesionales primero
                   </Button>
@@ -393,25 +394,25 @@ export function SubscriptionModal({
                   <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
                     <div className="flex items-center space-x-1">
                       <Shield className="h-3 w-3" />
-                      <span>SSL Seguro</span>
+                      <span className="font-serif">SSL Seguro</span>
                     </div>
                     <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
-                    <span>Sin permanencia</span>
+                    <span className="font-serif">Sin permanencia</span>
                     <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
-                    <span>Cancela cuando quieras</span>
+                    <span className="font-serif">Cancela cuando quieras</span>
                   </div>
                 </>
               )}
             </div>
           ) : (
             <div className="flex space-x-3">
-              <Button variant="outline" onClick={() => setStep("details")} className="flex-1 h-12">
+              <Button variant="outline" onClick={() => setStep("details")} className="flex-1 h-12 font-serif">
                 Volver
               </Button>
               <Button
                 onClick={handleMercadoPagoSubscription}
                 disabled={!isFormValid()}
-                className="flex-1 h-12 font-semibold bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+                className="flex-1 h-12 font-semibold bg-blue-600 hover:bg-blue-700 disabled:opacity-50 font-serif"
               >
                 <CreditCard className="h-4 w-4 mr-2" />
                 Pagar - {pricing.total}
@@ -423,3 +424,4 @@ export function SubscriptionModal({
     </Dialog>
   )
 }
+</merged_code>
