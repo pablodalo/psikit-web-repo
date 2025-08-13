@@ -182,10 +182,6 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
                         <ArrowRight className="h-4 w-4 ml-2" />
                       </Button>
                     </div>
-
-                    {plan.maxPatients !== "unlimited" && (
-                      <p className="text-xs text-gray-500 text-center mt-4">Hasta {plan.maxPatients} pacientes</p>
-                    )}
                   </CardContent>
                 </Card>
               )
