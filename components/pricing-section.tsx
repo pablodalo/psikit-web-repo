@@ -212,9 +212,7 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
             </div>
 
             {showRegionalPricing && (
-              <p className="text-sm text-gray-500 mt-8">
-                Precios mostrados en moneda local para {currentRegion.charAt(0).toUpperCase() + currentRegion.slice(1)}
-              </p>
+              <p className="text-sm text-gray-500 mt-8">Precios exhibidos en moneda local Argentina</p>
             )}
           </div>
         </div>
