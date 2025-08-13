@@ -61,6 +61,10 @@ export default function HomePage() {
             Tu consultorio psicológico
             <span className="text-blue-600"> en cualquier lugar</span>
           </h1>
+          <p className="text-xl text-gray-600 mb-4 max-w-3xl mx-auto">
+            Diseñada específicamente para psicólogos que buscan digitalizar y optimizar su práctica clínica. Desde la
+            gestión de pacientes hasta las sesiones virtuales, todo lo que necesitas en un solo lugar.
+          </p>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
             Gestiona tu práctica profesional con una plataforma completa: historia clínica, agenda, pagos, gestión de
             pacientes y recordatorios, todo en un mismo lugar.
@@ -82,7 +86,6 @@ export default function HomePage() {
 
       <section className="py-16 px-4 bg-white">
         <div className="container mx-auto text-center max-w-4xl">
-          <h2 className="text-3xl font-bold mb-8">Una plataforma completa para profesionales</h2>
           <p className="text-lg text-gray-600 mb-12 leading-relaxed">
             Diseñada específicamente para psicólogos que buscan digitalizar y optimizar su práctica clínica. Desde la
             gestión de pacientes hasta las sesiones virtuales, todo lo que necesitas en un solo lugar.
