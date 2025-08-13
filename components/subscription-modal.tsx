@@ -123,58 +123,62 @@ export function SubscriptionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col p-0 bg-white font-sans">
-        <DialogHeader className="px-6 py-4 border-b bg-gray-50 flex-shrink-0">
-          <div className="flex items-center space-x-3">
-            {selectedPlan.popular && (
-              <Badge className="bg-blue-600 text-white font-sans">
-                <Star className="h-3 w-3 mr-1" />
-                Popular
-              </Badge>
-            )}
-            <DialogTitle className="text-xl font-semibold text-gray-900 font-sans">
-              Plan {selectedPlan.name}
-            </DialogTitle>
+      <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-0 bg-white font-sans overflow-hidden">
+        <DialogHeader className="px-6 py-5 border-b bg-gradient-to-r from-blue-50 to-indigo-50 flex-shrink-0">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              {selectedPlan.popular && (
+                <Badge className="bg-blue-600 text-white font-sans text-xs px-2 py-1">
+                  <Star className="h-3 w-3 mr-1" />
+                  Popular
+                </Badge>
+              )}
+              <DialogTitle className="text-2xl font-bold text-gray-900 font-sans">Plan {selectedPlan.name}</DialogTitle>
+            </div>
           </div>
         </DialogHeader>
 
-        <div className="flex-1">
+        <div className="flex-1 overflow-y-auto">
           {step === "details" ? (
-            <div className="p-6">
-              <div className="text-center mb-6">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2 font-sans">{selectedPlan.name}</h3>
-                <p className="text-gray-600 mb-4 font-sans">{selectedPlan.description}</p>
+            <div className="p-6 space-y-6">
+              <div className="text-center">
+                <p className="text-gray-600 mb-6 text-lg font-sans">{selectedPlan.description}</p>
 
                 {selectedPlan.price === 0 ? (
-                  <div className="inline-block bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-                    <div className="text-2xl font-bold text-green-600 font-sans">Gratis</div>
+                  <div className="inline-block bg-green-50 border-2 border-green-200 rounded-xl p-6 mb-6">
+                    <div className="text-3xl font-bold text-green-600 font-sans">Gratis</div>
+                    <div className="text-sm text-green-600 mt-1 font-sans">Plan gratuito</div>
                   </div>
                 ) : (
                   <button
                     onClick={handleMercadoPagoSubscription}
-                    className="inline-block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg p-4 mb-4 transition-all duration-200 hover:shadow-lg cursor-pointer transform hover:scale-105"
+                    className="inline-block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl p-6 mb-6 transition-all duration-300 hover:shadow-xl cursor-pointer transform hover:scale-105 border-2 border-blue-600 hover:border-blue-700"
                   >
-                    <div className="text-2xl font-bold mb-1 font-sans">{pricing.price}</div>
+                    <div className="text-3xl font-bold mb-2 font-sans">{pricing.price}</div>
                     {pricing.originalPrice && (
                       <div className="text-sm text-blue-100 line-through mb-1 font-sans">{pricing.originalPrice}</div>
                     )}
                     {pricing.savings && (
-                      <div className="text-sm text-blue-100 font-medium font-sans">Ahorras {pricing.savings}</div>
+                      <div className="text-sm text-blue-100 font-medium mb-2 font-sans">Ahorras {pricing.savings}</div>
                     )}
-                    <div className="text-xs text-blue-100 mt-2 font-sans">Click para pagar con MercadoPago</div>
+                    <div className="text-sm text-blue-100 font-medium font-sans">Click para pagar con MercadoPago</div>
                   </button>
                 )}
               </div>
 
-              <div className="mb-4">
-                <h4 className="text-base font-semibold text-gray-900 mb-3 font-sans">Accede a</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {selectedPlan.features.map((feature, index) => (
-                    <div key={index} className="flex items-start space-x-2">
-                      <Check className="h-3 w-3 text-green-600 mt-1 flex-shrink-0" />
-                      <span className="text-xs text-gray-700 font-sans">{feature}</span>
-                    </div>
-                  ))}
+              <div>
+                <h4 className="text-xl font-bold text-gray-900 mb-4 text-center font-sans">Funcionalidades</h4>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="grid grid-cols-1 gap-3">
+                    {selectedPlan.features.map((feature, index) => (
+                      <div key={index} className="flex items-start space-x-3 p-2">
+                        <div className="bg-green-100 rounded-full p-1 mt-0.5">
+                          <Check className="h-3 w-3 text-green-600" />
+                        </div>
+                        <span className="text-sm text-gray-700 font-sans leading-relaxed">{feature}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -324,11 +328,14 @@ export function SubscriptionModal({
           )}
         </div>
 
-        <div className="px-6 py-4 border-t bg-gray-50 flex-shrink-0">
+        <div className="px-6 py-5 border-t bg-gray-50 flex-shrink-0">
           {step === "details" ? (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {selectedPlan.price === 0 ? (
-                <Button onClick={() => setStep("form")} className="w-full h-12 text-base font-semibold font-sans">
+                <Button
+                  onClick={() => setStep("form")}
+                  className="w-full h-12 text-base font-semibold font-sans bg-blue-600 hover:bg-blue-700"
+                >
                   Activar Plan Gratuito
                 </Button>
               ) : (
@@ -336,19 +343,17 @@ export function SubscriptionModal({
                   <Button
                     variant="outline"
                     onClick={() => setStep("form")}
-                    className="w-full h-10 text-sm border-gray-300 hover:bg-gray-50 font-sans"
+                    className="w-full h-11 text-sm border-gray-300 hover:bg-gray-50 font-sans"
                   >
                     Completar datos profesionales primero
                   </Button>
 
-                  <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
+                  <div className="flex items-center justify-center space-x-6 text-xs text-gray-500">
                     <div className="flex items-center space-x-1">
                       <Shield className="h-3 w-3" />
                       <span className="font-sans">SSL Seguro</span>
                     </div>
-                    <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
                     <span className="font-sans">Sin permanencia</span>
-                    <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
                     <span className="font-sans">Cancela cuando quieras</span>
                   </div>
                 </>
