@@ -79,11 +79,13 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
 
   return (
     <>
-      <section className={`py-16 px-4 ${compact ? "bg-transparent" : "bg-gray-50"}`}>
+      <section className={`py-12 px-4 ${compact ? "bg-transparent" : "bg-gray-50"}`}>
         <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Membresías Flexibles</h2>
-            <p className="text-gray-600 mb-8">Solo los profesionales pagan. Los pacientes acceden gratis siempre.</p>
+          <div className="text-center mb-10">
+            <h2 className="text-3xl font-bold mb-3">Membresías Flexibles</h2>
+            <p className="text-gray-600 mb-8">
+              Planes diseñados para profesionales. Tus pacientes siempre acceden sin costo.
+            </p>
 
             {/* Toggle Anual/Mensual */}
             <div className="flex items-center justify-center space-x-4 mb-8">
