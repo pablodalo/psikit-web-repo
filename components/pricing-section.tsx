@@ -119,12 +119,14 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
 
                   <CardHeader className="text-center pb-6 pt-8 relative z-10">
                     <CardTitle className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</CardTitle>
-                    <CardDescription className="text-gray-600 text-base">{plan.description}</CardDescription>
+                    <CardDescription className="text-gray-600 text-base text-center">
+                      {plan.description}
+                    </CardDescription>
 
-                    <div className="py-6">
+                    <div className="py-6 text-center">
                       <div className="text-4xl font-bold text-gray-900 mb-2">{pricing.price}</div>
                       {pricing.originalPrice && (
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-500 text-center">
                           <span className="line-through">{pricing.originalPrice}</span>
                           {pricing.savings && (
                             <span className="text-green-600 ml-2 font-medium">Ahorras {pricing.savings}</span>
@@ -134,8 +136,8 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
                     </div>
                   </CardHeader>
 
-                  <CardContent className="px-6 pb-8 relative z-10">
-                    <ul className="space-y-4 mb-8">
+                  <CardContent className="px-6 pb-8 relative z-10 text-center">
+                    <ul className="space-y-4 mb-8 text-left">
                       {plan.features.slice(0, 4).map((feature, index) => (
                         <li key={index} className="flex items-start space-x-3">
                           <div className="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
@@ -145,7 +147,7 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
                         </li>
                       ))}
                       {plan.features.length > 4 && (
-                        <li className="text-sm text-blue-600 font-medium pl-8">
+                        <li className="text-sm text-blue-600 font-medium text-center">
                           +{plan.features.length - 4} características más
                         </li>
                       )}
