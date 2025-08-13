@@ -167,7 +167,7 @@ export function SubscriptionModal({
               </div>
 
               <div className="mb-4">
-                <h4 className="text-base font-semibold text-gray-900 mb-3 font-sans">Características incluidas</h4>
+                <h4 className="text-base font-semibold text-gray-900 mb-3 font-sans">Accede a</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {selectedPlan.features.map((feature, index) => (
                     <div key={index} className="flex items-start space-x-2">
@@ -175,28 +175,6 @@ export function SubscriptionModal({
                       <span className="text-xs text-gray-700 font-sans">{feature}</span>
                     </div>
                   ))}
-                </div>
-              </div>
-
-              <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                <h4 className="font-semibold text-green-800 mb-2 text-sm font-sans">Beneficios adicionales</h4>
-                <div className="grid grid-cols-2 gap-1">
-                  <div className="flex items-center space-x-1">
-                    <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                    <span className="text-xs text-green-700 font-sans">Acceso instantáneo</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                    <span className="text-xs text-green-700 font-sans">Sin permanencia</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                    <span className="text-xs text-green-700 font-sans">Soporte incluido</span>
-                  </div>
-                  <div className="flex items-center space-x-1">
-                    <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                    <span className="text-xs text-green-700 font-sans">Cancela cuando quieras</span>
-                  </div>
                 </div>
               </div>
             </div>
