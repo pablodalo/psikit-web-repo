@@ -109,7 +109,7 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
                   onClick={() => handlePlanClick(plan)}
                 >
                   {plan.popular && (
-                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                    <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-10">
                       <Badge className="bg-blue-500 text-white px-6 py-2 shadow-lg rounded-full text-sm font-medium">
                         <Star className="h-4 w-4 mr-1 fill-current" />
                         Más Popular
@@ -117,7 +117,7 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
                     </div>
                   )}
 
-                  <CardHeader className="text-center pb-6 pt-8 relative z-10">
+                  <CardHeader className="text-center pb-6 pt-12 relative z-10">
                     <CardTitle className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</CardTitle>
                     <CardDescription className="text-gray-600 text-base text-center">
                       {plan.description}
