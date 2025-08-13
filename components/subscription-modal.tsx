@@ -26,6 +26,7 @@ export function SubscriptionModal({
   isAnnual,
   showRegionalPricing,
 }: SubscriptionModalProps) {
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "annual">(isAnnual ? "annual" : "monthly")
   const [step, setStep] = useState<"details" | "form">("details")
   const [formData, setFormData] = useState({
     firstName: "",
@@ -49,9 +50,11 @@ export function SubscriptionModal({
   if (!selectedPlan) return null
 
   const formatPrice = () => {
+    const isAnnualBilling = billingCycle === "annual"
+
     if (showRegionalPricing) {
       const formatted = pricingManager.formatPrice(selectedPlan.id)
-      if (isAnnual && selectedPlan.price > 0) {
+      if (isAnnualBilling && selectedPlan.price > 0) {
         const { annualPrice, savings } = pricingManager.calculateAnnualDiscount(selectedPlan.id)
         const { currency } = pricingManager.getPricingForRegion(selectedPlan.id)
         const formatter = new Intl.NumberFormat("es", {
@@ -74,7 +77,7 @@ export function SubscriptionModal({
       return { price: "Gratis", total: "Gratis" }
     }
 
-    if (isAnnual) {
+    if (isAnnualBilling) {
       const monthlyPrice = selectedPlan.id === "professional" ? 16.5 : selectedPlan.price
       const annualPrice = Math.round(monthlyPrice * 12 * 0.8)
       return {
@@ -95,7 +98,7 @@ export function SubscriptionModal({
     const subscriptionData = {
       plan: selectedPlan,
       formData,
-      isAnnual,
+      isAnnual: billingCycle === "annual",
       pricing,
     }
 
@@ -136,6 +139,31 @@ export function SubscriptionModal({
               <DialogTitle className="text-2xl font-bold text-gray-900 font-sans">Plan {selectedPlan.name}</DialogTitle>
             </div>
           </div>
+          {selectedPlan.price > 0 && (
+            <div className="flex items-center justify-center mt-4">
+              <div className="bg-white rounded-lg p-1 border border-gray-200 shadow-sm">
+                <button
+                  onClick={() => setBillingCycle("monthly")}
+                  className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
+                    billingCycle === "monthly"
+                      ? "bg-blue-600 text-white shadow-sm"
+                      : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  Mensual
+                </button>
+                <button
+                  onClick={() => setBillingCycle("annual")}
+                  className={`px-4 py-2 text-sm font-medium rounded-md transition-all ${
+                    billingCycle === "annual" ? "bg-blue-600 text-white shadow-sm" : "text-gray-600 hover:text-gray-900"
+                  }`}
+                >
+                  Anual
+                  <span className="ml-1 text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded">-20%</span>
+                </button>
+              </div>
+            </div>
+          )}
         </DialogHeader>
 
         <div className="flex-1 overflow-y-auto">
