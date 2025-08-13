@@ -12,8 +12,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Brain, Calendar, Users, FileText, CreditCard, Video, Settings, Home, Bell, LogOut, User } from "lucide-react"
+import { Calendar, Users, FileText, CreditCard, Video, Settings, Home, Bell, LogOut, User } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
+import Image from "next/image"
 
 interface NavigationProps {
   userType: "psicologo" | "paciente"
@@ -61,8 +62,7 @@ export function Navigation({ userType }: NavigationProps) {
     <nav className="w-64 bg-white border-r min-h-screen">
       <div className="p-6">
         <Link href="/" className="flex items-center space-x-2 mb-8">
-          <Brain className="h-8 w-8 text-blue-600" />
-          <span className="text-xl font-bold">PsiKit</span>
+          <Image src="/psikit-logo.png" alt="PsiKit Logo" width={120} height={40} className="h-10 w-auto" />
         </Link>
 
         {user && (
@@ -70,7 +70,7 @@ export function Navigation({ userType }: NavigationProps) {
             <div className="flex items-center space-x-3">
               <Avatar className="h-10 w-10">
                 <AvatarImage src="/placeholder.svg?height=40&width=40" />
-                <AvatarFallback className="bg-blue-100 text-blue-600">{getUserInitials(user.name)}</AvatarFallback>
+                <AvatarFallback className="bg-sky-100 text-sky-600">{getUserInitials(user.name)}</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
@@ -89,7 +89,7 @@ export function Navigation({ userType }: NavigationProps) {
               <Link key={item.href} href={item.href} onClick={() => handleNavClick(item.href, item.label)}>
                 <Button
                   variant={isActive ? "default" : "ghost"}
-                  className={cn("w-full justify-start", isActive && "bg-blue-600 text-white hover:bg-blue-700")}
+                  className={cn("w-full justify-start", isActive && "bg-sky-500 text-white hover:bg-sky-600")}
                 >
                   <IconComponent className="h-4 w-4 mr-3" />
                   {item.label}

@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Brain, Calendar, Users, FileText, CreditCard, Video, Shield, Globe } from "lucide-react"
+import { Calendar, Users, FileText, CreditCard, Video, Shield, Globe, Heart } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { PricingSection } from "@/components/pricing-section"
+import Image from "next/image"
 
 export default function HomePage() {
   const { user, logout } = useAuth()
@@ -26,13 +27,12 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-sky-50 to-blue-100">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Brain className="h-8 w-8 text-blue-600" />
-            <span className="text-2xl font-bold text-gray-900">PsiKit</span>
+            <Image src="/psikit-logo.png" alt="PsiKit Logo" width={120} height={40} className="h-8 w-auto" />
           </div>
           <div className="flex items-center space-x-4">
             {user?.isAuthenticated ? (
@@ -56,19 +56,19 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
-          <Badge className="mb-4 bg-blue-100 text-blue-800 hover:bg-blue-100">Consultorio Virtual Completo</Badge>
+          <Badge className="mb-4 bg-sky-100 text-sky-800 hover:bg-sky-100">Consultorio Virtual Completo</Badge>
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
-            Tu consultorio psicológico
-            <span className="text-blue-600"> en cualquier lugar</span>
+            Tu consultorio,
+            <span className="text-sky-500"> siempre con vos</span>
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Plataforma integral para psicólogos de Latinoamérica. Sesiones virtuales, gestión de pacientes, historia
-            clínica, pagos y mucho más en un solo lugar.
+            Llevá tu práctica profesional a cualquier parte del mundo con una plataforma diseñada para psicólogos:
+            historia clínica, agenda, pagos, gestión de pacientes y recordatorios, todo en un mismo lugar.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-sky-500 hover:bg-sky-600"
               onClick={() => handleUserTypeSelection("psicologo")}
             >
               Soy Psicólogo
@@ -80,6 +80,66 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* New Presentation Section */}
+      <section className="py-16 px-4 bg-white">
+        <div className="container mx-auto text-center max-w-4xl">
+          <h2 className="text-3xl font-bold mb-8">Organizá, conectá y potenciá tu práctica clínica</h2>
+          <p className="text-lg text-gray-600 mb-12 leading-relaxed">
+            Desde un solo espacio seguro y fácil de usar. Realizá sesiones virtuales de alta calidad, gestioná tu agenda
+            y recordatorios, almacená historias clínicas de manera segura y llevá el control de pagos y comprobantes.
+          </p>
+          <p className="text-lg text-gray-600 mb-8">
+            <strong>
+              Con nuestra solución, podés llevar tu consultorio a donde estés, sin perder cercanía con tus pacientes.
+            </strong>
+          </p>
+        </div>
+      </section>
+
+      {/* Updated Benefits Section */}
+      <section className="py-16 px-4 bg-sky-50">
+        <div className="container mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-12">Beneficios Destacados</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <div className="text-center">
+              <div className="text-4xl mb-4">📅</div>
+              <h3 className="text-xl font-semibold mb-3">Agenda inteligente</h3>
+              <p className="text-gray-600">Programá, cancelá y reprogramá citas en segundos.</p>
+            </div>
+
+            <div className="text-center">
+              <div className="text-4xl mb-4">💳</div>
+              <h3 className="text-xl font-semibold mb-3">Gestión de pagos</h3>
+              <p className="text-gray-600">Integrá cobros y facturación sin complicaciones.</p>
+            </div>
+
+            <div className="text-center">
+              <div className="text-4xl mb-4">📂</div>
+              <h3 className="text-xl font-semibold mb-3">Historia clínica segura</h3>
+              <p className="text-gray-600">Acceso rápido y protegido a la información de tus pacientes.</p>
+            </div>
+
+            <div className="text-center">
+              <div className="text-4xl mb-4">🔔</div>
+              <h3 className="text-xl font-semibold mb-3">Recordatorios automáticos</h3>
+              <p className="text-gray-600">Avisos por mail o WhatsApp para reducir ausencias.</p>
+            </div>
+
+            <div className="text-center">
+              <div className="text-4xl mb-4">🌎</div>
+              <h3 className="text-xl font-semibold mb-3">Sesiones virtuales sin límites</h3>
+              <p className="text-gray-600">Videollamadas seguras, estés donde estés.</p>
+            </div>
+
+            <div className="text-center">
+              <Heart className="h-12 w-12 text-sky-500 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold mb-3">Soporte especializado</h3>
+              <p className="text-gray-600">Acompañamiento técnico pensado para profesionales de la salud.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features Grid */}
       <section className="py-16 px-4 bg-white">
         <div className="container mx-auto">
@@ -87,7 +147,7 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="text-center">
               <CardHeader>
-                <Video className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <Video className="h-12 w-12 text-sky-500 mx-auto mb-4" />
                 <CardTitle>Sesiones Virtuales</CardTitle>
               </CardHeader>
               <CardContent>
@@ -157,7 +217,7 @@ export default function HomePage() {
 
             <Card className="text-center">
               <CardHeader>
-                <Brain className="h-12 w-12 text-pink-600 mx-auto mb-4" />
+                <Heart className="h-12 w-12 text-pink-600 mx-auto mb-4" />
                 <CardTitle>Comunidad Profesional</CardTitle>
               </CardHeader>
               <CardContent>
@@ -181,10 +241,15 @@ export default function HomePage() {
       <footer className="bg-gray-900 text-white py-12 px-4">
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <Brain className="h-6 w-6" />
-            <span className="text-xl font-bold">PsiKit</span>
+            <Image
+              src="/psikit-logo.png"
+              alt="PsiKit Logo"
+              width={100}
+              height={32}
+              className="h-6 w-auto brightness-0 invert"
+            />
           </div>
-          <p className="text-gray-400 mb-4">Transformando la práctica psicológica en Latinoamérica</p>
+          <p className="text-gray-400 mb-4">Psicología real con soporte digital</p>
           <div className="flex justify-center space-x-6 text-sm text-gray-400">
             <Link href="/privacidad" className="hover:text-white">
               Privacidad
