@@ -79,83 +79,85 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
 
   return (
     <>
-      <section className={`py-12 px-4 ${compact ? "bg-transparent" : "bg-gray-50"}`}>
+      <section className={`py-12 px-4 ${compact ? "bg-transparent" : "bg-white"}`}>
         <div className="container mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold mb-3">Membresías Flexibles</h2>
-            <p className="text-gray-600 mb-8">
-              Planes diseñados para profesionales. Tus pacientes siempre acceden sin costo.
-            </p>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">Membresías Flexibles</h2>
+            <p className="text-lg text-gray-600 mb-8">Planes diseñados para profesionales</p>
 
             {/* Toggle Anual/Mensual */}
             <div className="flex items-center justify-center space-x-4 mb-8">
-              <span className={`text-sm ${!isAnnual ? "font-medium" : "text-gray-600"}`}>Mensual</span>
+              <span className={`text-sm ${!isAnnual ? "font-medium text-gray-900" : "text-gray-500"}`}>Mensual</span>
               <Switch checked={isAnnual} onCheckedChange={setIsAnnual} />
-              <span className={`text-sm ${isAnnual ? "font-medium" : "text-gray-600"}`}>Anual</span>
+              <span className={`text-sm ${isAnnual ? "font-medium text-gray-900" : "text-gray-500"}`}>Anual</span>
               {isAnnual && <Badge className="bg-green-100 text-green-800 ml-2">Ahorra 20%</Badge>}
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {pricingPlans.map((plan) => {
               const pricing = formatPrice(plan)
 
               return (
                 <Card
                   key={plan.id}
-                  className={`relative cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-105 transform ${
-                    plan.popular ? "border-sky-500 border-2 scale-105 shadow-lg" : "hover:border-sky-300"
-                  } ${compact ? "h-auto" : ""} group`}
+                  className={`relative cursor-pointer transition-all duration-300 hover:shadow-2xl transform border-0 shadow-lg ${
+                    plan.popular
+                      ? "ring-2 ring-blue-500 scale-105 bg-gradient-to-br from-blue-50 to-white"
+                      : "hover:scale-102 bg-white hover:shadow-xl"
+                  } rounded-2xl overflow-hidden group`}
                   onClick={() => handlePlanClick(plan)}
                 >
                   {plan.popular && (
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                      <Badge className="bg-sky-500 text-white px-4 py-1 shadow-lg">
-                        <Star className="h-3 w-3 mr-1" />
+                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                      <Badge className="bg-blue-500 text-white px-6 py-2 shadow-lg rounded-full text-sm font-medium">
+                        <Star className="h-4 w-4 mr-1 fill-current" />
                         Más Popular
                       </Badge>
                     </div>
                   )}
 
-                  <div className="absolute inset-0 bg-sky-50 opacity-0 group-hover:opacity-10 transition-opacity duration-300 rounded-lg pointer-events-none" />
+                  <CardHeader className="text-center pb-6 pt-8 relative z-10">
+                    <CardTitle className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</CardTitle>
+                    <CardDescription className="text-gray-600 text-base">{plan.description}</CardDescription>
 
-                  <CardHeader className="text-center pb-4 relative z-10">
-                    <CardTitle className="text-xl group-hover:text-sky-500 transition-colors">{plan.name}</CardTitle>
-                    <CardDescription className="group-hover:text-gray-700 transition-colors">
-                      {plan.description}
-                    </CardDescription>
-
-                    <div className="py-4">
-                      <div className="text-3xl font-bold text-gray-900 group-hover:text-sky-500 transition-colors">
-                        {pricing.price}
-                      </div>
+                    <div className="py-6">
+                      <div className="text-4xl font-bold text-gray-900 mb-2">{pricing.price}</div>
                       {pricing.originalPrice && (
                         <div className="text-sm text-gray-500">
                           <span className="line-through">{pricing.originalPrice}</span>
-                          {pricing.savings && <span className="text-green-600 ml-2">Ahorras {pricing.savings}</span>}
+                          {pricing.savings && (
+                            <span className="text-green-600 ml-2 font-medium">Ahorras {pricing.savings}</span>
+                          )}
                         </div>
                       )}
                     </div>
                   </CardHeader>
 
-                  <CardContent className="space-y-4 relative z-10">
-                    <ul className="space-y-3">
+                  <CardContent className="px-6 pb-8 relative z-10">
+                    <ul className="space-y-4 mb-8">
                       {plan.features.slice(0, 4).map((feature, index) => (
-                        <li key={index} className="flex items-start space-x-2">
-                          <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                          <span className="text-sm text-gray-600">{feature}</span>
+                        <li key={index} className="flex items-start space-x-3">
+                          <div className="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                            <Check className="h-3 w-3 text-green-600" />
+                          </div>
+                          <span className="text-gray-700 text-sm leading-relaxed">{feature}</span>
                         </li>
                       ))}
                       {plan.features.length > 4 && (
-                        <li className="text-sm text-sky-500 font-medium group-hover:text-sky-600 transition-colors">
+                        <li className="text-sm text-blue-600 font-medium pl-8">
                           +{plan.features.length - 4} características más
                         </li>
                       )}
                     </ul>
 
-                    <div className="pt-4 space-y-2">
+                    <div className="space-y-3">
                       <Button
-                        className={`w-full transition-all duration-200 ${plan.buttonVariant === "outline" ? "bg-transparent group-hover:bg-sky-50" : "group-hover:shadow-lg"}`}
+                        className={`w-full h-12 text-base font-medium transition-all duration-200 rounded-xl ${
+                          plan.buttonVariant === "outline"
+                            ? "border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 text-gray-900"
+                            : "bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl"
+                        }`}
                         variant={plan.buttonVariant}
                         onClick={(e) => {
                           e.stopPropagation()
@@ -168,51 +170,51 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="w-full text-sky-500 hover:text-sky-600 hover:bg-sky-50 transition-all duration-200"
+                        className="w-full text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-all duration-200 rounded-xl"
                         onClick={(e) => {
                           e.stopPropagation()
                           handlePlanClick(plan)
                         }}
                       >
                         Ver detalles completos
-                        <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                        <ArrowRight className="h-4 w-4 ml-2" />
                       </Button>
                     </div>
 
                     {plan.maxPatients !== "unlimited" && (
-                      <p className="text-xs text-gray-500 text-center">Hasta {plan.maxPatients} pacientes</p>
+                      <p className="text-xs text-gray-500 text-center mt-4">Hasta {plan.maxPatients} pacientes</p>
                     )}
                   </CardContent>
-
-                  <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                    <div className="bg-sky-500 text-white rounded-full p-1">
-                      <ArrowRight className="h-3 w-3" />
-                    </div>
-                  </div>
                 </Card>
               )
             })}
           </div>
 
           {/* Información adicional */}
-          <div className="text-center mt-12">
-            <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto text-sm text-gray-600">
-              <div className="flex items-center justify-center space-x-2">
-                <Check className="h-4 w-4 text-green-600" />
-                <span>Sin permanencia</span>
+          <div className="text-center mt-16">
+            <div className="grid md:grid-cols-3 gap-8 max-w-2xl mx-auto">
+              <div className="flex items-center justify-center space-x-3">
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <Check className="h-4 w-4 text-green-600" />
+                </div>
+                <span className="text-gray-700 font-medium">Sin permanencia</span>
               </div>
-              <div className="flex items-center justify-center space-x-2">
-                <Check className="h-4 w-4 text-green-600" />
-                <span>Cancela cuando quieras</span>
+              <div className="flex items-center justify-center space-x-3">
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <Check className="h-4 w-4 text-green-600" />
+                </div>
+                <span className="text-gray-700 font-medium">Cancela cuando quieras</span>
               </div>
-              <div className="flex items-center justify-center space-x-2">
-                <Check className="h-4 w-4 text-green-600" />
-                <span>Soporte incluido</span>
+              <div className="flex items-center justify-center space-x-3">
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <Check className="h-4 w-4 text-green-600" />
+                </div>
+                <span className="text-gray-700 font-medium">Soporte incluido</span>
               </div>
             </div>
 
             {showRegionalPricing && (
-              <p className="text-xs text-gray-500 mt-6">
+              <p className="text-sm text-gray-500 mt-8">
                 Precios mostrados en moneda local para {currentRegion.charAt(0).toUpperCase() + currentRegion.slice(1)}
               </p>
             )}
