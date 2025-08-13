@@ -10,8 +10,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Brain, User, Stethoscope, Eye, EyeOff } from "lucide-react"
+import { User, Stethoscope, Eye, EyeOff } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
+import { PsiKitLogo } from "@/components/psikit-logo"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -83,7 +84,7 @@ export default function LoginPage() {
         {/* Header */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center space-x-2 mb-4">
-            <Brain className="h-8 w-8 text-blue-600" />
+            <PsiKitLogo />
             <span className="text-2xl font-bold text-gray-900">PsiKit</span>
           </Link>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Iniciar Sesión</h1>

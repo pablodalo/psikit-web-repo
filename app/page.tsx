@@ -5,9 +5,10 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Calendar, Users, FileText, CreditCard, Video, Shield, Globe, Heart, Brain } from "lucide-react"
+import { Calendar, Users, FileText, CreditCard, Video, Shield, Globe, Heart } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { PricingSection } from "@/components/pricing-section"
+import { PsiKitLogo } from "@/components/psikit-logo"
 
 export default function HomePage() {
   const { user, logout } = useAuth()
@@ -31,7 +32,7 @@ export default function HomePage() {
       <header className="border-b bg-white">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Brain className="h-8 w-8 text-blue-600" />
+            <PsiKitLogo />
             <span className="text-xl font-bold">PsiKit</span>
           </div>
           <div className="flex items-center space-x-4">
@@ -179,7 +180,7 @@ export default function HomePage() {
       <footer className="bg-gray-900 text-white py-12 px-4">
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <Brain className="h-6 w-6 text-white" />
+            <PsiKitLogo className="h-6 w-6 text-white" />
             <span className="text-lg font-bold">PsiKit</span>
           </div>
           <p className="text-gray-400 mb-4">Tu consultorio psicológico digital</p>
