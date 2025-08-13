@@ -45,7 +45,7 @@ export default function HomePage() {
                   <Button variant="ghost">Iniciar Sesión</Button>
                 </Link>
                 <Link href="/register">
-                  <Button>Registrarse</Button>
+                  <Button className="bg-black hover:bg-gray-800 text-white">Registrarse</Button>
                 </Link>
               </>
             )}
