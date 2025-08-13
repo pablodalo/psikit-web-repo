@@ -123,7 +123,7 @@ export function SubscriptionModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl h-[85vh] flex flex-col p-0 bg-white font-sans">
+      <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col p-0 bg-white font-sans">
         <DialogHeader className="px-6 py-4 border-b bg-gray-50 flex-shrink-0">
           <div className="flex items-center space-x-3">
             {selectedPlan.popular && (
@@ -138,54 +138,64 @@ export function SubscriptionModal({
           </div>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1">
           {step === "details" ? (
             <div className="p-6">
-              <div className="text-center mb-8">
+              <div className="text-center mb-6">
                 <h3 className="text-2xl font-bold text-gray-900 mb-2 font-sans">{selectedPlan.name}</h3>
-                <p className="text-gray-600 mb-6 font-sans">{selectedPlan.description}</p>
+                <p className="text-gray-600 mb-4 font-sans">{selectedPlan.description}</p>
 
-                <div className="inline-block bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
-                  <div className="text-3xl font-bold text-blue-600 mb-2 font-sans">{pricing.price}</div>
-                  {pricing.originalPrice && (
-                    <div className="text-sm text-gray-500 line-through mb-1 font-sans">{pricing.originalPrice}</div>
-                  )}
-                  {pricing.savings && (
-                    <div className="text-sm text-green-600 font-medium font-sans">Ahorras {pricing.savings}</div>
-                  )}
-                </div>
+                {selectedPlan.price === 0 ? (
+                  <div className="inline-block bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+                    <div className="text-2xl font-bold text-green-600 font-sans">Gratis</div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleMercadoPagoSubscription}
+                    className="inline-block bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg p-4 mb-4 transition-all duration-200 hover:shadow-lg cursor-pointer transform hover:scale-105"
+                  >
+                    <div className="text-2xl font-bold mb-1 font-sans">{pricing.price}</div>
+                    {pricing.originalPrice && (
+                      <div className="text-sm text-blue-100 line-through mb-1 font-sans">{pricing.originalPrice}</div>
+                    )}
+                    {pricing.savings && (
+                      <div className="text-sm text-blue-100 font-medium font-sans">Ahorras {pricing.savings}</div>
+                    )}
+                    <div className="text-xs text-blue-100 mt-2 font-sans">Click para pagar con MercadoPago</div>
+                  </button>
+                )}
               </div>
 
-              <div className="mb-8">
-                <h4 className="text-lg font-semibold text-gray-900 mb-4 font-sans">Características incluidas</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="mb-4">
+                <h4 className="text-base font-semibold text-gray-900 mb-3 font-sans">Características incluidas</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {selectedPlan.features.map((feature, index) => (
-                    <div key={index} className="flex items-start space-x-3">
-                      <Check className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm text-gray-700 font-sans">{feature}</span>
+                    <div key={index} className="flex items-start space-x-2">
+                      <Check className="h-3 w-3 text-green-600 mt-1 flex-shrink-0" />
+                      <span className="text-xs text-gray-700 font-sans">{feature}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                <h4 className="font-semibold text-green-800 mb-3 font-sans">Beneficios adicionales</h4>
-                <div className="space-y-2">
-                  <div className="flex items-center space-x-2">
+              <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                <h4 className="font-semibold text-green-800 mb-2 text-sm font-sans">Beneficios adicionales</h4>
+                <div className="grid grid-cols-2 gap-1">
+                  <div className="flex items-center space-x-1">
                     <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                    <span className="text-sm text-green-700 font-sans">Acceso instantáneo</span>
+                    <span className="text-xs text-green-700 font-sans">Acceso instantáneo</span>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1">
                     <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                    <span className="text-sm text-green-700 font-sans">Sin permanencia</span>
+                    <span className="text-xs text-green-700 font-sans">Sin permanencia</span>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1">
                     <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                    <span className="text-sm text-green-700 font-sans">Soporte incluido</span>
+                    <span className="text-xs text-green-700 font-sans">Soporte incluido</span>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1">
                     <Check className="h-3 w-3 text-green-600 flex-shrink-0" />
-                    <span className="text-sm text-green-700 font-sans">Cancela cuando quieras</span>
+                    <span className="text-xs text-green-700 font-sans">Cancela cuando quieras</span>
                   </div>
                 </div>
               </div>
@@ -345,14 +355,6 @@ export function SubscriptionModal({
                 </Button>
               ) : (
                 <>
-                  <Button
-                    onClick={handleMercadoPagoSubscription}
-                    className="w-full h-14 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold text-lg shadow-lg transition-all duration-200 hover:shadow-xl font-sans"
-                  >
-                    <CreditCard className="h-5 w-5 mr-3" />
-                    PAGAR CON MERCADOPAGO
-                  </Button>
-
                   <Button
                     variant="outline"
                     onClick={() => setStep("form")}
