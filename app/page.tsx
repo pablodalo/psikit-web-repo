@@ -26,9 +26,9 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm">
+      <header className="border-b bg-white">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Brain className="h-8 w-8 text-blue-600" />
@@ -54,20 +54,16 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 bg-blue-50">
         <div className="container mx-auto text-center">
-          <Badge className="mb-4 bg-blue-100 text-blue-800 hover:bg-blue-100">Consultorio Virtual Completo</Badge>
+          <Badge className="mb-6 bg-blue-100 text-blue-800 hover:bg-blue-100">Consultorio Virtual Completo</Badge>
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
             Tu consultorio psicológico
             <span className="text-blue-600"> en cualquier lugar</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-4 max-w-3xl mx-auto">
-            Diseñada específicamente para psicólogos que buscan digitalizar y optimizar su práctica clínica. Desde la
-            gestión de pacientes hasta las sesiones virtuales, todo lo que necesitas en un solo lugar.
-          </p>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Gestiona tu práctica profesional con una plataforma completa: historia clínica, agenda, pagos, gestión de
-            pacientes y recordatorios, todo en un mismo lugar.
+          <p className="text-xl text-gray-600 mb-8 max-w-4xl mx-auto">
+            Plataforma integral para psicólogos de Latinoamérica. Sesiones virtuales, gestión de pacientes, historia
+            clínica, pagos y mucho más en un solo lugar.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
@@ -81,15 +77,6 @@ export default function HomePage() {
               Soy Paciente
             </Button>
           </div>
-        </div>
-      </section>
-
-      <section className="py-16 px-4 bg-white">
-        <div className="container mx-auto text-center max-w-4xl">
-          <p className="text-lg text-gray-600 mb-12 leading-relaxed">
-            Diseñada específicamente para psicólogos que buscan digitalizar y optimizar su práctica clínica. Desde la
-            gestión de pacientes hasta las sesiones virtuales, todo lo que necesitas en un solo lugar.
-          </p>
         </div>
       </section>
 
