@@ -80,49 +80,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="py-16 px-4 bg-blue-50">
-        <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">¿Por qué elegir PsiKit?</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div className="text-center">
-              <Calendar className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Agenda Inteligente</h3>
-              <p className="text-gray-600">Gestiona citas, recordatorios y disponibilidad de forma automática.</p>
-            </div>
-
-            <div className="text-center">
-              <Shield className="h-12 w-12 text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Seguridad Total</h3>
-              <p className="text-gray-600">Cumplimiento de normativas de privacidad y protección de datos.</p>
-            </div>
-
-            <div className="text-center">
-              <Video className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Sesiones Virtuales</h3>
-              <p className="text-gray-600">Videollamadas de alta calidad con sala de espera integrada.</p>
-            </div>
-
-            <div className="text-center">
-              <FileText className="h-12 w-12 text-orange-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Historia Clínica Digital</h3>
-              <p className="text-gray-600">Registros seguros y organizados de todos tus pacientes.</p>
-            </div>
-
-            <div className="text-center">
-              <CreditCard className="h-12 w-12 text-red-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Gestión de Pagos</h3>
-              <p className="text-gray-600">Integración con MercadoPago para cobros automáticos.</p>
-            </div>
-
-            <div className="text-center">
-              <Heart className="h-12 w-12 text-pink-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Soporte Especializado</h3>
-              <p className="text-gray-600">Atención personalizada para profesionales de la salud mental.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Features Grid */}
       <section className="py-16 px-4 bg-white">
         <div className="container mx-auto">
