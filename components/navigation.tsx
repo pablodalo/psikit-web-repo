@@ -12,9 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Calendar, Users, FileText, CreditCard, Video, Settings, Home, Bell, LogOut, User } from "lucide-react"
+import { Calendar, Users, FileText, CreditCard, Video, Settings, Home, Bell, LogOut, User, Brain } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
-import { PsiKitLogo } from "@/components/psikit-logo"
 
 interface NavigationProps {
   userType: "psicologo" | "paciente"
@@ -62,7 +61,7 @@ export function Navigation({ userType }: NavigationProps) {
     <nav className="w-64 bg-white border-r min-h-screen">
       <div className="p-6">
         <Link href="/" className="flex items-center space-x-2 mb-8">
-          <PsiKitLogo />
+          <Brain className="h-8 w-8 text-blue-600" />
           <span className="text-xl font-bold">PsiKit</span>
         </Link>
 
