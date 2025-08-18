@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { CalendarIcon, Clock, Plus, Users, Video, ChevronLeft, ChevronRight, Grid, List, MapPin } from "lucide-react"
+import { CalendarIcon, Clock, Plus, Users, Video, ChevronLeft, ChevronRight, List, MapPin } from "lucide-react"
 import Link from "next/link"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
@@ -111,11 +111,12 @@ function generateAppointments() {
 }
 
 export default function PsicologoAgendaPage() {
-  const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar")
+  const [viewMode, setViewMode] = useState<"month" | "week" | "day" | "list">("month")
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [isNewAppointmentOpen, setIsNewAppointmentOpen] = useState(false)
   const [appointments, setAppointments] = useState(() => generateAppointments())
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
@@ -124,7 +125,7 @@ export default function PsicologoAgendaPage() {
     if (viewParam === "list") {
       setViewMode("list")
     } else if (viewParam === "calendar") {
-      setViewMode("calendar")
+      setViewMode("month")
     }
   }, [])
 
@@ -223,13 +224,15 @@ export default function PsicologoAgendaPage() {
     return date.toISOString().split("T")[0]
   }
 
-  const navigateMonth = (direction: "prev" | "next") => {
+  const navigateDate = (direction: "prev" | "next") => {
     setCurrentDate((prev) => {
       const newDate = new Date(prev)
-      if (direction === "prev") {
-        newDate.setMonth(prev.getMonth() - 1)
-      } else {
-        newDate.setMonth(prev.getMonth() + 1)
+      if (viewMode === "month") {
+        newDate.setMonth(prev.getMonth() + (direction === "next" ? 1 : -1))
+      } else if (viewMode === "week") {
+        newDate.setDate(prev.getDate() + (direction === "next" ? 7 : -7))
+      } else if (viewMode === "day") {
+        newDate.setDate(prev.getDate() + (direction === "next" ? 1 : -1))
       }
       return newDate
     })
@@ -302,27 +305,66 @@ export default function PsicologoAgendaPage() {
     setViewMode("list")
   }
 
+  const getWeekDays = (date: Date) => {
+    const week = []
+    const startOfWeek = new Date(date)
+    const day = startOfWeek.getDay()
+    const diff = startOfWeek.getDate() - day
+    startOfWeek.setDate(diff)
+
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(startOfWeek)
+      day.setDate(startOfWeek.getDate() + i)
+      week.push(day)
+    }
+    return week
+  }
+
+  const getTimeSlots = () => {
+    const slots = []
+    for (let hour = 8; hour < 20; hour++) {
+      slots.push(`${hour.toString().padStart(2, "0")}:00`)
+      slots.push(`${hour.toString().padStart(2, "0")}:30`)
+    }
+    return slots
+  }
+
   return (
     <AuthGuard requiredUserType="psicologo">
       <div className="flex">
         <Navigation userType="psicologo" />
-        <div className="flex-1 min-h-screen bg-gray-50">
-          <header className="bg-white border-b">
+        <div className={`flex-1 min-h-screen ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
+          <header className={`${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white"} border-b`}>
             <div className="px-6 py-4 flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Mi Agenda</h1>
-                <p className="text-gray-600">Gestiona tus citas y horarios</p>
+                <h1 className={`text-2xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>Mi Agenda</h1>
+                <p className={`${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>Gestiona tus citas y horarios</p>
               </div>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center border rounded-lg">
                   <Button
-                    variant={viewMode === "calendar" ? "default" : "ghost"}
+                    variant={viewMode === "day" ? "default" : "ghost"}
                     size="sm"
-                    onClick={() => setViewMode("calendar")}
+                    onClick={() => setViewMode("day")}
                     className="rounded-r-none"
                   >
-                    <Grid className="h-4 w-4 mr-2" />
-                    Calendario
+                    Día
+                  </Button>
+                  <Button
+                    variant={viewMode === "week" ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setViewMode("week")}
+                    className="rounded-none border-x"
+                  >
+                    Semana
+                  </Button>
+                  <Button
+                    variant={viewMode === "month" ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setViewMode("month")}
+                    className="rounded-none border-x"
+                  >
+                    Mes
                   </Button>
                   <Button
                     variant={viewMode === "list" ? "default" : "ghost"}
@@ -335,11 +377,15 @@ export default function PsicologoAgendaPage() {
                   </Button>
                 </div>
 
+                <Button variant="outline" size="sm" onClick={() => setIsDarkMode(!isDarkMode)}>
+                  {isDarkMode ? "☀️" : "🌙"}
+                </Button>
+
                 <Dialog open={isNewAppointmentOpen} onOpenChange={setIsNewAppointmentOpen}>
                   <DialogTrigger asChild>
-                    <Button>
+                    <Button className="bg-blue-600 hover:bg-blue-700">
                       <Plus className="h-4 w-4 mr-2" />
-                      Nueva Cita
+                      Crear
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-[500px]">
@@ -457,64 +503,102 @@ export default function PsicologoAgendaPage() {
           </header>
 
           <div className="p-6">
-            {viewMode === "calendar" ? (
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-xl">
-                      {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
-                    </CardTitle>
-                    <div className="flex items-center space-x-2">
-                      <Button size="sm" variant="outline" onClick={() => navigateMonth("prev")}>
-                        <ChevronLeft className="h-4 w-4" />
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={() => setCurrentDate(new Date())}>
-                        Hoy
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={() => navigateMonth("next")}>
-                        <ChevronRight className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-7 gap-1 mb-4">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <Button size="sm" variant="outline" onClick={() => navigateDate("prev")}>
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => setCurrentDate(new Date())}>
+                    Hoy
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => navigateDate("next")}>
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+                <h2 className={`text-xl font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                  {viewMode === "month" && `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`}
+                  {viewMode === "week" && `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`}
+                  {viewMode === "day" &&
+                    currentDate.toLocaleDateString("es-ES", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                </h2>
+              </div>
+            </div>
+
+            {viewMode === "month" && (
+              <Card className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+                <CardContent className="p-0">
+                  <div className={`grid grid-cols-7 ${isDarkMode ? "bg-gray-700" : "bg-gray-50"} border-b`}>
                     {dayNames.map((day) => (
-                      <div key={day} className="p-2 text-center font-medium text-gray-600 text-sm">
+                      <div
+                        key={day}
+                        className={`p-4 text-center font-medium ${isDarkMode ? "text-gray-300" : "text-gray-600"} text-sm border-r last:border-r-0`}
+                      >
                         {day}
                       </div>
                     ))}
                   </div>
-                  <div className="grid grid-cols-7 gap-1">
+                  <div className="grid grid-cols-7">
                     {getDaysInMonth(currentDate).map((day, index) => {
                       if (!day) {
-                        return <div key={index} className="h-32 p-1"></div>
+                        return (
+                          <div
+                            key={index}
+                            className={`h-32 border-r border-b last:border-r-0 ${isDarkMode ? "border-gray-700" : ""}`}
+                          ></div>
+                        )
                       }
 
                       const dateKey = formatDateKey(day)
                       const dayAppointments = appointments[dateKey] || []
                       const isToday = day.toDateString() === new Date().toDateString()
+                      const isCurrentMonth = day.getMonth() === currentDate.getMonth()
 
                       return (
                         <div
                           key={index}
                           onClick={() => handleDayClick(day)}
-                          className={`h-32 p-2 border rounded-lg relative overflow-hidden cursor-pointer transition-colors ${
-                            isToday ? "bg-blue-50 border-blue-200 hover:bg-blue-100" : "bg-white hover:bg-gray-50"
-                          }`}
+                          className={`h-32 p-2 border-r border-b last:border-r-0 relative overflow-hidden cursor-pointer transition-all hover:bg-opacity-80 ${
+                            isToday
+                              ? isDarkMode
+                                ? "bg-blue-900 border-blue-600"
+                                : "bg-blue-50 border-blue-200"
+                              : isDarkMode
+                                ? "bg-gray-800 hover:bg-gray-700 border-gray-700"
+                                : "bg-white hover:bg-gray-50"
+                          } ${!isCurrentMonth ? "opacity-40" : ""}`}
                         >
-                          <div className={`text-sm font-semibold mb-2 ${isToday ? "text-blue-600" : "text-gray-900"}`}>
+                          <div
+                            className={`text-sm font-semibold mb-1 ${
+                              isToday
+                                ? isDarkMode
+                                  ? "text-blue-300"
+                                  : "text-blue-600"
+                                : isDarkMode
+                                  ? "text-white"
+                                  : "text-gray-900"
+                            }`}
+                          >
                             {day.getDate()}
                           </div>
 
                           <div className="space-y-1 h-20 overflow-hidden">
-                            {dayAppointments.slice(0, 3).map((appointment, idx) => (
+                            {dayAppointments.slice(0, 2).map((appointment, idx) => (
                               <div
                                 key={appointment.id}
                                 className={`text-xs p-1.5 rounded-md truncate font-medium ${
                                   appointment.tipo === "virtual"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : "bg-green-100 text-green-800"
+                                    ? isDarkMode
+                                      ? "bg-blue-800 text-blue-200"
+                                      : "bg-blue-100 text-blue-800"
+                                    : isDarkMode
+                                      ? "bg-green-800 text-green-200"
+                                      : "bg-green-100 text-green-800"
                                 }`}
                                 title={`${appointment.hora} - ${appointment.paciente} (${appointment.tipo})`}
                               >
@@ -526,9 +610,11 @@ export default function PsicologoAgendaPage() {
                               </div>
                             ))}
 
-                            {dayAppointments.length > 3 && (
-                              <div className="absolute bottom-2 right-2 bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full font-medium border">
-                                +{dayAppointments.length - 3}
+                            {dayAppointments.length > 2 && (
+                              <div
+                                className={`absolute bottom-1 right-1 ${isDarkMode ? "bg-gray-700 text-gray-300" : "bg-gray-100 text-gray-600"} text-xs px-2 py-1 rounded-full font-medium border`}
+                              >
+                                +{dayAppointments.length - 2}
                               </div>
                             )}
                           </div>
@@ -538,9 +624,136 @@ export default function PsicologoAgendaPage() {
                   </div>
                 </CardContent>
               </Card>
-            ) : (
+            )}
+
+            {viewMode === "week" && (
+              <Card className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+                <CardContent className="p-0">
+                  <div className={`grid grid-cols-8 ${isDarkMode ? "bg-gray-700" : "bg-gray-50"} border-b`}>
+                    <div className={`p-4 border-r ${isDarkMode ? "border-gray-600" : ""}`}></div>
+                    {getWeekDays(currentDate).map((day, index) => {
+                      const isToday = day.toDateString() === new Date().toDateString()
+                      return (
+                        <div
+                          key={index}
+                          className={`p-4 text-center border-r last:border-r-0 ${isDarkMode ? "border-gray-600" : ""}`}
+                        >
+                          <div className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                            {day.toLocaleDateString("es-ES", { weekday: "short" })}
+                          </div>
+                          <div
+                            className={`text-lg font-semibold ${
+                              isToday
+                                ? isDarkMode
+                                  ? "text-blue-300"
+                                  : "text-blue-600"
+                                : isDarkMode
+                                  ? "text-white"
+                                  : "text-gray-900"
+                            }`}
+                          >
+                            {day.getDate()}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  <div className="max-h-96 overflow-y-auto">
+                    {getTimeSlots().map((time) => (
+                      <div key={time} className={`grid grid-cols-8 border-b ${isDarkMode ? "border-gray-700" : ""}`}>
+                        <div
+                          className={`p-2 text-xs ${isDarkMode ? "text-gray-400 bg-gray-700" : "text-gray-500 bg-gray-50"} border-r font-medium`}
+                        >
+                          {time}
+                        </div>
+                        {getWeekDays(currentDate).map((day, dayIndex) => {
+                          const dateKey = formatDateKey(day)
+                          const dayAppointments = appointments[dateKey] || []
+                          const timeAppointment = dayAppointments.find((apt) => apt.hora === time)
+
+                          return (
+                            <div
+                              key={dayIndex}
+                              className={`p-2 h-12 border-r last:border-r-0 ${isDarkMode ? "border-gray-700 hover:bg-gray-700" : "hover:bg-gray-50"} cursor-pointer transition-colors`}
+                            >
+                              {timeAppointment && (
+                                <div
+                                  className={`text-xs p-1 rounded truncate ${
+                                    timeAppointment.tipo === "virtual"
+                                      ? isDarkMode
+                                        ? "bg-blue-800 text-blue-200"
+                                        : "bg-blue-100 text-blue-800"
+                                      : isDarkMode
+                                        ? "bg-green-800 text-green-200"
+                                        : "bg-green-100 text-green-800"
+                                  }`}
+                                >
+                                  {timeAppointment.paciente}
+                                </div>
+                              )}
+                            </div>
+                          )
+                        })}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {viewMode === "day" && (
+              <Card className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+                <CardContent className="p-0">
+                  <div className="max-h-96 overflow-y-auto">
+                    {getTimeSlots().map((time) => {
+                      const dateKey = formatDateKey(currentDate)
+                      const dayAppointments = appointments[dateKey] || []
+                      const timeAppointment = dayAppointments.find((apt) => apt.hora === time)
+
+                      return (
+                        <div key={time} className={`flex border-b ${isDarkMode ? "border-gray-700" : ""}`}>
+                          <div
+                            className={`w-20 p-3 text-sm ${isDarkMode ? "text-gray-400 bg-gray-700" : "text-gray-500 bg-gray-50"} border-r font-medium`}
+                          >
+                            {time}
+                          </div>
+                          <div
+                            className={`flex-1 p-3 h-16 ${isDarkMode ? "hover:bg-gray-700" : "hover:bg-gray-50"} cursor-pointer transition-colors`}
+                          >
+                            {timeAppointment && (
+                              <div
+                                className={`p-2 rounded-lg h-full flex items-center ${
+                                  timeAppointment.tipo === "virtual"
+                                    ? isDarkMode
+                                      ? "bg-blue-800 text-blue-200"
+                                      : "bg-blue-100 text-blue-800"
+                                    : isDarkMode
+                                      ? "bg-green-800 text-green-200"
+                                      : "bg-green-100 text-green-800"
+                                }`}
+                              >
+                                <div className="flex items-center space-x-2">
+                                  {timeAppointment.tipo === "virtual" && <Video className="h-4 w-4" />}
+                                  <div>
+                                    <div className="font-medium">{timeAppointment.paciente}</div>
+                                    <div className="text-xs opacity-75">{timeAppointment.tipo}</div>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {viewMode === "list" && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <Card className="lg:col-span-2">
+                <Card className={`lg:col-span-2 ${isDarkMode ? "bg-gray-800 border-gray-700" : ""}`}>
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
