@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -34,7 +33,7 @@ import Link from "next/link"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
 import { useAuth } from "@/contexts/auth-context"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function PsicologoDashboard() {
   const { logout } = useAuth()
@@ -63,22 +62,40 @@ export default function PsicologoDashboard() {
     },
   ])
 
+  useEffect(() => {
+    const savedNotifications = localStorage.getItem("psicologo-notifications")
+    if (savedNotifications) {
+      try {
+        const parsed = JSON.parse(savedNotifications)
+        setNotificaciones(parsed)
+      } catch (error) {
+        console.error("Error loading notifications from localStorage:", error)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem("psicologo-notifications", JSON.stringify(notificaciones))
+  }, [notificaciones])
+
   const handleNotificationClick = (notif: any) => {
     setNotificaciones((prev) => prev.map((n) => (n.id === notif.id ? { ...n, leida: true } : n)))
 
-    switch (notif.tipo) {
-      case "sesion":
-        window.location.href = "/dashboard/psicologo/agenda?view=list"
-        break
-      case "pago":
-        window.location.href = "/dashboard/psicologo/pagos?patient=carlos-rodriguez&view=history"
-        break
-      case "documento":
-        window.location.href = "/dashboard/psicologo/pacientes"
-        break
-      default:
-        window.location.href = "/dashboard/psicologo/notificaciones"
-    }
+    setTimeout(() => {
+      switch (notif.tipo) {
+        case "sesion":
+          window.location.href = "/dashboard/psicologo/agenda?view=list"
+          break
+        case "pago":
+          window.location.href = "/dashboard/psicologo/pagos?patient=carlos-rodriguez&view=history"
+          break
+        case "documento":
+          window.location.href = "/dashboard/psicologo/pacientes"
+          break
+        default:
+          window.location.href = "/dashboard/psicologo/notificaciones"
+      }
+    }, 100)
   }
 
   const toggleNotificationStatus = (notifId: number, event: React.MouseEvent) => {
