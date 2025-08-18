@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -116,6 +116,17 @@ export default function PsicologoAgendaPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [isNewAppointmentOpen, setIsNewAppointmentOpen] = useState(false)
   const [appointments, setAppointments] = useState(() => generateAppointments())
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const viewParam = urlParams.get("view")
+
+    if (viewParam === "list") {
+      setViewMode("list")
+    } else if (viewParam === "calendar") {
+      setViewMode("calendar")
+    }
+  }, [])
 
   const [newAppointment, setNewAppointment] = useState({
     paciente: "",
