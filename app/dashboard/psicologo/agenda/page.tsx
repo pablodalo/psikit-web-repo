@@ -188,12 +188,36 @@ export default function PsicologoAgendaPage() {
 
   const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"]
 
-  const proximosDias = [
-    { fecha: "Mañana", sesiones: 4 },
-    { fecha: "Miércoles", sesiones: 6 },
-    { fecha: "Jueves", sesiones: 3 },
-    { fecha: "Viernes", sesiones: 5 },
-  ]
+  const getProximosDias = () => {
+    const today = new Date()
+    const proximosDias = []
+
+    for (let i = 1; i <= 4; i++) {
+      const date = new Date(today)
+      date.setDate(today.getDate() + i)
+
+      const dateKey = formatDateKey(date)
+      const dayAppointments = appointments[dateKey] || []
+
+      const dayName = date.toLocaleDateString("es-ES", { weekday: "long" })
+      const capitalizedDayName = dayName.charAt(0).toUpperCase() + dayName.slice(1)
+
+      proximosDias.push({
+        fecha: capitalizedDayName,
+        date: date,
+        sesiones: dayAppointments.length,
+      })
+    }
+
+    return proximosDias
+  }
+
+  const proximosDias = getProximosDias()
+
+  const handleProximoDiaClick = (date: Date) => {
+    setSelectedDate(date)
+    setViewMode("list")
+  }
 
   return (
     <AuthGuard requiredUserType="psicologo">
@@ -398,12 +422,23 @@ export default function PsicologoAgendaPage() {
                   <CardContent>
                     <div className="space-y-4">
                       {proximosDias.map((dia, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div
+                          key={index}
+                          onClick={() => handleProximoDiaClick(dia.date)}
+                          className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                        >
                           <div>
                             <p className="font-medium">{dia.fecha}</p>
                             <p className="text-sm text-gray-600">{dia.sesiones} sesiones</p>
                           </div>
-                          <Button size="sm" variant="outline">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleProximoDiaClick(dia.date)
+                            }}
+                          >
                             Ver
                           </Button>
                         </div>
