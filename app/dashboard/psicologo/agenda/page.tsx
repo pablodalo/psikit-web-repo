@@ -4,15 +4,126 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { CalendarIcon, Clock, Plus, Users, Video, ChevronLeft, ChevronRight, Grid, List } from "lucide-react"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { CalendarIcon, Clock, Plus, Users, Video, ChevronLeft, ChevronRight, Grid, List, MapPin } from "lucide-react"
 import Link from "next/link"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
+
+function generateAppointments() {
+  const appointments: { [key: string]: any[] } = {}
+  const today = new Date()
+  const currentMonth = today.getMonth()
+  const currentYear = today.getFullYear()
+
+  // Sample patients
+  const patients = [
+    "María González",
+    "Carlos Rodríguez",
+    "Ana Martínez",
+    "Luis Pérez",
+    "Sofia López",
+    "Diego Martín",
+    "Elena Ruiz",
+    "Roberto Silva",
+    "Carmen Torres",
+    "Pedro Jiménez",
+    "Laura Vega",
+    "Miguel Santos",
+  ]
+
+  // Generate appointments for current month
+  for (let day = 1; day <= 31; day++) {
+    const date = new Date(currentYear, currentMonth, day)
+    if (date.getMonth() !== currentMonth) break // Stop if we've moved to next month
+
+    const dateKey = date.toISOString().split("T")[0]
+    const dayOfWeek = date.getDay()
+
+    // Skip weekends for most appointments
+    if (dayOfWeek === 0 || dayOfWeek === 6) continue
+
+    // Randomly generate 1-4 appointments per day
+    const numAppointments = Math.floor(Math.random() * 4) + 1
+    const dayAppointments = []
+
+    for (let i = 0; i < numAppointments; i++) {
+      const hour = 9 + Math.floor(Math.random() * 8) // 9 AM to 4 PM
+      const minute = Math.random() > 0.5 ? "00" : "30"
+      const patient = patients[Math.floor(Math.random() * patients.length)]
+      const tipo = Math.random() > 0.3 ? "virtual" : "presencial"
+      const estado = Math.random() > 0.2 ? "confirmada" : "pendiente"
+
+      dayAppointments.push({
+        id: `${dateKey}-${i}`,
+        paciente: patient,
+        hora: `${hour.toString().padStart(2, "0")}:${minute}`,
+        tipo,
+        estado,
+      })
+    }
+
+    // Sort appointments by time
+    dayAppointments.sort((a, b) => a.hora.localeCompare(b.hora))
+    appointments[dateKey] = dayAppointments
+  }
+
+  // Add next month appointments
+  for (let day = 1; day <= 15; day++) {
+    const date = new Date(currentYear, currentMonth + 1, day)
+    const dateKey = date.toISOString().split("T")[0]
+    const dayOfWeek = date.getDay()
+
+    if (dayOfWeek === 0 || dayOfWeek === 6) continue
+
+    const numAppointments = Math.floor(Math.random() * 3) + 1
+    const dayAppointments = []
+
+    for (let i = 0; i < numAppointments; i++) {
+      const hour = 9 + Math.floor(Math.random() * 8)
+      const minute = Math.random() > 0.5 ? "00" : "30"
+      const patient = patients[Math.floor(Math.random() * patients.length)]
+
+      dayAppointments.push({
+        id: `${dateKey}-${i}`,
+        paciente: patient,
+        hora: `${hour.toString().padStart(2, "0")}:${minute}`,
+        tipo: Math.random() > 0.3 ? "virtual" : "presencial",
+        estado: "confirmada",
+      })
+    }
+
+    dayAppointments.sort((a, b) => a.hora.localeCompare(b.hora))
+    appointments[dateKey] = dayAppointments
+  }
+
+  return appointments
+}
 
 export default function PsicologoAgendaPage() {
   const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar")
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+  const [isNewAppointmentOpen, setIsNewAppointmentOpen] = useState(false)
+  const [appointments, setAppointments] = useState(() => generateAppointments())
+
+  const [newAppointment, setNewAppointment] = useState({
+    paciente: "",
+    fecha: "",
+    hora: "",
+    tipo: "virtual" as "virtual" | "presencial",
+    duracion: 50,
+  })
 
   const sesionesHoy = [
     { id: 1, paciente: "María González", hora: "09:00", duracion: 50, estado: "confirmada", tipo: "virtual" },
@@ -21,97 +132,58 @@ export default function PsicologoAgendaPage() {
     { id: 4, paciente: "Luis Pérez", hora: "15:30", duracion: 50, estado: "confirmada", tipo: "virtual" },
   ]
 
-  const generateAppointments = () => {
-    const appointments: { [key: string]: any[] } = {}
-    const today = new Date()
-    const currentMonth = today.getMonth()
-    const currentYear = today.getFullYear()
+  const getAvailableTimeSlots = (date: string) => {
+    const timeSlots = []
+    const dayAppointments = appointments[date] || []
+    const bookedTimes = dayAppointments.map((apt) => apt.hora)
 
-    // Sample patients
-    const patients = [
-      "María González",
-      "Carlos Rodríguez",
-      "Ana Martínez",
-      "Luis Pérez",
-      "Sofia López",
-      "Diego Martín",
-      "Elena Ruiz",
-      "Roberto Silva",
-      "Carmen Torres",
-      "Pedro Jiménez",
-      "Laura Vega",
-      "Miguel Santos",
-    ]
-
-    // Generate appointments for current month
-    for (let day = 1; day <= 31; day++) {
-      const date = new Date(currentYear, currentMonth, day)
-      if (date.getMonth() !== currentMonth) break // Stop if we've moved to next month
-
-      const dateKey = date.toISOString().split("T")[0]
-      const dayOfWeek = date.getDay()
-
-      // Skip weekends for most appointments
-      if (dayOfWeek === 0 || dayOfWeek === 6) continue
-
-      // Randomly generate 1-4 appointments per day
-      const numAppointments = Math.floor(Math.random() * 4) + 1
-      const dayAppointments = []
-
-      for (let i = 0; i < numAppointments; i++) {
-        const hour = 9 + Math.floor(Math.random() * 8) // 9 AM to 4 PM
-        const minute = Math.random() > 0.5 ? "00" : "30"
-        const patient = patients[Math.floor(Math.random() * patients.length)]
-        const tipo = Math.random() > 0.3 ? "virtual" : "presencial"
-        const estado = Math.random() > 0.2 ? "confirmada" : "pendiente"
-
-        dayAppointments.push({
-          id: `${dateKey}-${i}`,
-          paciente: patient,
-          hora: `${hour.toString().padStart(2, "0")}:${minute}`,
-          tipo,
-          estado,
+    // Generate time slots from 9:00 to 17:00 (5 PM)
+    for (let hour = 9; hour < 17; hour++) {
+      for (let minute = 0; minute < 60; minute += 30) {
+        const timeString = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`
+        timeSlots.push({
+          time: timeString,
+          available: !bookedTimes.includes(timeString),
         })
       }
-
-      // Sort appointments by time
-      dayAppointments.sort((a, b) => a.hora.localeCompare(b.hora))
-      appointments[dateKey] = dayAppointments
     }
 
-    // Add next month appointments
-    for (let day = 1; day <= 15; day++) {
-      const date = new Date(currentYear, currentMonth + 1, day)
-      const dateKey = date.toISOString().split("T")[0]
-      const dayOfWeek = date.getDay()
-
-      if (dayOfWeek === 0 || dayOfWeek === 6) continue
-
-      const numAppointments = Math.floor(Math.random() * 3) + 1
-      const dayAppointments = []
-
-      for (let i = 0; i < numAppointments; i++) {
-        const hour = 9 + Math.floor(Math.random() * 8)
-        const minute = Math.random() > 0.5 ? "00" : "30"
-        const patient = patients[Math.floor(Math.random() * patients.length)]
-
-        dayAppointments.push({
-          id: `${dateKey}-${i}`,
-          paciente: patient,
-          hora: `${hour.toString().padStart(2, "0")}:${minute}`,
-          tipo: Math.random() > 0.3 ? "virtual" : "presencial",
-          estado: "confirmada",
-        })
-      }
-
-      dayAppointments.sort((a, b) => a.hora.localeCompare(b.hora))
-      appointments[dateKey] = dayAppointments
-    }
-
-    return appointments
+    return timeSlots
   }
 
-  const appointments = generateAppointments()
+  const handleCreateAppointment = () => {
+    if (!newAppointment.paciente || !newAppointment.fecha || !newAppointment.hora) {
+      alert("Por favor completa todos los campos requeridos")
+      return
+    }
+
+    const appointmentId = `${newAppointment.fecha}-${Date.now()}`
+    const newApt = {
+      id: appointmentId,
+      paciente: newAppointment.paciente,
+      hora: newAppointment.hora,
+      tipo: newAppointment.tipo,
+      estado: "confirmada" as const,
+    }
+
+    // Update appointments state
+    setAppointments((prev) => ({
+      ...prev,
+      [newAppointment.fecha]: [...(prev[newAppointment.fecha] || []), newApt].sort((a, b) =>
+        a.hora.localeCompare(b.hora),
+      ),
+    }))
+
+    // Reset form and close modal
+    setNewAppointment({
+      paciente: "",
+      fecha: "",
+      hora: "",
+      tipo: "virtual",
+      duracion: 50,
+    })
+    setIsNewAppointmentOpen(false)
+  }
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear()
@@ -251,10 +323,124 @@ export default function PsicologoAgendaPage() {
                     Lista
                   </Button>
                 </div>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Nueva Cita
-                </Button>
+
+                <Dialog open={isNewAppointmentOpen} onOpenChange={setIsNewAppointmentOpen}>
+                  <DialogTrigger asChild>
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Nueva Cita
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[500px]">
+                    <DialogHeader>
+                      <DialogTitle>Programar Nueva Cita</DialogTitle>
+                      <DialogDescription>
+                        Selecciona un horario disponible para programar una nueva sesión
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor="paciente">Paciente</Label>
+                        <Input
+                          id="paciente"
+                          placeholder="Nombre del paciente"
+                          value={newAppointment.paciente}
+                          onChange={(e) => setNewAppointment((prev) => ({ ...prev, paciente: e.target.value }))}
+                        />
+                      </div>
+
+                      <div className="grid gap-2">
+                        <Label htmlFor="fecha">Fecha</Label>
+                        <Input
+                          id="fecha"
+                          type="date"
+                          value={newAppointment.fecha}
+                          min={new Date().toISOString().split("T")[0]}
+                          onChange={(e) => setNewAppointment((prev) => ({ ...prev, fecha: e.target.value, hora: "" }))}
+                        />
+                      </div>
+
+                      {newAppointment.fecha && (
+                        <div className="grid gap-2">
+                          <Label>Horarios Disponibles</Label>
+                          <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto">
+                            {getAvailableTimeSlots(newAppointment.fecha).map((slot) => (
+                              <Button
+                                key={slot.time}
+                                variant={newAppointment.hora === slot.time ? "default" : "outline"}
+                                size="sm"
+                                disabled={!slot.available}
+                                onClick={() => setNewAppointment((prev) => ({ ...prev, hora: slot.time }))}
+                                className={`text-xs ${!slot.available ? "opacity-50 cursor-not-allowed" : ""}`}
+                              >
+                                {slot.time}
+                                {!slot.available && <span className="ml-1 text-red-500">✕</span>}
+                              </Button>
+                            ))}
+                          </div>
+                          <p className="text-xs text-gray-500 mt-2">
+                            ✕ = Horario ocupado | Selecciona un horario disponible
+                          </p>
+                        </div>
+                      )}
+
+                      <div className="grid gap-2">
+                        <Label htmlFor="tipo">Tipo de Sesión</Label>
+                        <Select
+                          value={newAppointment.tipo}
+                          onValueChange={(value: "virtual" | "presencial") =>
+                            setNewAppointment((prev) => ({ ...prev, tipo: value }))
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="virtual">
+                              <div className="flex items-center">
+                                <Video className="h-4 w-4 mr-2" />
+                                Virtual
+                              </div>
+                            </SelectItem>
+                            <SelectItem value="presencial">
+                              <div className="flex items-center">
+                                <MapPin className="h-4 w-4 mr-2" />
+                                Presencial
+                              </div>
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div className="grid gap-2">
+                        <Label htmlFor="duracion">Duración (minutos)</Label>
+                        <Select
+                          value={newAppointment.duracion.toString()}
+                          onValueChange={(value) =>
+                            setNewAppointment((prev) => ({ ...prev, duracion: Number.parseInt(value) }))
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="30">30 minutos</SelectItem>
+                            <SelectItem value="45">45 minutos</SelectItem>
+                            <SelectItem value="50">50 minutos</SelectItem>
+                            <SelectItem value="60">60 minutos</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end space-x-2">
+                      <Button variant="outline" onClick={() => setIsNewAppointmentOpen(false)}>
+                        Cancelar
+                      </Button>
+                      <Button onClick={handleCreateAppointment}>Programar Cita</Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </header>
