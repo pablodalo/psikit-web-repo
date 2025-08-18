@@ -247,7 +247,7 @@ export default function PsicologoAgendaPage() {
                   <div className="grid grid-cols-7 gap-1">
                     {getDaysInMonth(currentDate).map((day, index) => {
                       if (!day) {
-                        return <div key={index} className="h-24 p-1"></div>
+                        return <div key={index} className="h-32 p-1"></div>
                       }
 
                       const dateKey = formatDateKey(day)
@@ -257,22 +257,37 @@ export default function PsicologoAgendaPage() {
                       return (
                         <div
                           key={index}
-                          className={`h-24 p-1 border rounded-lg ${isToday ? "bg-blue-50 border-blue-200" : "bg-white hover:bg-gray-50"}`}
+                          className={`h-32 p-2 border rounded-lg relative overflow-hidden ${
+                            isToday ? "bg-blue-50 border-blue-200" : "bg-white hover:bg-gray-50"
+                          }`}
                         >
-                          <div className={`text-sm font-medium mb-1 ${isToday ? "text-blue-600" : "text-gray-900"}`}>
+                          <div className={`text-sm font-semibold mb-2 ${isToday ? "text-blue-600" : "text-gray-900"}`}>
                             {day.getDate()}
                           </div>
-                          <div className="space-y-1">
-                            {dayAppointments.slice(0, 2).map((appointment) => (
+
+                          <div className="space-y-1 h-20 overflow-hidden">
+                            {dayAppointments.slice(0, 3).map((appointment, idx) => (
                               <div
                                 key={appointment.id}
-                                className="text-xs p-1 rounded bg-blue-100 text-blue-800 truncate"
+                                className={`text-xs p-1.5 rounded-md truncate font-medium ${
+                                  appointment.tipo === "virtual"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-green-100 text-green-800"
+                                }`}
+                                title={`${appointment.hora} - ${appointment.paciente} (${appointment.tipo})`}
                               >
-                                {appointment.hora} {appointment.paciente}
+                                <div className="flex items-center justify-between">
+                                  <span className="font-medium">{appointment.hora}</span>
+                                  {appointment.tipo === "virtual" && <Video className="h-3 w-3" />}
+                                </div>
+                                <div className="truncate text-xs opacity-90">{appointment.paciente}</div>
                               </div>
                             ))}
-                            {dayAppointments.length > 2 && (
-                              <div className="text-xs text-gray-500">+{dayAppointments.length - 2} más</div>
+
+                            {dayAppointments.length > 3 && (
+                              <div className="absolute bottom-2 right-2 bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full font-medium border">
+                                +{dayAppointments.length - 3}
+                              </div>
                             )}
                           </div>
                         </div>
