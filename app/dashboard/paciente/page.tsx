@@ -1,13 +1,37 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Calendar, Video, FileText, CreditCard, Bell, Clock, Download, AlertCircle } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import {
+  Calendar,
+  Video,
+  FileText,
+  CreditCard,
+  Bell,
+  Clock,
+  Download,
+  AlertCircle,
+  User,
+  Settings,
+  LogOut,
+} from "lucide-react"
 import Link from "next/link"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function PacienteDashboard() {
+  const { logout } = useAuth()
+
   const proximasSesiones = [
     { id: 1, fecha: "Hoy", hora: "15:00", profesional: "Dr. Roberto Silva", estado: "confirmada", puedeIngresar: true },
     {
@@ -57,12 +81,33 @@ export default function PacienteDashboard() {
                   <Bell className="h-4 w-4 mr-2" />
                   Notificaciones
                 </Button>
-                <Link href="/sala-espera/1">
-                  <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                    <Video className="h-4 w-4 mr-2" />
-                    Unirse a Sesión
-                  </Button>
-                </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button size="sm">
+                      <User className="h-4 w-4 mr-2" />
+                      Mi Cuenta
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <Link href="/dashboard/paciente/perfil">
+                      <DropdownMenuItem className="flex items-center">
+                        <User className="h-4 w-4 mr-2" />
+                        Perfil
+                      </DropdownMenuItem>
+                    </Link>
+                    <Link href="/dashboard/paciente/configuracion">
+                      <DropdownMenuItem className="flex items-center">
+                        <Settings className="h-4 w-4 mr-2" />
+                        Configuración
+                      </DropdownMenuItem>
+                    </Link>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={logout} className="text-red-600 flex items-center">
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Cerrar Sesión
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           </header>
