@@ -5,14 +5,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Calendar, Users, FileText, CreditCard, Video, Settings, Home, Bell, LogOut, User, Brain } from "lucide-react"
+import { Calendar, Users, FileText, CreditCard, Video, Settings, Home, Bell, Brain } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 
 interface NavigationProps {
@@ -111,38 +104,6 @@ export function Navigation({ userType }: NavigationProps) {
               Notificaciones
             </Button>
           </Link>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="w-full justify-start">
-                <User className="h-4 w-4 mr-3" />
-                Mi Cuenta
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56">
-              <Link href={userType === "psicologo" ? "/dashboard/psicologo/perfil" : "/dashboard/paciente/perfil"}>
-                <DropdownMenuItem className="flex items-center">
-                  <User className="h-4 w-4 mr-2" />
-                  Perfil
-                </DropdownMenuItem>
-              </Link>
-              <Link
-                href={
-                  userType === "psicologo" ? "/dashboard/psicologo/configuracion" : "/dashboard/paciente/configuracion"
-                }
-              >
-                <DropdownMenuItem className="flex items-center">
-                  <Settings className="h-4 w-4 mr-2" />
-                  Configuración
-                </DropdownMenuItem>
-              </Link>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout} className="text-red-600 flex items-center">
-                <LogOut className="h-4 w-4 mr-2" />
-                Cerrar Sesión
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
     </nav>
