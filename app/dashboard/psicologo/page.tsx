@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -25,37 +27,63 @@ import {
   User,
   Settings,
   LogOut,
+  Mail,
+  MailOpen,
 } from "lucide-react"
 import Link from "next/link"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
 import { useAuth } from "@/contexts/auth-context"
+import { useState } from "react"
 
 export default function PsicologoDashboard() {
   const { logout } = useAuth()
 
-  const handleNotificationClick = (notif: any) => {
-    // Mark notification as read (in a real app, this would update the database)
-    notif.leida = true
+  const [notificaciones, setNotificaciones] = useState([
+    {
+      id: 1,
+      tipo: "sesion",
+      mensaje: "Sesión con María González en 30 minutos",
+      tiempo: "hace 5 min",
+      leida: false,
+    },
+    {
+      id: 2,
+      tipo: "pago",
+      mensaje: "Pago recibido de Carlos Rodríguez",
+      tiempo: "hace 1 hora",
+      leida: false,
+    },
+    {
+      id: 3,
+      tipo: "documento",
+      mensaje: "Nuevo consentimiento firmado por Ana Martínez",
+      tiempo: "hace 2 horas",
+      leida: true,
+    },
+  ])
 
-    // Route based on notification type
+  const handleNotificationClick = (notif: any) => {
+    setNotificaciones((prev) => prev.map((n) => (n.id === notif.id ? { ...n, leida: true } : n)))
+
     switch (notif.tipo) {
       case "sesion":
-        // Redirect to agenda page
         window.location.href = "/dashboard/psicologo/agenda"
         break
       case "pago":
-        // Redirect to payments page
         window.location.href = "/dashboard/psicologo/pagos"
         break
       case "documento":
-        // Redirect to patients page where documents are managed
         window.location.href = "/dashboard/psicologo/pacientes"
         break
       default:
-        // Default to notifications page
         window.location.href = "/dashboard/psicologo/notificaciones"
     }
+  }
+
+  const toggleNotificationStatus = (notifId: number, event: React.MouseEvent) => {
+    event.stopPropagation()
+    setNotificaciones((prev) => prev.map((n) => (n.id === notifId ? { ...n, leida: !n.leida } : n)))
   }
 
   const proximasSesiones = [
@@ -89,30 +117,6 @@ export default function PsicologoDashboard() {
     { tipo: "pago", mensaje: "3 pacientes con pagos pendientes", urgencia: "alta" },
     { tipo: "sesion", mensaje: "Sesión con Juan Pérez en 15 minutos", urgencia: "media" },
     { tipo: "documento", mensaje: "2 consentimientos informados pendientes", urgencia: "baja" },
-  ]
-
-  const notificaciones = [
-    {
-      id: 1,
-      tipo: "sesion",
-      mensaje: "Sesión con María González en 30 minutos",
-      tiempo: "hace 5 min",
-      leida: false,
-    },
-    {
-      id: 2,
-      tipo: "pago",
-      mensaje: "Pago recibido de Carlos Rodríguez",
-      tiempo: "hace 1 hora",
-      leida: false,
-    },
-    {
-      id: 3,
-      tipo: "documento",
-      mensaje: "Nuevo consentimiento firmado por Ana Martínez",
-      tiempo: "hace 2 horas",
-      leida: true,
-    },
   ]
 
   return (
@@ -158,21 +162,36 @@ export default function PsicologoDashboard() {
                                 : "bg-gray-50 border-gray-200 hover:bg-gray-100"
                             }`}
                           >
-                            <div className="flex items-start space-x-2">
-                              <div
-                                className={`w-2 h-2 rounded-full mt-2 ${
-                                  notif.tipo === "sesion"
-                                    ? "bg-green-500"
-                                    : notif.tipo === "pago"
-                                      ? "bg-blue-500"
-                                      : "bg-purple-500"
-                                }`}
-                              />
-                              <div className="flex-1">
-                                <p className="text-sm font-medium">{notif.mensaje}</p>
-                                <p className="text-xs text-gray-500 mt-1">{notif.tiempo}</p>
-                                <p className="text-xs text-blue-600 mt-1 opacity-75">Click para ver detalles</p>
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-start space-x-2 flex-1">
+                                <div
+                                  className={`w-2 h-2 rounded-full mt-2 ${
+                                    notif.tipo === "sesion"
+                                      ? "bg-green-500"
+                                      : notif.tipo === "pago"
+                                        ? "bg-blue-500"
+                                        : "bg-purple-500"
+                                  }`}
+                                />
+                                <div className="flex-1">
+                                  <p className="text-sm font-medium">{notif.mensaje}</p>
+                                  <p className="text-xs text-gray-500 mt-1">{notif.tiempo}</p>
+                                  <p className="text-xs text-blue-600 mt-1 opacity-75">Click para ver detalles</p>
+                                </div>
                               </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => toggleNotificationStatus(notif.id, e)}
+                                className="h-6 w-6 p-0 hover:bg-gray-200"
+                                title={notif.leida ? "Marcar como no leída" : "Marcar como leída"}
+                              >
+                                {notif.leida ? (
+                                  <MailOpen className="h-3 w-3 text-gray-500" />
+                                ) : (
+                                  <Mail className="h-3 w-3 text-blue-600" />
+                                )}
+                              </Button>
                             </div>
                           </div>
                         ))}
