@@ -116,7 +116,6 @@ export default function PsicologoAgendaPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [isNewAppointmentOpen, setIsNewAppointmentOpen] = useState(false)
   const [appointments, setAppointments] = useState(() => generateAppointments())
-  const [isDarkMode, setIsDarkMode] = useState(false)
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
@@ -333,12 +332,12 @@ export default function PsicologoAgendaPage() {
     <AuthGuard requiredUserType="psicologo">
       <div className="flex">
         <Navigation userType="psicologo" />
-        <div className={`flex-1 min-h-screen ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}>
-          <header className={`${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white"} border-b`}>
+        <div className="flex-1 min-h-screen bg-gray-50">
+          <header className="bg-white border-b">
             <div className="px-6 py-4 flex items-center justify-between">
               <div>
-                <h1 className={`text-2xl font-bold ${isDarkMode ? "text-white" : "text-gray-900"}`}>Mi Agenda</h1>
-                <p className={`${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>Gestiona tus citas y horarios</p>
+                <h1 className="text-2xl font-bold text-gray-900">Mi Agenda</h1>
+                <p className="text-gray-600">Gestiona tus citas y horarios</p>
               </div>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center border rounded-lg">
@@ -376,10 +375,6 @@ export default function PsicologoAgendaPage() {
                     Lista
                   </Button>
                 </div>
-
-                <Button variant="outline" size="sm" onClick={() => setIsDarkMode(!isDarkMode)}>
-                  {isDarkMode ? "☀️" : "🌙"}
-                </Button>
 
                 <Dialog open={isNewAppointmentOpen} onOpenChange={setIsNewAppointmentOpen}>
                   <DialogTrigger asChild>
@@ -516,7 +511,7 @@ export default function PsicologoAgendaPage() {
                     <ChevronRight className="h-4 w-4" />
                   </Button>
                 </div>
-                <h2 className={`text-xl font-semibold ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+                <h2 className="text-xl font-semibold text-gray-900">
                   {viewMode === "month" && `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`}
                   {viewMode === "week" && `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`}
                   {viewMode === "day" &&
@@ -531,13 +526,13 @@ export default function PsicologoAgendaPage() {
             </div>
 
             {viewMode === "month" && (
-              <Card className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+              <Card>
                 <CardContent className="p-0">
-                  <div className={`grid grid-cols-7 ${isDarkMode ? "bg-gray-700" : "bg-gray-50"} border-b`}>
+                  <div className="grid grid-cols-7 bg-gray-50 border-b">
                     {dayNames.map((day) => (
                       <div
                         key={day}
-                        className={`p-4 text-center font-medium ${isDarkMode ? "text-gray-300" : "text-gray-600"} text-sm border-r last:border-r-0`}
+                        className="p-4 text-center font-medium text-gray-600 text-sm border-r last:border-r-0"
                       >
                         {day}
                       </div>
@@ -546,12 +541,7 @@ export default function PsicologoAgendaPage() {
                   <div className="grid grid-cols-7">
                     {getDaysInMonth(currentDate).map((day, index) => {
                       if (!day) {
-                        return (
-                          <div
-                            key={index}
-                            className={`h-32 border-r border-b last:border-r-0 ${isDarkMode ? "border-gray-700" : ""}`}
-                          ></div>
-                        )
+                        return <div key={index} className="h-32 border-r border-b last:border-r-0"></div>
                       }
 
                       const dateKey = formatDateKey(day)
@@ -564,26 +554,10 @@ export default function PsicologoAgendaPage() {
                           key={index}
                           onClick={() => handleDayClick(day)}
                           className={`h-32 p-2 border-r border-b last:border-r-0 relative overflow-hidden cursor-pointer transition-all hover:bg-opacity-80 ${
-                            isToday
-                              ? isDarkMode
-                                ? "bg-blue-900 border-blue-600"
-                                : "bg-blue-50 border-blue-200"
-                              : isDarkMode
-                                ? "bg-gray-800 hover:bg-gray-700 border-gray-700"
-                                : "bg-white hover:bg-gray-50"
+                            isToday ? "bg-blue-50 border-blue-200" : "bg-white hover:bg-gray-50"
                           } ${!isCurrentMonth ? "opacity-40" : ""}`}
                         >
-                          <div
-                            className={`text-sm font-semibold mb-1 ${
-                              isToday
-                                ? isDarkMode
-                                  ? "text-blue-300"
-                                  : "text-blue-600"
-                                : isDarkMode
-                                  ? "text-white"
-                                  : "text-gray-900"
-                            }`}
-                          >
+                          <div className={`text-sm font-semibold mb-1 ${isToday ? "text-blue-600" : "text-gray-900"}`}>
                             {day.getDate()}
                           </div>
 
@@ -593,12 +567,8 @@ export default function PsicologoAgendaPage() {
                                 key={appointment.id}
                                 className={`text-xs p-1.5 rounded-md truncate font-medium ${
                                   appointment.tipo === "virtual"
-                                    ? isDarkMode
-                                      ? "bg-blue-800 text-blue-200"
-                                      : "bg-blue-100 text-blue-800"
-                                    : isDarkMode
-                                      ? "bg-green-800 text-green-200"
-                                      : "bg-green-100 text-green-800"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-green-100 text-green-800"
                                 }`}
                                 title={`${appointment.hora} - ${appointment.paciente} (${appointment.tipo})`}
                               >
@@ -611,9 +581,7 @@ export default function PsicologoAgendaPage() {
                             ))}
 
                             {dayAppointments.length > 2 && (
-                              <div
-                                className={`absolute bottom-1 right-1 ${isDarkMode ? "bg-gray-700 text-gray-300" : "bg-gray-100 text-gray-600"} text-xs px-2 py-1 rounded-full font-medium border`}
-                              >
+                              <div className="absolute bottom-1 right-1 bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full font-medium border">
                                 +{dayAppointments.length - 2}
                               </div>
                             )}
@@ -627,31 +595,18 @@ export default function PsicologoAgendaPage() {
             )}
 
             {viewMode === "week" && (
-              <Card className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+              <Card>
                 <CardContent className="p-0">
-                  <div className={`grid grid-cols-8 ${isDarkMode ? "bg-gray-700" : "bg-gray-50"} border-b`}>
-                    <div className={`p-4 border-r ${isDarkMode ? "border-gray-600" : ""}`}></div>
+                  <div className="grid grid-cols-8 bg-gray-50 border-b">
+                    <div className="p-4 border-r"></div>
                     {getWeekDays(currentDate).map((day, index) => {
                       const isToday = day.toDateString() === new Date().toDateString()
                       return (
-                        <div
-                          key={index}
-                          className={`p-4 text-center border-r last:border-r-0 ${isDarkMode ? "border-gray-600" : ""}`}
-                        >
-                          <div className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
+                        <div key={index} className={`p-4 text-center border-r last:border-r-0`}>
+                          <div className="text-sm text-gray-600">
                             {day.toLocaleDateString("es-ES", { weekday: "short" })}
                           </div>
-                          <div
-                            className={`text-lg font-semibold ${
-                              isToday
-                                ? isDarkMode
-                                  ? "text-blue-300"
-                                  : "text-blue-600"
-                                : isDarkMode
-                                  ? "text-white"
-                                  : "text-gray-900"
-                            }`}
-                          >
+                          <div className={`text-lg font-semibold ${isToday ? "text-blue-600" : "text-gray-900"}`}>
                             {day.getDate()}
                           </div>
                         </div>
@@ -661,12 +616,8 @@ export default function PsicologoAgendaPage() {
 
                   <div className="max-h-96 overflow-y-auto">
                     {getTimeSlots().map((time) => (
-                      <div key={time} className={`grid grid-cols-8 border-b ${isDarkMode ? "border-gray-700" : ""}`}>
-                        <div
-                          className={`p-2 text-xs ${isDarkMode ? "text-gray-400 bg-gray-700" : "text-gray-500 bg-gray-50"} border-r font-medium`}
-                        >
-                          {time}
-                        </div>
+                      <div key={time} className={`grid grid-cols-8 border-b`}>
+                        <div className={`p-2 text-xs text-gray-500 bg-gray-50 border-r font-medium`}>{time}</div>
                         {getWeekDays(currentDate).map((day, dayIndex) => {
                           const dateKey = formatDateKey(day)
                           const dayAppointments = appointments[dateKey] || []
@@ -675,18 +626,14 @@ export default function PsicologoAgendaPage() {
                           return (
                             <div
                               key={dayIndex}
-                              className={`p-2 h-12 border-r last:border-r-0 ${isDarkMode ? "border-gray-700 hover:bg-gray-700" : "hover:bg-gray-50"} cursor-pointer transition-colors`}
+                              className={`p-2 h-12 border-r last:border-r-0 hover:bg-gray-50 cursor-pointer transition-colors`}
                             >
                               {timeAppointment && (
                                 <div
                                   className={`text-xs p-1 rounded truncate ${
                                     timeAppointment.tipo === "virtual"
-                                      ? isDarkMode
-                                        ? "bg-blue-800 text-blue-200"
-                                        : "bg-blue-100 text-blue-800"
-                                      : isDarkMode
-                                        ? "bg-green-800 text-green-200"
-                                        : "bg-green-100 text-green-800"
+                                      ? "bg-blue-100 text-blue-800"
+                                      : "bg-green-100 text-green-800"
                                   }`}
                                 >
                                   {timeAppointment.paciente}
@@ -703,7 +650,7 @@ export default function PsicologoAgendaPage() {
             )}
 
             {viewMode === "day" && (
-              <Card className={isDarkMode ? "bg-gray-800 border-gray-700" : ""}>
+              <Card>
                 <CardContent className="p-0">
                   <div className="max-h-96 overflow-y-auto">
                     {getTimeSlots().map((time) => {
@@ -712,25 +659,15 @@ export default function PsicologoAgendaPage() {
                       const timeAppointment = dayAppointments.find((apt) => apt.hora === time)
 
                       return (
-                        <div key={time} className={`flex border-b ${isDarkMode ? "border-gray-700" : ""}`}>
-                          <div
-                            className={`w-20 p-3 text-sm ${isDarkMode ? "text-gray-400 bg-gray-700" : "text-gray-500 bg-gray-50"} border-r font-medium`}
-                          >
-                            {time}
-                          </div>
-                          <div
-                            className={`flex-1 p-3 h-16 ${isDarkMode ? "hover:bg-gray-700" : "hover:bg-gray-50"} cursor-pointer transition-colors`}
-                          >
+                        <div key={time} className={`flex border-b`}>
+                          <div className={`w-20 p-3 text-sm text-gray-500 bg-gray-50 border-r font-medium`}>{time}</div>
+                          <div className={`flex-1 p-3 h-16 hover:bg-gray-50 cursor-pointer transition-colors`}>
                             {timeAppointment && (
                               <div
                                 className={`p-2 rounded-lg h-full flex items-center ${
                                   timeAppointment.tipo === "virtual"
-                                    ? isDarkMode
-                                      ? "bg-blue-800 text-blue-200"
-                                      : "bg-blue-100 text-blue-800"
-                                    : isDarkMode
-                                      ? "bg-green-800 text-green-200"
-                                      : "bg-green-100 text-green-800"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-green-100 text-green-800"
                                 }`}
                               >
                                 <div className="flex items-center space-x-2">
@@ -753,7 +690,7 @@ export default function PsicologoAgendaPage() {
 
             {viewMode === "list" && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <Card className={`lg:col-span-2 ${isDarkMode ? "bg-gray-800 border-gray-700" : ""}`}>
+                <Card className={`lg:col-span-2`}>
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
