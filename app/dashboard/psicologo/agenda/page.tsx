@@ -19,7 +19,6 @@ import { CalendarIcon, Clock, Plus, Users, Video, ChevronLeft, ChevronRight, Gri
 import Link from "next/link"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
-import { GoogleCalendarIntegration } from "@/components/google-calendar-integration"
 
 function generateAppointments() {
   const appointments: { [key: string]: any[] } = {}
@@ -117,7 +116,6 @@ export default function PsicologoAgendaPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [isNewAppointmentOpen, setIsNewAppointmentOpen] = useState(false)
   const [appointments, setAppointments] = useState(() => generateAppointments())
-  const [googleEvents, setGoogleEvents] = useState<any[]>([])
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search)
@@ -186,36 +184,6 @@ export default function PsicologoAgendaPage() {
         a.hora.localeCompare(b.hora),
       ),
     }))
-
-    try {
-      const startDateTime = new Date(`${newAppointment.fecha}T${newAppointment.hora}:00`)
-      const endDateTime = new Date(startDateTime.getTime() + newAppointment.duracion * 60000)
-
-      const googleEventData = {
-        summary: `Sesión con ${newAppointment.paciente}`,
-        description: `Sesión de psicología con ${newAppointment.paciente} (${newAppointment.tipo})`,
-        start: {
-          dateTime: startDateTime.toISOString(),
-          timeZone: "America/Argentina/Buenos_Aires",
-        },
-        end: {
-          dateTime: endDateTime.toISOString(),
-          timeZone: "America/Argentina/Buenos_Aires",
-        },
-      }
-
-      const response = await fetch("/api/google-calendar/events", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(googleEventData),
-      })
-
-      if (response.ok) {
-        console.log("Evento sincronizado con Google Calendar")
-      }
-    } catch (error) {
-      console.error("Error syncing with Google Calendar:", error)
-    }
 
     // Reset form and close modal
     setNewAppointment({
@@ -332,12 +300,6 @@ export default function PsicologoAgendaPage() {
   const handleProximoDiaClick = (date: Date) => {
     setSelectedDate(date)
     setViewMode("list")
-  }
-
-  const handleGoogleEventsSync = (events: any[]) => {
-    setGoogleEvents(events)
-    // Optionally merge Google events with local appointments
-    console.log("Google Calendar events synced:", events.length)
   }
 
   return (
@@ -495,8 +457,6 @@ export default function PsicologoAgendaPage() {
           </header>
 
           <div className="p-6">
-            <GoogleCalendarIntegration onEventsSync={handleGoogleEventsSync} />
-
             {viewMode === "calendar" ? (
               <Card>
                 <CardHeader>
