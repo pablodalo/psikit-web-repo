@@ -20,23 +20,97 @@ export default function PsicologoAgendaPage() {
     { id: 4, paciente: "Luis Pérez", hora: "15:30", duracion: 50, estado: "confirmada", tipo: "virtual" },
   ]
 
-  const appointments = {
-    "2024-12-18": [
-      { id: 1, paciente: "María González", hora: "09:00", tipo: "virtual", estado: "confirmada" },
-      { id: 2, paciente: "Carlos Rodríguez", hora: "10:30", tipo: "virtual", estado: "pendiente" },
-      { id: 3, paciente: "Ana Martínez", hora: "14:00", tipo: "presencial", estado: "confirmada" },
-      { id: 4, paciente: "Luis Pérez", hora: "15:30", tipo: "virtual", estado: "confirmada" },
-    ],
-    "2024-12-19": [
-      { id: 5, paciente: "Sofia López", hora: "10:00", tipo: "virtual", estado: "confirmada" },
-      { id: 6, paciente: "Diego Martín", hora: "15:00", tipo: "presencial", estado: "confirmada" },
-    ],
-    "2024-12-20": [
-      { id: 7, paciente: "Elena Ruiz", hora: "09:30", tipo: "virtual", estado: "confirmada" },
-      { id: 8, paciente: "Roberto Silva", hora: "11:00", tipo: "virtual", estado: "pendiente" },
-      { id: 9, paciente: "Carmen Torres", hora: "16:00", tipo: "presencial", estado: "confirmada" },
-    ],
+  const generateAppointments = () => {
+    const appointments: { [key: string]: any[] } = {}
+    const today = new Date()
+    const currentMonth = today.getMonth()
+    const currentYear = today.getFullYear()
+
+    // Sample patients
+    const patients = [
+      "María González",
+      "Carlos Rodríguez",
+      "Ana Martínez",
+      "Luis Pérez",
+      "Sofia López",
+      "Diego Martín",
+      "Elena Ruiz",
+      "Roberto Silva",
+      "Carmen Torres",
+      "Pedro Jiménez",
+      "Laura Vega",
+      "Miguel Santos",
+    ]
+
+    // Generate appointments for current month
+    for (let day = 1; day <= 31; day++) {
+      const date = new Date(currentYear, currentMonth, day)
+      if (date.getMonth() !== currentMonth) break // Stop if we've moved to next month
+
+      const dateKey = date.toISOString().split("T")[0]
+      const dayOfWeek = date.getDay()
+
+      // Skip weekends for most appointments
+      if (dayOfWeek === 0 || dayOfWeek === 6) continue
+
+      // Randomly generate 1-4 appointments per day
+      const numAppointments = Math.floor(Math.random() * 4) + 1
+      const dayAppointments = []
+
+      for (let i = 0; i < numAppointments; i++) {
+        const hour = 9 + Math.floor(Math.random() * 8) // 9 AM to 4 PM
+        const minute = Math.random() > 0.5 ? "00" : "30"
+        const patient = patients[Math.floor(Math.random() * patients.length)]
+        const tipo = Math.random() > 0.3 ? "virtual" : "presencial"
+        const estado = Math.random() > 0.2 ? "confirmada" : "pendiente"
+
+        dayAppointments.push({
+          id: `${dateKey}-${i}`,
+          paciente: patient,
+          hora: `${hour.toString().padStart(2, "0")}:${minute}`,
+          tipo,
+          estado,
+        })
+      }
+
+      // Sort appointments by time
+      dayAppointments.sort((a, b) => a.hora.localeCompare(b.hora))
+      appointments[dateKey] = dayAppointments
+    }
+
+    // Add next month appointments
+    for (let day = 1; day <= 15; day++) {
+      const date = new Date(currentYear, currentMonth + 1, day)
+      const dateKey = date.toISOString().split("T")[0]
+      const dayOfWeek = date.getDay()
+
+      if (dayOfWeek === 0 || dayOfWeek === 6) continue
+
+      const numAppointments = Math.floor(Math.random() * 3) + 1
+      const dayAppointments = []
+
+      for (let i = 0; i < numAppointments; i++) {
+        const hour = 9 + Math.floor(Math.random() * 8)
+        const minute = Math.random() > 0.5 ? "00" : "30"
+        const patient = patients[Math.floor(Math.random() * patients.length)]
+
+        dayAppointments.push({
+          id: `${dateKey}-${i}`,
+          paciente: patient,
+          hora: `${hour.toString().padStart(2, "0")}:${minute}`,
+          tipo: Math.random() > 0.3 ? "virtual" : "presencial",
+          estado: "confirmada",
+        })
+      }
+
+      dayAppointments.sort((a, b) => a.hora.localeCompare(b.hora))
+      appointments[dateKey] = dayAppointments
+    }
+
+    return appointments
   }
+
+  const appointments = generateAppointments()
 
   const getDaysInMonth = (date: Date) => {
     const year = date.getFullYear()
@@ -215,7 +289,7 @@ export default function PsicologoAgendaPage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <CardTitle>Hoy - {new Date().toLocaleDateString()}</CardTitle>
-                        <CardDescription>4 sesiones programadas</CardDescription>
+                        <CardDescription>{sesionesHoy.length} sesiones programadas</CardDescription>
                       </div>
                       <div className="flex items-center space-x-2">
                         <Button size="sm" variant="outline">
