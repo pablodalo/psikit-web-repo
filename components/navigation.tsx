@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Calendar, Users, FileText, CreditCard, Video, Home, Bell, Brain } from "lucide-react"
+import { Calendar, Users, FileText, CreditCard, Video, Home, Brain } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 
 interface NavigationProps {
@@ -89,19 +89,6 @@ export function Navigation({ userType }: NavigationProps) {
               </Link>
             )
           })}
-        </div>
-
-        <div className="mt-8 pt-8 border-t space-y-2">
-          <Link
-            href={
-              userType === "psicologo" ? "/dashboard/psicologo/notificaciones" : "/dashboard/paciente/notificaciones"
-            }
-          >
-            <Button variant="ghost" className="w-full justify-start">
-              <Bell className="h-4 w-4 mr-3" />
-              Notificaciones
-            </Button>
-          </Link>
         </div>
       </div>
     </nav>
