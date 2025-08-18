@@ -273,37 +273,6 @@ export default function PsicologoAgendaPage() {
 
   const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"]
 
-  const getProximosDias = () => {
-    const today = new Date()
-    const proximosDias = []
-
-    for (let i = 1; i <= 4; i++) {
-      const date = new Date(today)
-      date.setDate(today.getDate() + i)
-
-      const dateKey = formatDateKey(date)
-      const dayAppointments = appointments[dateKey] || []
-
-      const dayName = date.toLocaleDateString("es-ES", { weekday: "long" })
-      const capitalizedDayName = dayName.charAt(0).toUpperCase() + dayName.slice(1)
-
-      proximosDias.push({
-        fecha: capitalizedDayName,
-        date: date,
-        sesiones: dayAppointments.length,
-      })
-    }
-
-    return proximosDias
-  }
-
-  const proximosDias = getProximosDias()
-
-  const handleProximoDiaClick = (date: Date) => {
-    setSelectedDate(date)
-    setViewMode("list")
-  }
-
   const getWeekDays = (date: Date) => {
     const week = []
     const startOfWeek = new Date(date)
@@ -689,111 +658,75 @@ export default function PsicologoAgendaPage() {
             )}
 
             {viewMode === "list" && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <Card className={`lg:col-span-2`}>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle>
-                          {selectedDate
-                            ? `${selectedDate.toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`
-                            : `Hoy - ${new Date().toLocaleDateString()}`}
-                        </CardTitle>
-                        <CardDescription>
-                          {selectedDate
-                            ? `${getSessionsForDate(selectedDate).length} sesiones programadas`
-                            : `${sesionesHoy.length} sesiones programadas`}
-                        </CardDescription>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        {selectedDate && (
-                          <Button size="sm" variant="outline" onClick={() => setSelectedDate(null)}>
-                            Ver Hoy
-                          </Button>
-                        )}
-                        <Button size="sm" variant="outline">
-                          <ChevronLeft className="h-4 w-4" />
-                        </Button>
-                        <Button size="sm" variant="outline">
-                          <ChevronRight className="h-4 w-4" />
-                        </Button>
-                      </div>
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle>
+                        {selectedDate
+                          ? `${selectedDate.toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`
+                          : `Hoy - ${new Date().toLocaleDateString()}`}
+                      </CardTitle>
+                      <CardDescription>
+                        {selectedDate
+                          ? `${getSessionsForDate(selectedDate).length} sesiones programadas`
+                          : `${sesionesHoy.length} sesiones programadas`}
+                      </CardDescription>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {(selectedDate ? getSessionsForDate(selectedDate) : sesionesHoy).map((sesion) => (
-                        <div key={sesion.id} className="flex items-center justify-between p-4 border rounded-lg">
-                          <div className="flex items-center space-x-4">
-                            <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
-                              <Clock className="h-6 w-6 text-blue-600" />
-                            </div>
-                            <div>
-                              <p className="font-medium">{sesion.paciente}</p>
-                              <p className="text-sm text-gray-600">
-                                {sesion.hora} - {sesion.duracion} min
-                              </p>
-                              <div className="flex items-center space-x-2 mt-1">
-                                <Badge variant={sesion.tipo === "virtual" ? "default" : "secondary"}>
-                                  {sesion.tipo}
-                                </Badge>
-                                <Badge variant={sesion.estado === "confirmada" ? "default" : "secondary"}>
-                                  {sesion.estado}
-                                </Badge>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            {sesion.tipo === "virtual" && (
-                              <Link href={`/sesion/${sesion.id}`}>
-                                <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                                  <Video className="h-4 w-4 mr-1" />
-                                  Iniciar
-                                </Button>
-                              </Link>
-                            )}
-                            <Button size="sm" variant="outline">
-                              Editar
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
+                    <div className="flex items-center space-x-2">
+                      {selectedDate && (
+                        <Button size="sm" variant="outline" onClick={() => setSelectedDate(null)}>
+                          Ver Hoy
+                        </Button>
+                      )}
+                      <Button size="sm" variant="outline">
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
                     </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Próximos Días</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {proximosDias.map((dia, index) => (
-                        <div
-                          key={index}
-                          onClick={() => handleProximoDiaClick(dia.date)}
-                          className="flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
-                        >
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {(selectedDate ? getSessionsForDate(selectedDate) : sesionesHoy).map((sesion) => (
+                      <div key={sesion.id} className="flex items-center justify-between p-4 border rounded-lg">
+                        <div className="flex items-center space-x-4">
+                          <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
+                            <Clock className="h-6 w-6 text-blue-600" />
+                          </div>
                           <div>
-                            <p className="font-medium">{dia.fecha}</p>
-                            <p className="text-sm text-gray-600">{dia.sesiones} sesiones</p>
+                            <p className="font-medium">{sesion.paciente}</p>
+                            <p className="text-sm text-gray-600">
+                              {sesion.hora} - {sesion.duracion} min
+                            </p>
+                            <div className="flex items-center space-x-2 mt-1">
+                              <Badge variant={sesion.tipo === "virtual" ? "default" : "secondary"}>{sesion.tipo}</Badge>
+                              <Badge variant={sesion.estado === "confirmada" ? "default" : "secondary"}>
+                                {sesion.estado}
+                              </Badge>
+                            </div>
                           </div>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              handleProximoDiaClick(dia.date)
-                            }}
-                          >
-                            Ver
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {sesion.tipo === "virtual" && (
+                            <Link href={`/sesion/${sesion.id}`}>
+                              <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                                <Video className="h-4 w-4 mr-1" />
+                                Iniciar
+                              </Button>
+                            </Link>
+                          )}
+                          <Button size="sm" variant="outline">
+                            Editar
                           </Button>
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
             )}
 
             <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6">
