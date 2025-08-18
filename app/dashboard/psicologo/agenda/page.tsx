@@ -12,6 +12,7 @@ import { Navigation } from "@/components/navigation"
 export default function PsicologoAgendaPage() {
   const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar")
   const [currentDate, setCurrentDate] = useState(new Date())
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
 
   const sesionesHoy = [
     { id: 1, paciente: "María González", hora: "09:00", duracion: 50, estado: "confirmada", tipo: "virtual" },
@@ -151,6 +152,25 @@ export default function PsicologoAgendaPage() {
     })
   }
 
+  const handleDayClick = (day: Date) => {
+    setSelectedDate(day)
+    setViewMode("list")
+  }
+
+  const getSessionsForDate = (date: Date) => {
+    const dateKey = formatDateKey(date)
+    const dayAppointments = appointments[dateKey] || []
+
+    return dayAppointments.map((appointment, index) => ({
+      id: `${dateKey}-${index}`,
+      paciente: appointment.paciente,
+      hora: appointment.hora,
+      duracion: 50,
+      estado: appointment.estado,
+      tipo: appointment.tipo,
+    }))
+  }
+
   const monthNames = [
     "Enero",
     "Febrero",
@@ -257,8 +277,9 @@ export default function PsicologoAgendaPage() {
                       return (
                         <div
                           key={index}
-                          className={`h-32 p-2 border rounded-lg relative overflow-hidden ${
-                            isToday ? "bg-blue-50 border-blue-200" : "bg-white hover:bg-gray-50"
+                          onClick={() => handleDayClick(day)}
+                          className={`h-32 p-2 border rounded-lg relative overflow-hidden cursor-pointer transition-colors ${
+                            isToday ? "bg-blue-50 border-blue-200 hover:bg-blue-100" : "bg-white hover:bg-gray-50"
                           }`}
                         >
                           <div className={`text-sm font-semibold mb-2 ${isToday ? "text-blue-600" : "text-gray-900"}`}>
@@ -298,15 +319,27 @@ export default function PsicologoAgendaPage() {
               </Card>
             ) : (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Existing list view */}
                 <Card className="lg:col-span-2">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div>
-                        <CardTitle>Hoy - {new Date().toLocaleDateString()}</CardTitle>
-                        <CardDescription>{sesionesHoy.length} sesiones programadas</CardDescription>
+                        <CardTitle>
+                          {selectedDate
+                            ? `${selectedDate.toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`
+                            : `Hoy - ${new Date().toLocaleDateString()}`}
+                        </CardTitle>
+                        <CardDescription>
+                          {selectedDate
+                            ? `${getSessionsForDate(selectedDate).length} sesiones programadas`
+                            : `${sesionesHoy.length} sesiones programadas`}
+                        </CardDescription>
                       </div>
                       <div className="flex items-center space-x-2">
+                        {selectedDate && (
+                          <Button size="sm" variant="outline" onClick={() => setSelectedDate(null)}>
+                            Ver Hoy
+                          </Button>
+                        )}
                         <Button size="sm" variant="outline">
                           <ChevronLeft className="h-4 w-4" />
                         </Button>
@@ -318,7 +351,7 @@ export default function PsicologoAgendaPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {sesionesHoy.map((sesion) => (
+                      {(selectedDate ? getSessionsForDate(selectedDate) : sesionesHoy).map((sesion) => (
                         <div key={sesion.id} className="flex items-center justify-between p-4 border rounded-lg">
                           <div className="flex items-center space-x-4">
                             <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
@@ -381,7 +414,6 @@ export default function PsicologoAgendaPage() {
               </div>
             )}
 
-            {/* Estadísticas Rápidas */}
             <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6">
               <Card>
                 <CardContent className="p-6 text-center">
