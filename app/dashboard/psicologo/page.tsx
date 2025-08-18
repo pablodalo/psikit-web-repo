@@ -34,6 +34,30 @@ import { useAuth } from "@/contexts/auth-context"
 export default function PsicologoDashboard() {
   const { logout } = useAuth()
 
+  const handleNotificationClick = (notif: any) => {
+    // Mark notification as read (in a real app, this would update the database)
+    notif.leida = true
+
+    // Route based on notification type
+    switch (notif.tipo) {
+      case "sesion":
+        // Redirect to agenda page
+        window.location.href = "/dashboard/psicologo/agenda"
+        break
+      case "pago":
+        // Redirect to payments page
+        window.location.href = "/dashboard/psicologo/pagos"
+        break
+      case "documento":
+        // Redirect to patients page where documents are managed
+        window.location.href = "/dashboard/psicologo/pacientes"
+        break
+      default:
+        // Default to notifications page
+        window.location.href = "/dashboard/psicologo/notificaciones"
+    }
+  }
+
   const proximasSesiones = [
     {
       id: 1,
@@ -127,8 +151,11 @@ export default function PsicologoDashboard() {
                         {notificaciones.map((notif) => (
                           <div
                             key={notif.id}
-                            className={`p-3 rounded-lg border ${
-                              !notif.leida ? "bg-blue-50 border-blue-200" : "bg-gray-50 border-gray-200"
+                            onClick={() => handleNotificationClick(notif)}
+                            className={`p-3 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
+                              !notif.leida
+                                ? "bg-blue-50 border-blue-200 hover:bg-blue-100"
+                                : "bg-gray-50 border-gray-200 hover:bg-gray-100"
                             }`}
                           >
                             <div className="flex items-start space-x-2">
@@ -144,6 +171,7 @@ export default function PsicologoDashboard() {
                               <div className="flex-1">
                                 <p className="text-sm font-medium">{notif.mensaje}</p>
                                 <p className="text-xs text-gray-500 mt-1">{notif.tiempo}</p>
+                                <p className="text-xs text-blue-600 mt-1 opacity-75">Click para ver detalles</p>
                               </div>
                             </div>
                           </div>
