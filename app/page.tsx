@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Calendar, Users, FileText, CreditCard, Video, Shield, Globe, Heart, Brain } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 import { PricingSection } from "@/components/pricing-section"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function HomePage() {
   const { user, logout } = useAuth()
@@ -26,15 +27,16 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Header */}
-      <header className="border-b bg-white">
+      <header className="border-b bg-white dark:bg-gray-900 dark:border-gray-800">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Brain className="h-8 w-8 text-blue-600" />
-            <span className="text-xl font-bold">PsiKit</span>
+            <span className="text-xl font-bold dark:text-white">PsiKit</span>
           </div>
           <div className="flex items-center space-x-4">
+            <ThemeToggle />
             {user?.isAuthenticated ? (
               <Link href={user.userType === "psicologo" ? "/dashboard/psicologo" : "/dashboard/paciente"}>
                 <Button>Ir a mi perfil</Button>
@@ -54,14 +56,16 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-blue-50">
+      <section className="py-20 px-4 bg-blue-50 dark:bg-gray-800">
         <div className="container mx-auto text-center">
-          <Badge className="mb-6 bg-blue-100 text-blue-800 hover:bg-blue-100">Consultorio Virtual Completo</Badge>
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+          <Badge className="mb-6 bg-blue-100 text-blue-800 hover:bg-blue-100 dark:bg-blue-900 dark:text-blue-200">
+            Consultorio Virtual Completo
+          </Badge>
+          <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-6">
             Tu consultorio psicológico
             <span className="text-blue-600"> en cualquier lugar</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-4xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-4xl mx-auto">
             Plataforma integral para psicólogos de Latinoamérica. Sesiones virtuales, gestión de pacientes, historia
             clínica, pagos y mucho más en un solo lugar.
           </p>
@@ -81,9 +85,9 @@ export default function HomePage() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-16 px-4 bg-white">
+      <section className="py-16 px-4 bg-white dark:bg-gray-900">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Funcionalidades Principales</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 dark:text-white">Funcionalidades Principales</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="text-center">
               <CardHeader>
@@ -91,7 +95,7 @@ export default function HomePage() {
                 <CardTitle>Sesiones Virtuales</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">Integración con Google Meet y sala de espera virtual</p>
+                <p className="text-gray-600 dark:text-gray-300">Integración con Google Meet y sala de espera virtual</p>
               </CardContent>
             </Card>
 
@@ -101,7 +105,9 @@ export default function HomePage() {
                 <CardTitle>Agenda Inteligente</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">Calendario de pacientes con recordatorios automáticos</p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Calendario de pacientes con recordatorios automáticos
+                </p>
               </CardContent>
             </Card>
 
@@ -111,7 +117,7 @@ export default function HomePage() {
                 <CardTitle>Gestión de Pacientes</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">Historia clínica digital y fichas de admisión</p>
+                <p className="text-gray-600 dark:text-gray-300">Historia clínica digital y fichas de admisión</p>
               </CardContent>
             </Card>
 
@@ -121,7 +127,7 @@ export default function HomePage() {
                 <CardTitle>Pagos Integrados</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">Gestión de pagos con Mercado Pago y facturación</p>
+                <p className="text-gray-600 dark:text-gray-300">Gestión de pagos con Mercado Pago y facturación</p>
               </CardContent>
             </Card>
 
@@ -131,7 +137,7 @@ export default function HomePage() {
                 <CardTitle>Test Psicológicos</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">PHQ-9, GAD-7, MMSE y más tests disponibles</p>
+                <p className="text-gray-600 dark:text-gray-300">PHQ-9, GAD-7, MMSE y más tests disponibles</p>
               </CardContent>
             </Card>
 
@@ -141,7 +147,7 @@ export default function HomePage() {
                 <CardTitle>Consentimiento Digital</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">Consentimientos informados seguros y legales</p>
+                <p className="text-gray-600 dark:text-gray-300">Consentimientos informados seguros y legales</p>
               </CardContent>
             </Card>
 
@@ -151,7 +157,7 @@ export default function HomePage() {
                 <CardTitle>Catálogo de Profesionales</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">Directorio público para encontrar psicólogos</p>
+                <p className="text-gray-600 dark:text-gray-300">Directorio público para encontrar psicólogos</p>
               </CardContent>
             </Card>
 
@@ -161,7 +167,7 @@ export default function HomePage() {
                 <CardTitle>Comunidad Profesional</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">Red de intercambio entre profesionales</p>
+                <p className="text-gray-600 dark:text-gray-300">Red de intercambio entre profesionales</p>
               </CardContent>
             </Card>
           </div>
@@ -169,14 +175,14 @@ export default function HomePage() {
       </section>
 
       {/* Pricing Preview */}
-      <section className="py-16 px-4 bg-gray-50">
+      <section className="py-16 px-4 bg-gray-50 dark:bg-gray-800">
         <div className="container mx-auto">
           <PricingSection />
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12 px-4">
+      <footer className="bg-gray-900 dark:bg-black text-white py-12 px-4">
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Brain className="h-6 w-6 text-white" />

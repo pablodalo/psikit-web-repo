@@ -34,6 +34,7 @@ import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
 import { useAuth } from "@/contexts/auth-context"
 import { useState, useEffect } from "react"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 export default function PsicologoDashboard() {
   const { logout } = useAuth()
@@ -140,9 +141,9 @@ export default function PsicologoDashboard() {
     <AuthGuard requiredUserType="psicologo">
       <div className="flex">
         <Navigation userType="psicologo" />
-        <div className="flex-1 min-h-screen bg-gray-50">
+        <div className="flex-1 min-h-screen bg-gray-50 dark:bg-gray-900">
           {/* Header */}
-          <header className="bg-white border-b">
+          <header className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
             <div className="px-6 py-4 flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <Avatar>
@@ -150,11 +151,13 @@ export default function PsicologoDashboard() {
                   <AvatarFallback>DR</AvatarFallback>
                 </Avatar>
                 <div>
-                  <h1 className="text-xl font-semibold">Dr. Roberto Silva</h1>
-                  <p className="text-sm text-gray-600">Psicólogo Clínico - Mat. 12345</p>
+                  <h1 className="text-xl font-semibold dark:text-white">Dr. Roberto Silva</h1>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Psicólogo Clínico - Mat. 12345</p>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
+                <ThemeToggle />
+
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="relative bg-transparent">
