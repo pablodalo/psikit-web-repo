@@ -67,6 +67,30 @@ export default function PsicologoDashboard() {
     { tipo: "documento", mensaje: "2 consentimientos informados pendientes", urgencia: "baja" },
   ]
 
+  const notificaciones = [
+    {
+      id: 1,
+      tipo: "sesion",
+      mensaje: "Sesión con María González en 30 minutos",
+      tiempo: "hace 5 min",
+      leida: false,
+    },
+    {
+      id: 2,
+      tipo: "pago",
+      mensaje: "Pago recibido de Carlos Rodríguez",
+      tiempo: "hace 1 hora",
+      leida: false,
+    },
+    {
+      id: 3,
+      tipo: "documento",
+      mensaje: "Nuevo consentimiento firmado por Ana Martínez",
+      tiempo: "hace 2 horas",
+      leida: true,
+    },
+  ]
+
   return (
     <AuthGuard requiredUserType="psicologo">
       <div className="flex">
@@ -86,10 +110,55 @@ export default function PsicologoDashboard() {
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                <Button variant="outline" size="sm">
-                  <Bell className="h-4 w-4 mr-2" />
-                  Notificaciones
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="relative bg-transparent">
+                      <Bell className="h-4 w-4 mr-2" />
+                      Notificaciones
+                      {notificaciones.some((n) => !n.leida) && (
+                        <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
+                      )}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-80">
+                    <div className="p-2">
+                      <h3 className="font-semibold text-sm mb-2">Notificaciones recientes</h3>
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {notificaciones.map((notif) => (
+                          <div
+                            key={notif.id}
+                            className={`p-3 rounded-lg border ${
+                              !notif.leida ? "bg-blue-50 border-blue-200" : "bg-gray-50 border-gray-200"
+                            }`}
+                          >
+                            <div className="flex items-start space-x-2">
+                              <div
+                                className={`w-2 h-2 rounded-full mt-2 ${
+                                  notif.tipo === "sesion"
+                                    ? "bg-green-500"
+                                    : notif.tipo === "pago"
+                                      ? "bg-blue-500"
+                                      : "bg-purple-500"
+                                }`}
+                              />
+                              <div className="flex-1">
+                                <p className="text-sm font-medium">{notif.mensaje}</p>
+                                <p className="text-xs text-gray-500 mt-1">{notif.tiempo}</p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <DropdownMenuSeparator className="my-2" />
+                      <Link href="/dashboard/psicologo/notificaciones">
+                        <Button variant="outline" size="sm" className="w-full bg-transparent">
+                          Ver todas las notificaciones
+                        </Button>
+                      </Link>
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button size="sm">
