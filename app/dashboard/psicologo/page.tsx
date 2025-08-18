@@ -68,10 +68,10 @@ export default function PsicologoDashboard() {
 
     switch (notif.tipo) {
       case "sesion":
-        window.location.href = "/dashboard/psicologo/agenda"
+        window.location.href = "/dashboard/psicologo/agenda?view=list"
         break
       case "pago":
-        window.location.href = "/dashboard/psicologo/pagos"
+        window.location.href = "/dashboard/psicologo/pagos?patient=carlos-rodriguez&view=history"
         break
       case "documento":
         window.location.href = "/dashboard/psicologo/pacientes"
