@@ -37,7 +37,7 @@ export default function HomePage() {
           <div className="flex items-center space-x-4">
             {user?.isAuthenticated ? (
               <Link href={user.userType === "psicologo" ? "/dashboard/psicologo" : "/dashboard/paciente"}>
-                <Button>Ir al Dashboard</Button>
+                <Button>Ir a mi perfil</Button>
               </Link>
             ) : (
               <>
