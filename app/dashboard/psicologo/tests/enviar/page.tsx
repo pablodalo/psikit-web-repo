@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useEffect } from "react"
+import { useState, useMemo, useEffect, useRef } from "react"
 import { useSearchParams } from "next/navigation"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
@@ -16,14 +16,16 @@ export default function EnviarTestPage() {
   const [selectedPatients, setSelectedPatients] = useState<string[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const hasSetInitialTest = useRef(false)
 
   useEffect(() => {
     const testId = searchParams.get("test")
-    if (testId) {
+    if (testId && !hasSetInitialTest.current && selectedTest === null) {
       console.log("[v0] Setting initial test from URL:", testId)
       setSelectedTest(testId)
+      hasSetInitialTest.current = true
     }
-  }, [searchParams])
+  }, [searchParams, selectedTest])
 
   const pacientes = [
     {
@@ -122,12 +124,8 @@ export default function EnviarTestPage() {
     setIsLoading(true)
 
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
-      console.log("[v0] Sending test:", selectedTest, "to patients:", selectedPatients)
-
-      // Show success message and redirect
       alert(`Test enviado exitosamente a ${selectedPatients.length} paciente(s)`)
       window.location.href = "/dashboard/psicologo/tests"
     } catch (error) {
@@ -205,7 +203,6 @@ export default function EnviarTestPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {testsDisponibles.map((test) => {
                     const isSelected = selectedTest === test.id
-                    console.log("[v0] Rendering test:", test.id, "Selected:", selectedTest, "IsSelected:", isSelected)
 
                     return (
                       <Card
@@ -218,7 +215,6 @@ export default function EnviarTestPage() {
                         onClick={(e) => {
                           e.preventDefault()
                           e.stopPropagation()
-                          console.log("[v0] Card clicked for test:", test.id, "Current selected:", selectedTest)
                           setSelectedTest(test.id)
                         }}
                       >
@@ -233,12 +229,6 @@ export default function EnviarTestPage() {
                               onClick={(e) => {
                                 e.preventDefault()
                                 e.stopPropagation()
-                                console.log(
-                                  "[v0] Checkbox clicked for test:",
-                                  test.id,
-                                  "Current selected:",
-                                  selectedTest,
-                                )
                                 setSelectedTest(test.id)
                               }}
                             >
