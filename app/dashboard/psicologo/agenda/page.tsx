@@ -16,7 +16,18 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { CalendarIcon, Clock, Plus, Video, ChevronLeft, ChevronRight, List, MapPin } from "lucide-react"
+import {
+  CalendarIcon,
+  Plus,
+  Video,
+  ChevronLeft,
+  ChevronRight,
+  List,
+  MapPin,
+  Search,
+  TrendingUp,
+  Users,
+} from "lucide-react"
 import Link from "next/link"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
@@ -116,6 +127,7 @@ export default function PsicologoAgendaPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [isNewAppointmentOpen, setIsNewAppointmentOpen] = useState(false)
   const [appointments, setAppointments] = useState(() => generateAppointments())
+  const [searchTerm, setSearchTerm] = useState("")
 
   useEffect(() => {
     const view = searchParams.get("view")
@@ -261,20 +273,20 @@ export default function PsicologoAgendaPage() {
         <Navigation userType="psicologo" />
 
         <div className="flex-1">
-          <header className="bg-white border-b border-gray-200">
+          <header className="bg-white border-b border-gray-200 shadow-sm">
             <div className="px-8 py-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">Agenda</h1>
-                  <p className="text-gray-600">Gestiona tus citas y horarios</p>
+                  <h1 className="text-3xl font-bold text-gray-900">Agenda</h1>
+                  <p className="text-gray-600 mt-1">Gestiona tus citas y horarios profesionales</p>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <div className="flex items-center border rounded-lg">
+                  <div className="flex items-center border rounded-lg shadow-sm">
                     <Button
                       variant={viewMode === "calendar" ? "default" : "ghost"}
                       size="sm"
                       onClick={() => setViewMode("calendar")}
-                      className="rounded-r-none"
+                      className={`rounded-r-none ${viewMode === "calendar" ? "bg-blue-600 hover:bg-blue-700 text-white" : "hover:bg-gray-50"}`}
                     >
                       <CalendarIcon className="h-4 w-4 mr-2" />
                       Calendario
@@ -283,7 +295,7 @@ export default function PsicologoAgendaPage() {
                       variant={viewMode === "list" ? "default" : "ghost"}
                       size="sm"
                       onClick={() => setViewMode("list")}
-                      className="rounded-l-none border-l"
+                      className={`rounded-l-none border-l ${viewMode === "list" ? "bg-blue-600 hover:bg-blue-700 text-white" : "hover:bg-gray-50"}`}
                     >
                       <List className="h-4 w-4 mr-2" />
                       Lista
@@ -292,11 +304,12 @@ export default function PsicologoAgendaPage() {
 
                   <Dialog open={isNewAppointmentOpen} onOpenChange={setIsNewAppointmentOpen}>
                     <DialogTrigger asChild>
-                      <Button className="bg-blue-600 hover:bg-blue-700">
+                      <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm">
                         <Plus className="h-4 w-4 mr-2" />
                         Nueva Cita
                       </Button>
                     </DialogTrigger>
+                    {/* ... existing dialog content ... */}
                     <DialogContent className="sm:max-w-[500px]">
                       <DialogHeader>
                         <DialogTitle>Programar Nueva Cita</DialogTitle>
@@ -415,34 +428,78 @@ export default function PsicologoAgendaPage() {
           </header>
 
           <div className="p-8 space-y-8">
+            <div className="flex items-center justify-between">
+              <div className="max-w-md">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    placeholder="Buscar citas, pacientes..."
+                    className="pl-10 h-10 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center space-y-1 p-3 bg-blue-50 rounded-lg">
+                  <div className="text-lg font-bold text-blue-600">12</div>
+                  <p className="text-xs font-medium text-gray-900">Hoy</p>
+                </div>
+                <div className="text-center space-y-1 p-3 bg-green-50 rounded-lg">
+                  <div className="text-lg font-bold text-green-600">45</div>
+                  <p className="text-xs font-medium text-gray-900">Esta semana</p>
+                </div>
+                <div className="text-center space-y-1 p-3 bg-purple-50 rounded-lg">
+                  <div className="text-lg font-bold text-purple-600">89%</div>
+                  <p className="text-xs font-medium text-gray-900">Asistencia</p>
+                </div>
+              </div>
+            </div>
+
             {viewMode === "calendar" && (
               <>
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
-                      <Button size="sm" variant="outline" onClick={() => navigateMonth("prev")}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => navigateMonth("prev")}
+                        className="hover:bg-gray-50 border-gray-300"
+                      >
                         <ChevronLeft className="h-4 w-4" />
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => setCurrentDate(new Date())}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setCurrentDate(new Date())}
+                        className="hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700"
+                      >
                         Hoy
                       </Button>
-                      <Button size="sm" variant="outline" onClick={() => navigateMonth("next")}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => navigateMonth("next")}
+                        className="hover:bg-gray-50 border-gray-300"
+                      >
                         <ChevronRight className="h-4 w-4" />
                       </Button>
                     </div>
-                    <h2 className="text-xl font-semibold text-gray-900">
+                    <h2 className="text-2xl font-bold text-gray-900">
                       {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
                     </h2>
                   </div>
                 </div>
 
-                <Card>
+                <Card className="shadow-sm border-gray-200">
                   <CardContent className="p-0">
                     <div className="grid grid-cols-7 bg-gray-50 border-b">
                       {dayNames.map((day) => (
                         <div
                           key={day}
-                          className="p-4 text-center font-medium text-gray-600 text-sm border-r last:border-r-0"
+                          className="p-4 text-center font-semibold text-gray-700 text-sm border-r last:border-r-0 bg-gradient-to-b from-gray-50 to-gray-100"
                         >
                           {day}
                         </div>
@@ -451,7 +508,7 @@ export default function PsicologoAgendaPage() {
                     <div className="grid grid-cols-7">
                       {getDaysInMonth(currentDate).map((day, index) => {
                         if (!day) {
-                          return <div key={index} className="h-32 border-r border-b last:border-r-0"></div>
+                          return <div key={index} className="h-32 border-r border-b last:border-r-0 bg-gray-25"></div>
                         }
 
                         const dateKey = formatDateKey(day)
@@ -463,12 +520,16 @@ export default function PsicologoAgendaPage() {
                           <div
                             key={index}
                             onClick={() => handleDayClick(day)}
-                            className={`h-32 p-2 border-r border-b last:border-r-0 relative overflow-hidden cursor-pointer transition-all hover:bg-opacity-80 ${
-                              isToday ? "bg-blue-50 border-blue-200" : "bg-white hover:bg-gray-50"
-                            } ${!isCurrentMonth ? "opacity-40" : ""}`}
+                            className={`h-32 p-2 border-r border-b last:border-r-0 relative overflow-hidden cursor-pointer transition-all duration-200 hover:bg-blue-25 ${
+                              isToday ? "bg-blue-50 border-blue-200 shadow-inner" : "bg-white hover:bg-gray-50"
+                            } ${!isCurrentMonth ? "opacity-40 bg-gray-25" : ""}`}
                           >
                             <div
-                              className={`text-sm font-semibold mb-1 ${isToday ? "text-blue-600" : "text-gray-900"}`}
+                              className={`text-sm font-bold mb-2 ${
+                                isToday
+                                  ? "text-blue-700 bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+                                  : "text-gray-900"
+                              }`}
                             >
                               {day.getDate()}
                             </div>
@@ -477,23 +538,24 @@ export default function PsicologoAgendaPage() {
                               {dayAppointments.slice(0, 2).map((appointment, idx) => (
                                 <div
                                   key={appointment.id}
-                                  className={`text-xs p-1.5 rounded-md truncate font-medium ${
+                                  className={`text-xs p-1.5 rounded-md truncate font-medium shadow-sm border transition-all hover:shadow-md ${
                                     appointment.tipo === "virtual"
-                                      ? "bg-blue-100 text-blue-800"
-                                      : "bg-green-100 text-green-800"
+                                      ? "bg-blue-100 text-blue-800 border-blue-200"
+                                      : "bg-green-100 text-green-800 border-green-200"
                                   }`}
                                   title={`${appointment.hora} - ${appointment.paciente} (${appointment.tipo})`}
                                 >
                                   <div className="flex items-center justify-between">
-                                    <span className="font-medium">{appointment.hora}</span>
+                                    <span className="font-semibold">{appointment.hora}</span>
                                     {appointment.tipo === "virtual" && <Video className="h-3 w-3" />}
+                                    {appointment.tipo === "presencial" && <MapPin className="h-3 w-3" />}
                                   </div>
                                   <div className="truncate text-xs opacity-90">{appointment.paciente}</div>
                                 </div>
                               ))}
 
                               {dayAppointments.length > 2 && (
-                                <div className="absolute bottom-1 right-1 bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full font-medium border">
+                                <div className="absolute bottom-1 right-1 bg-gray-600 text-white text-xs px-2 py-1 rounded-full font-semibold shadow-sm">
                                   +{dayAppointments.length - 2}
                                 </div>
                               )}
@@ -510,16 +572,17 @@ export default function PsicologoAgendaPage() {
             {viewMode === "list" && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2">
-                  <Card>
-                    <CardHeader>
+                  <Card className="shadow-sm border-gray-200">
+                    <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
                       <div className="flex items-center justify-between">
                         <div>
-                          <CardTitle>
+                          <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                            <CalendarIcon className="h-5 w-5 text-blue-600" />
                             {selectedDate
                               ? `${selectedDate.toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`
                               : `Hoy - ${new Date().toLocaleDateString()}`}
                           </CardTitle>
-                          <CardDescription>
+                          <CardDescription className="text-gray-600 mt-1">
                             {selectedDate
                               ? `${(appointments[formatDateKey(selectedDate)] || []).length} sesiones programadas`
                               : `${sesionesHoy.length} sesiones programadas`}
@@ -527,38 +590,68 @@ export default function PsicologoAgendaPage() {
                         </div>
                         <div className="flex items-center space-x-2">
                           {selectedDate && (
-                            <Button size="sm" variant="outline" onClick={() => setSelectedDate(null)}>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setSelectedDate(null)}
+                              className="bg-white hover:bg-blue-50 border-blue-200 text-blue-700"
+                            >
                               Ver Hoy
                             </Button>
                           )}
-                          <Button size="sm" variant="outline">
+                          <Button size="sm" variant="outline" className="hover:bg-gray-50 bg-transparent">
                             <ChevronLeft className="h-4 w-4" />
                           </Button>
-                          <Button size="sm" variant="outline">
+                          <Button size="sm" variant="outline" className="hover:bg-gray-50 bg-transparent">
                             <ChevronRight className="h-4 w-4" />
                           </Button>
                         </div>
                       </div>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-6">
                       <div className="space-y-4">
                         {(selectedDate ? appointments[formatDateKey(selectedDate)] || [] : sesionesHoy).map(
                           (sesion) => (
-                            <div key={sesion.id} className="flex items-center justify-between p-4 border rounded-lg">
+                            <div
+                              key={sesion.id}
+                              className="flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-all duration-200 hover:border-blue-200 bg-white"
+                            >
                               <div className="flex items-center space-x-4">
-                                <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
-                                  <Clock className="h-6 w-6 text-blue-600" />
+                                <div
+                                  className={`flex items-center justify-center w-12 h-12 rounded-full ${
+                                    sesion.tipo === "virtual" ? "bg-blue-100" : "bg-green-100"
+                                  }`}
+                                >
+                                  {sesion.tipo === "virtual" ? (
+                                    <Video className="h-6 w-6 text-blue-600" />
+                                  ) : (
+                                    <MapPin className="h-6 w-6 text-green-600" />
+                                  )}
                                 </div>
                                 <div>
-                                  <p className="font-medium">{sesion.paciente}</p>
+                                  <p className="font-semibold text-gray-900">{sesion.paciente}</p>
                                   <p className="text-sm text-gray-600">
                                     {sesion.hora} - {sesion.duracion || 50} min
                                   </p>
                                   <div className="flex items-center space-x-2 mt-1">
-                                    <Badge variant={sesion.tipo === "virtual" ? "default" : "secondary"}>
+                                    <Badge
+                                      variant="outline"
+                                      className={`text-xs ${
+                                        sesion.tipo === "virtual"
+                                          ? "border-blue-200 text-blue-800 bg-blue-50"
+                                          : "border-green-200 text-green-800 bg-green-50"
+                                      }`}
+                                    >
                                       {sesion.tipo}
                                     </Badge>
-                                    <Badge variant={sesion.estado === "confirmada" ? "default" : "secondary"}>
+                                    <Badge
+                                      variant="outline"
+                                      className={`text-xs ${
+                                        sesion.estado === "confirmada"
+                                          ? "border-green-200 text-green-800 bg-green-50"
+                                          : "border-amber-200 text-amber-800 bg-amber-50"
+                                      }`}
+                                    >
                                       {sesion.estado}
                                     </Badge>
                                   </div>
@@ -567,13 +660,13 @@ export default function PsicologoAgendaPage() {
                               <div className="flex items-center space-x-2">
                                 {sesion.tipo === "virtual" && (
                                   <Link href={`/sesion/${sesion.id}`}>
-                                    <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                                    <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white shadow-sm">
                                       <Video className="h-4 w-4 mr-1" />
                                       Iniciar
                                     </Button>
                                   </Link>
                                 )}
-                                <Button size="sm" variant="outline">
+                                <Button size="sm" variant="outline" className="hover:bg-gray-50 bg-transparent">
                                   Editar
                                 </Button>
                               </div>
@@ -586,25 +679,32 @@ export default function PsicologoAgendaPage() {
                 </div>
 
                 <div>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Próximos Días</CardTitle>
+                  <Card className="shadow-sm border-gray-200">
+                    <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 border-b">
+                      <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                        <TrendingUp className="h-5 w-5 text-purple-600" />
+                        Próximos Días
+                      </CardTitle>
+                      <CardDescription className="text-gray-600">Vista rápida de tu agenda</CardDescription>
                     </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
+                    <CardContent className="p-4">
+                      <div className="space-y-3">
                         {proximosDias.map((dia, index) => (
                           <div
                             key={index}
                             onClick={() => handleProximosDiasClick(dia)}
-                            className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                            className="p-4 border rounded-lg cursor-pointer hover:shadow-md transition-all duration-200 hover:border-purple-200 bg-white hover:bg-purple-25"
                           >
                             <div className="flex items-center justify-between">
                               <div>
-                                <p className="font-medium">{dia.dia}</p>
+                                <p className="font-semibold text-gray-900">{dia.dia}</p>
                                 <p className="text-sm text-gray-600">{dia.fecha}</p>
                               </div>
                               <div className="text-right">
-                                <p className="text-sm font-medium">{dia.sesiones} sesiones</p>
+                                <div className="flex items-center gap-2">
+                                  <Users className="h-4 w-4 text-purple-600" />
+                                  <p className="text-sm font-semibold text-gray-900">{dia.sesiones}</p>
+                                </div>
                                 <p className="text-xs text-gray-500">{dia.disponibles} disponibles</p>
                               </div>
                             </div>
