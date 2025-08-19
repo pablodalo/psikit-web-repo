@@ -123,6 +123,11 @@ export default function TestsPage() {
     )
   }, [searchTerm])
 
+  const handleSendTest = (testId?: string) => {
+    const url = testId ? `/dashboard/psicologo/tests/enviar?test=${testId}` : "/dashboard/psicologo/tests/enviar"
+    window.location.href = url
+  }
+
   return (
     <AuthGuard requiredUserType="psicologo">
       <div className="flex min-h-screen bg-gray-50">
@@ -136,7 +141,7 @@ export default function TestsPage() {
                   <h1 className="text-3xl font-bold text-gray-900">Tests Psicológicos</h1>
                   <p className="text-gray-600 text-lg">Biblioteca completa de evaluaciones psicológicas</p>
                 </div>
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3">
+                <Button onClick={() => handleSendTest()} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3">
                   <Send className="h-5 w-5 mr-2" />
                   Enviar Test
                 </Button>
@@ -219,7 +224,11 @@ export default function TestsPage() {
                                   </div>
                                 </div>
                                 <div className="flex gap-3">
-                                  <Button size="sm" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
+                                  <Button
+                                    size="sm"
+                                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
+                                    onClick={() => handleSendTest(test.id.toString())}
+                                  >
                                     <Send className="h-4 w-4 mr-2" />
                                     Enviar
                                   </Button>
