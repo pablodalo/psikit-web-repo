@@ -1,3 +1,6 @@
+"use client"
+
+import { useState, useMemo } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -7,6 +10,8 @@ import { Navigation } from "@/components/navigation"
 import { AuthGuard } from "@/components/auth-guard"
 
 export default function TestsPage() {
+  const [searchTerm, setSearchTerm] = useState("")
+
   const testsDisponibles = [
     {
       id: 1,
@@ -106,6 +111,18 @@ export default function TestsPage() {
     },
   ]
 
+  const filteredTests = useMemo(() => {
+    if (!searchTerm.trim()) return testsDisponibles
+
+    const searchLower = searchTerm.toLowerCase()
+    return testsDisponibles.filter(
+      (test) =>
+        test.nombre.toLowerCase().includes(searchLower) ||
+        test.descripcion.toLowerCase().includes(searchLower) ||
+        test.categoria.toLowerCase().includes(searchLower),
+    )
+  }, [searchTerm])
+
   return (
     <AuthGuard requiredUserType="psicologo">
       <div className="flex min-h-screen bg-gray-50">
@@ -135,6 +152,8 @@ export default function TestsPage() {
                   <Input
                     placeholder="Buscar tests por nombre o categoría..."
                     className="pl-12 h-12 text-base border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
                 </div>
               </CardContent>
@@ -146,66 +165,78 @@ export default function TestsPage() {
                   <CardHeader className="pb-6">
                     <CardTitle className="text-2xl font-semibold text-gray-900">Tests Disponibles</CardTitle>
                     <CardDescription className="text-gray-600 text-base">
-                      Selecciona y envía tests a tus pacientes
+                      {searchTerm
+                        ? `${filteredTests.length} test${filteredTests.length !== 1 ? "s" : ""} encontrado${filteredTests.length !== 1 ? "s" : ""}`
+                        : "Selecciona y envía tests a tus pacientes"}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      {testsDisponibles.map((test) => {
-                        const IconComponent = test.icono
-                        return (
-                          <Card
-                            key={test.id}
-                            className="cursor-pointer hover:shadow-lg transition-all duration-200 border-gray-200 hover:border-blue-300"
-                          >
-                            <CardHeader className="pb-4">
-                              <div className="flex items-start justify-between gap-4">
-                                <div className="flex items-center gap-3">
-                                  <div className={`p-3 rounded-lg ${test.bgColor}`}>
-                                    <IconComponent className={`h-6 w-6 ${test.color}`} />
+                    {filteredTests.length === 0 ? (
+                      <div className="text-center py-12">
+                        <div className="text-gray-400 mb-4">
+                          <Search className="h-12 w-12 mx-auto" />
+                        </div>
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron tests</h3>
+                        <p className="text-gray-600">Intenta con otros términos de búsqueda</p>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {filteredTests.map((test) => {
+                          const IconComponent = test.icono
+                          return (
+                            <Card
+                              key={test.id}
+                              className="cursor-pointer hover:shadow-lg transition-all duration-200 border-gray-200 hover:border-blue-300"
+                            >
+                              <CardHeader className="pb-4">
+                                <div className="flex items-start justify-between gap-4">
+                                  <div className="flex items-center gap-3">
+                                    <div className={`p-3 rounded-lg ${test.bgColor}`}>
+                                      <IconComponent className={`h-6 w-6 ${test.color}`} />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                      <CardTitle className="text-lg font-semibold text-gray-900 leading-tight">
+                                        {test.nombre}
+                                      </CardTitle>
+                                      <CardDescription className="text-sm text-gray-600 mt-1 line-clamp-2">
+                                        {test.descripcion}
+                                      </CardDescription>
+                                    </div>
                                   </div>
-                                  <div className="flex-1 min-w-0">
-                                    <CardTitle className="text-lg font-semibold text-gray-900 leading-tight">
-                                      {test.nombre}
-                                    </CardTitle>
-                                    <CardDescription className="text-sm text-gray-600 mt-1 line-clamp-2">
-                                      {test.descripcion}
-                                    </CardDescription>
+                                  <Badge variant="outline" className="shrink-0 text-xs font-medium">
+                                    {test.categoria}
+                                  </Badge>
+                                </div>
+                              </CardHeader>
+                              <CardContent className="pt-0 space-y-4">
+                                <div className="flex items-center justify-between text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
+                                  <div className="flex items-center gap-2">
+                                    <FileText className="h-4 w-4" />
+                                    <span className="font-medium">{test.preguntas} preguntas</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="font-medium">{test.duracion}</span>
                                   </div>
                                 </div>
-                                <Badge variant="outline" className="shrink-0 text-xs font-medium">
-                                  {test.categoria}
-                                </Badge>
-                              </div>
-                            </CardHeader>
-                            <CardContent className="pt-0 space-y-4">
-                              <div className="flex items-center justify-between text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
-                                <div className="flex items-center gap-2">
-                                  <FileText className="h-4 w-4" />
-                                  <span className="font-medium">{test.preguntas} preguntas</span>
+                                <div className="flex gap-3">
+                                  <Button size="sm" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
+                                    <Send className="h-4 w-4 mr-2" />
+                                    Enviar
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="px-4 border-gray-300 hover:bg-gray-50 bg-transparent"
+                                  >
+                                    <Download className="h-4 w-4" />
+                                  </Button>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium">{test.duracion}</span>
-                                </div>
-                              </div>
-                              <div className="flex gap-3">
-                                <Button size="sm" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
-                                  <Send className="h-4 w-4 mr-2" />
-                                  Enviar
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="px-4 border-gray-300 hover:bg-gray-50 bg-transparent"
-                                >
-                                  <Download className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        )
-                      })}
-                    </div>
+                              </CardContent>
+                            </Card>
+                          )
+                        })}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               </div>
