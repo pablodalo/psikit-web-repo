@@ -1,18 +1,28 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { ArrowLeft, Check, Search, User, Send } from "lucide-react"
+import { ArrowLeft, Check, Search, User, Send, Clock, Mail, Phone } from "lucide-react"
 
 export default function EnviarTestPage() {
+  const searchParams = useSearchParams()
   const [selectedTest, setSelectedTest] = useState<string | null>(null)
   const [selectedPatients, setSelectedPatients] = useState<string[]>([])
   const [searchTerm, setSearchTerm] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    const testId = searchParams.get("test")
+    if (testId) {
+      setSelectedTest(testId)
+    }
+  }, [searchParams])
 
   const pacientes = [
     {
@@ -22,6 +32,8 @@ export default function EnviarTestPage() {
       telefono: "+34 612 345 678",
       ultimaConsulta: "10/01/2024",
       estado: "activo",
+      edad: 34,
+      diagnostico: "Ansiedad",
     },
     {
       id: "2",
@@ -30,6 +42,8 @@ export default function EnviarTestPage() {
       telefono: "+34 687 654 321",
       ultimaConsulta: "08/01/2024",
       estado: "activo",
+      edad: 28,
+      diagnostico: "Depresión",
     },
     {
       id: "3",
@@ -38,6 +52,8 @@ export default function EnviarTestPage() {
       telefono: "+34 654 987 123",
       ultimaConsulta: "05/01/2024",
       estado: "inactivo",
+      edad: 45,
+      diagnostico: "Trastorno bipolar",
     },
     {
       id: "4",
@@ -46,6 +62,8 @@ export default function EnviarTestPage() {
       telefono: "+34 698 123 456",
       ultimaConsulta: "12/01/2024",
       estado: "activo",
+      edad: 52,
+      diagnostico: "Estrés postraumático",
     },
     {
       id: "5",
@@ -54,16 +72,28 @@ export default function EnviarTestPage() {
       telefono: "+34 645 789 012",
       ultimaConsulta: "15/01/2024",
       estado: "activo",
+      edad: 39,
+      diagnostico: "Trastorno de pánico",
     },
   ]
 
   const testsDisponibles = [
-    { id: "1", nombre: "PHQ-9", descripcion: "Cuestionario de Salud del Paciente - Depresión" },
-    { id: "2", nombre: "GAD-7", descripcion: "Escala de Ansiedad Generalizada" },
-    { id: "3", nombre: "Rosenberg Self-Esteem Scale", descripcion: "Escala de Autoestima de Rosenberg" },
-    { id: "4", nombre: "AUDIT", descripcion: "Test de Identificación de Trastornos por Uso de Alcohol" },
-    { id: "5", nombre: "MMSE", descripcion: "Mini Examen del Estado Mental" },
-    { id: "6", nombre: "MoCA", descripcion: "Evaluación Cognitiva de Montreal" },
+    { id: "1", nombre: "PHQ-9", descripcion: "Cuestionario de Salud del Paciente - Depresión", duracion: "5-10 min" },
+    { id: "2", nombre: "GAD-7", descripcion: "Escala de Ansiedad Generalizada", duracion: "3-5 min" },
+    {
+      id: "3",
+      nombre: "Rosenberg Self-Esteem Scale",
+      descripcion: "Escala de Autoestima de Rosenberg",
+      duracion: "5 min",
+    },
+    {
+      id: "4",
+      nombre: "AUDIT",
+      descripcion: "Test de Identificación de Trastornos por Uso de Alcohol",
+      duracion: "10 min",
+    },
+    { id: "5", nombre: "MMSE", descripcion: "Mini Examen del Estado Mental", duracion: "15-20 min" },
+    { id: "6", nombre: "MoCA", descripcion: "Evaluación Cognitiva de Montreal", duracion: "10-15 min" },
   ]
 
   const filteredPatients = useMemo(() => {
@@ -72,7 +102,10 @@ export default function EnviarTestPage() {
     const searchLower = searchTerm.toLowerCase()
     return pacientes.filter(
       (paciente) =>
-        paciente.nombre.toLowerCase().includes(searchLower) || paciente.email.toLowerCase().includes(searchLower),
+        paciente.nombre.toLowerCase().includes(searchLower) ||
+        paciente.email.toLowerCase().includes(searchLower) ||
+        paciente.telefono.includes(searchTerm) ||
+        paciente.diagnostico.toLowerCase().includes(searchLower),
     )
   }, [searchTerm])
 
@@ -82,15 +115,37 @@ export default function EnviarTestPage() {
     )
   }
 
-  const handleSendTest = () => {
+  const handleSendTest = async () => {
     if (!selectedTest || selectedPatients.length === 0) return
 
-    // Here you would implement the actual sending logic
-    console.log("[v0] Sending test:", selectedTest, "to patients:", selectedPatients)
+    setIsLoading(true)
 
-    // Show success message and redirect
-    alert(`Test enviado exitosamente a ${selectedPatients.length} paciente(s)`)
-    window.location.href = "/dashboard/psicologo/tests"
+    try {
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      console.log("[v0] Sending test:", selectedTest, "to patients:", selectedPatients)
+
+      // Show success message and redirect
+      alert(`Test enviado exitosamente a ${selectedPatients.length} paciente(s)`)
+      window.location.href = "/dashboard/psicologo/tests"
+    } catch (error) {
+      console.error("[v0] Error sending test:", error)
+      alert("Error al enviar el test. Por favor, inténtalo de nuevo.")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleSelectAllFiltered = () => {
+    const filteredIds = filteredPatients.map((p) => p.id)
+    const allSelected = filteredIds.every((id) => selectedPatients.includes(id))
+
+    if (allSelected) {
+      setSelectedPatients((prev) => prev.filter((id) => !filteredIds.includes(id)))
+    } else {
+      setSelectedPatients((prev) => [...new Set([...prev, ...filteredIds])])
+    }
   }
 
   return (
@@ -118,7 +173,12 @@ export default function EnviarTestPage() {
             {/* Test Selection */}
             <Card className="shadow-sm border-gray-200">
               <CardHeader>
-                <CardTitle className="text-xl font-semibold text-gray-900">1. Seleccionar Test</CardTitle>
+                <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-sm">
+                    1
+                  </div>
+                  Seleccionar Test
+                </CardTitle>
                 <CardDescription className="text-gray-600">Elige el test psicológico que deseas enviar</CardDescription>
               </CardHeader>
               <CardContent>
@@ -128,23 +188,27 @@ export default function EnviarTestPage() {
                       key={test.id}
                       className={`cursor-pointer transition-all duration-200 ${
                         selectedTest === test.id
-                          ? "border-blue-500 bg-blue-50 shadow-md"
+                          ? "border-blue-500 bg-blue-50 shadow-md ring-2 ring-blue-200"
                           : "border-gray-200 hover:border-blue-300 hover:shadow-sm"
                       }`}
                       onClick={() => setSelectedTest(test.id)}
                     >
                       <CardContent className="p-4">
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-start gap-3">
                           <div
-                            className={`w-4 h-4 rounded-full border-2 ${
+                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 ${
                               selectedTest === test.id ? "bg-blue-600 border-blue-600" : "border-gray-300"
                             }`}
                           >
                             {selectedTest === test.id && <Check className="h-3 w-3 text-white" />}
                           </div>
-                          <div>
-                            <h3 className="font-semibold text-gray-900">{test.nombre}</h3>
-                            <p className="text-sm text-gray-600">{test.descripcion}</p>
+                          <div className="flex-1">
+                            <h3 className="font-semibold text-gray-900 mb-1">{test.nombre}</h3>
+                            <p className="text-sm text-gray-600 mb-2">{test.descripcion}</p>
+                            <div className="flex items-center gap-1 text-xs text-gray-500">
+                              <Clock className="h-3 w-3" />
+                              {test.duracion}
+                            </div>
                           </div>
                         </div>
                       </CardContent>
@@ -157,21 +221,39 @@ export default function EnviarTestPage() {
             {/* Patient Selection */}
             <Card className="shadow-sm border-gray-200">
               <CardHeader>
-                <CardTitle className="text-xl font-semibold text-gray-900">2. Seleccionar Pacientes</CardTitle>
+                <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-sm">
+                    2
+                  </div>
+                  Seleccionar Pacientes
+                </CardTitle>
                 <CardDescription className="text-gray-600">
                   Elige los pacientes que recibirán el test ({selectedPatients.length} seleccionados)
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* Search Bar */}
-                <div className="relative max-w-md">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <Input
-                    placeholder="Buscar pacientes..."
-                    className="pl-12 h-12 text-base border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
+                {/* Search Bar and Controls */}
+                <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                  <div className="relative flex-1 max-w-md">
+                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <Input
+                      placeholder="Buscar por nombre, email, teléfono o diagnóstico..."
+                      className="pl-12 h-12 text-base border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                  {filteredPatients.length > 0 && (
+                    <Button
+                      variant="outline"
+                      onClick={handleSelectAllFiltered}
+                      className="whitespace-nowrap bg-transparent"
+                    >
+                      {filteredPatients.every((p) => selectedPatients.includes(p.id))
+                        ? "Deseleccionar todos"
+                        : "Seleccionar todos"}
+                    </Button>
+                  )}
                 </div>
 
                 {/* Patients List */}
@@ -181,7 +263,7 @@ export default function EnviarTestPage() {
                       key={paciente.id}
                       className={`cursor-pointer transition-all duration-200 ${
                         selectedPatients.includes(paciente.id)
-                          ? "border-blue-500 bg-blue-50 shadow-sm"
+                          ? "border-blue-500 bg-blue-50 shadow-sm ring-1 ring-blue-200"
                           : "border-gray-200 hover:border-blue-300 hover:shadow-sm"
                       }`}
                       onClick={() => handlePatientToggle(paciente.id)}
@@ -199,12 +281,24 @@ export default function EnviarTestPage() {
                               {selectedPatients.includes(paciente.id) && <Check className="h-3 w-3 text-white" />}
                             </div>
                             <div className="flex items-center gap-4">
-                              <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                                <User className="h-5 w-5 text-gray-600" />
+                              <div className="w-12 h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center">
+                                <User className="h-6 w-6 text-blue-600" />
                               </div>
                               <div>
                                 <h3 className="font-semibold text-gray-900">{paciente.nombre}</h3>
-                                <p className="text-sm text-gray-600">{paciente.email}</p>
+                                <div className="flex items-center gap-4 text-sm text-gray-600 mt-1">
+                                  <div className="flex items-center gap-1">
+                                    <Mail className="h-3 w-3" />
+                                    {paciente.email}
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <Phone className="h-3 w-3" />
+                                    {paciente.telefono}
+                                  </div>
+                                </div>
+                                <p className="text-sm text-gray-500 mt-1">
+                                  {paciente.edad} años • {paciente.diagnostico}
+                                </p>
                               </div>
                             </div>
                           </div>
@@ -213,13 +307,16 @@ export default function EnviarTestPage() {
                               variant={paciente.estado === "activo" ? "default" : "secondary"}
                               className={
                                 paciente.estado === "activo"
-                                  ? "bg-green-100 text-green-800"
-                                  : "bg-gray-100 text-gray-800"
+                                  ? "bg-green-100 text-green-800 border-green-200"
+                                  : "bg-gray-100 text-gray-800 border-gray-200"
                               }
                             >
                               {paciente.estado}
                             </Badge>
-                            <p className="text-xs text-gray-500 mt-1">Última consulta: {paciente.ultimaConsulta}</p>
+                            <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              Última consulta: {paciente.ultimaConsulta}
+                            </p>
                           </div>
                         </div>
                       </CardContent>
@@ -243,11 +340,20 @@ export default function EnviarTestPage() {
             <div className="flex justify-end">
               <Button
                 onClick={handleSendTest}
-                disabled={!selectedTest || selectedPatients.length === 0}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
+                disabled={!selectedTest || selectedPatients.length === 0 || isLoading}
+                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-8 py-3 text-lg min-w-[200px]"
               >
-                <Send className="h-5 w-5 mr-2" />
-                Enviar Test a {selectedPatients.length} Paciente{selectedPatients.length !== 1 ? "s" : ""}
+                {isLoading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Enviando...
+                  </div>
+                ) : (
+                  <>
+                    <Send className="h-5 w-5 mr-2" />
+                    Enviar Test a {selectedPatients.length} Paciente{selectedPatients.length !== 1 ? "s" : ""}
+                  </>
+                )}
               </Button>
             </div>
           </div>
