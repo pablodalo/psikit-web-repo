@@ -16,27 +16,6 @@ interface PaymentResult {
 }
 
 class MercadoPagoIntegration {
-  private publicKey: string
-  private mp: any
-
-  constructor() {
-    this.publicKey = process.env.NEXT_PUBLIC_MERCADO_PAGO_PUBLIC_KEY || ""
-  }
-
-  async initialize() {
-    if (typeof window !== "undefined") {
-      // Cargar SDK de Mercado Pago
-      const script = document.createElement("script")
-      script.src = "https://sdk.mercadopago.com/js/v2"
-      script.onload = () => {
-        this.mp = new (window as any).MercadoPago(this.publicKey, {
-          locale: "es-AR",
-        })
-      }
-      document.head.appendChild(script)
-    }
-  }
-
   async createPayment(data: PaymentData): Promise<PaymentResult> {
     try {
       const response = await fetch("/api/payments/create", {
@@ -70,22 +49,22 @@ class MercadoPagoIntegration {
   }
 
   async createCardToken(cardData: any) {
-    if (!this.mp) {
-      throw new Error("Mercado Pago no inicializado")
-    }
-
     try {
-      const token = await this.mp.createCardToken({
-        cardNumber: cardData.number,
-        cardholderName: cardData.holderName,
-        cardExpirationMonth: cardData.expirationMonth,
-        cardExpirationYear: cardData.expirationYear,
-        securityCode: cardData.securityCode,
-        identificationType: cardData.identificationType,
-        identificationNumber: cardData.identificationNumber,
+      const response = await fetch("/api/payments/create-token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(cardData),
       })
 
-      return token
+      const result = await response.json()
+
+      if (result.success) {
+        return result.token
+      } else {
+        throw new Error(result.error || "Error creando token de tarjeta")
+      }
     } catch (error) {
       throw new Error("Error creando token de tarjeta")
     }

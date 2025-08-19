@@ -37,7 +37,7 @@ export const pricingPlans: PricingPlan[] = [
     id: "professional",
     name: "Profesional",
     description: "Hasta 50 pacientes",
-    price: 15,
+    price: 16.5,
     currency: "USD",
     interval: "month",
     maxPatients: 50,
@@ -45,8 +45,6 @@ export const pricingPlans: PricingPlan[] = [
       "Todo lo del plan Básico",
       "Tests psicológicos",
       "Pagos integrados",
-      "Facturación automática",
-      "Grabación de sesiones",
       "Chat avanzado",
       "Reportes básicos",
     ],
@@ -83,7 +81,7 @@ export const regionalPricing = {
     currency: "ARS",
     rates: {
       basic: 0,
-      professional: 15000, // ~15 USD
+      professional: 16500, // ~16.5 USD
       premium: 25000, // ~25 USD
     },
   },
@@ -91,7 +89,7 @@ export const regionalPricing = {
     currency: "MXN",
     rates: {
       basic: 0,
-      professional: 270, // ~15 USD
+      professional: 297, // ~16.5 USD
       premium: 450, // ~25 USD
     },
   },
@@ -99,7 +97,7 @@ export const regionalPricing = {
     currency: "COP",
     rates: {
       basic: 0,
-      professional: 60000, // ~15 USD
+      professional: 66000, // ~16.5 USD
       premium: 100000, // ~25 USD
     },
   },
@@ -107,7 +105,7 @@ export const regionalPricing = {
     currency: "CLP",
     rates: {
       basic: 0,
-      professional: 12000, // ~15 USD
+      professional: 13200, // ~16.5 USD
       premium: 20000, // ~25 USD
     },
   },
@@ -115,7 +113,7 @@ export const regionalPricing = {
     currency: "PEN",
     rates: {
       basic: 0,
-      professional: 55, // ~15 USD
+      professional: 61, // ~16.5 USD
       premium: 90, // ~25 USD
     },
   },

@@ -1,53 +1,90 @@
+"use client"
+
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Brain, Calendar, Users, FileText, CreditCard, Video, Shield, Globe } from "lucide-react"
+import { Calendar, Users, FileText, CreditCard, Video, Shield, Globe, Heart, Brain } from "lucide-react"
+import { useAuth } from "@/contexts/auth-context"
+import { PricingSection } from "@/components/pricing-section"
 
 export default function HomePage() {
+  const { user, logout } = useAuth()
+  const router = useRouter()
+
+  const handleUserTypeSelection = (userType: "psicologo" | "paciente") => {
+    console.log("Selected user type:", userType)
+
+    if (user?.isAuthenticated) {
+      logout()
+    }
+
+    localStorage.setItem("intendedUserType", userType)
+    console.log("Stored in localStorage:", localStorage.getItem("intendedUserType"))
+    router.push("/login")
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm">
+      <header className="border-b bg-white">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Brain className="h-8 w-8 text-blue-600" />
-            <span className="text-2xl font-bold text-gray-900">PsiKit</span>
+            <span className="text-xl font-bold text-gray-900">PsiKit</span>
           </div>
           <div className="flex items-center space-x-4">
-            <Link href="/login">
-              <Button variant="ghost">Iniciar Sesión</Button>
-            </Link>
-            <Link href="/register">
-              <Button>Registrarse</Button>
-            </Link>
+            {user?.isAuthenticated ? (
+              <Link href={user.userType === "psicologo" ? "/dashboard/psicologo" : "/dashboard/paciente"}>
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white">Ir a mi perfil</Button>
+              </Link>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button variant="ghost" className="text-gray-700 hover:text-gray-900 hover:bg-gray-100">
+                    Iniciar Sesión
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button className="bg-black hover:bg-gray-800 text-white">Registrarse</Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 px-4">
+      <section className="py-20 px-4 bg-blue-50">
         <div className="container mx-auto text-center">
-          <Badge className="mb-4 bg-blue-100 text-blue-800 hover:bg-blue-100">Consultorio Virtual Completo</Badge>
+          <Badge className="mb-6 bg-blue-100 text-blue-800 hover:bg-blue-100 border-0">
+            Consultorio Virtual Completo
+          </Badge>
           <h1 className="text-5xl font-bold text-gray-900 mb-6">
             Tu consultorio psicológico
             <span className="text-blue-600"> en cualquier lugar</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 mb-8 max-w-4xl mx-auto">
             Plataforma integral para psicólogos de Latinoamérica. Sesiones virtuales, gestión de pacientes, historia
             clínica, pagos y mucho más en un solo lugar.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/dashboard/psicologo">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
-                Soy Psicólogo
-              </Button>
-            </Link>
-            <Link href="/dashboard/paciente">
-              <Button size="lg" variant="outline">
-                Soy Paciente
-              </Button>
-            </Link>
+            <Button
+              size="lg"
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              onClick={() => handleUserTypeSelection("psicologo")}
+            >
+              Soy Psicólogo
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-gray-300 text-gray-700 hover:bg-gray-50 bg-transparent"
+              onClick={() => handleUserTypeSelection("paciente")}
+            >
+              Soy Paciente
+            </Button>
           </div>
         </div>
       </section>
@@ -59,7 +96,7 @@ export default function HomePage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card className="text-center">
               <CardHeader>
-                <Video className="h-12 w-12 text-blue-600 mx-auto mb-4" />
+                <Video className="h-12 w-12 text-sky-500 mx-auto mb-4" />
                 <CardTitle>Sesiones Virtuales</CardTitle>
               </CardHeader>
               <CardContent>
@@ -129,7 +166,7 @@ export default function HomePage() {
 
             <Card className="text-center">
               <CardHeader>
-                <Brain className="h-12 w-12 text-pink-600 mx-auto mb-4" />
+                <Heart className="h-12 w-12 text-pink-600 mx-auto mb-4" />
                 <CardTitle>Comunidad Profesional</CardTitle>
               </CardHeader>
               <CardContent>
@@ -142,58 +179,8 @@ export default function HomePage() {
 
       {/* Pricing Preview */}
       <section className="py-16 px-4 bg-gray-50">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold mb-8">Membresías Flexibles</h2>
-          <p className="text-gray-600 mb-8">Solo los profesionales pagan. Los pacientes acceden gratis siempre.</p>
-          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <Card>
-              <CardHeader>
-                <CardTitle>Básico</CardTitle>
-                <CardDescription>Hasta 10 pacientes</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold mb-4">Gratis</div>
-                <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Sesiones virtuales</li>
-                  <li>• Agenda básica</li>
-                  <li>• Historia clínica</li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card className="border-blue-500 border-2">
-              <CardHeader>
-                <Badge className="mb-2">Más Popular</Badge>
-                <CardTitle>Profesional</CardTitle>
-                <CardDescription>Hasta 50 pacientes</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold mb-4">$15/mes</div>
-                <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Todo lo del plan Básico</li>
-                  <li>• Tests psicológicos</li>
-                  <li>• Pagos integrados</li>
-                  <li>• Facturación automática</li>
-                </ul>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle>Premium</CardTitle>
-                <CardDescription>Pacientes ilimitados</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-3xl font-bold mb-4">$25/mes</div>
-                <ul className="text-sm text-gray-600 space-y-2">
-                  <li>• Todo lo del plan Profesional</li>
-                  <li>• Comunidad profesional</li>
-                  <li>• Aula virtual</li>
-                  <li>• Soporte prioritario</li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
+        <div className="container mx-auto">
+          <PricingSection />
         </div>
       </section>
 
@@ -201,10 +188,10 @@ export default function HomePage() {
       <footer className="bg-gray-900 text-white py-12 px-4">
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <Brain className="h-6 w-6" />
-            <span className="text-xl font-bold">PsiKit</span>
+            <Brain className="h-6 w-6 text-white" />
+            <span className="text-lg font-bold">PsiKit</span>
           </div>
-          <p className="text-gray-400 mb-4">Transformando la práctica psicológica en Latinoamérica</p>
+          <p className="text-gray-400 mb-4">Tu consultorio psicológico digital</p>
           <div className="flex justify-center space-x-6 text-sm text-gray-400">
             <Link href="/privacidad" className="hover:text-white">
               Privacidad

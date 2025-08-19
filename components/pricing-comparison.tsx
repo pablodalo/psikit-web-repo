@@ -23,7 +23,6 @@ const features = [
       { name: "Tests psicológicos", basic: false, professional: true, premium: true },
       { name: "Pagos integrados", basic: false, professional: true, premium: true },
       { name: "Facturación automática", basic: false, professional: true, premium: true },
-      { name: "Grabación de sesiones", basic: false, professional: true, premium: true },
       { name: "Chat avanzado", basic: false, professional: true, premium: true },
     ],
   },
