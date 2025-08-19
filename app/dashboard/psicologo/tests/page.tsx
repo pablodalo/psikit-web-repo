@@ -6,7 +6,19 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Search, Send, Download, BarChart3, FileText, Brain, Heart, Zap, Shield } from "lucide-react"
+import {
+  Search,
+  Send,
+  Download,
+  BarChart3,
+  FileText,
+  Brain,
+  Heart,
+  Zap,
+  Shield,
+  Clock,
+  CheckCircle,
+} from "lucide-react"
 import { Navigation } from "@/components/navigation"
 import { AuthGuard } from "@/components/auth-guard"
 
@@ -197,7 +209,7 @@ export default function TestsPage() {
             </div>
           </header>
 
-          <div className="p-8 space-y-8">
+          <div className="p-8 space-y-6">
             <Card className="shadow-sm border-gray-200">
               <CardContent className="p-6">
                 <div className="relative max-w-md">
@@ -212,182 +224,189 @@ export default function TestsPage() {
               </CardContent>
             </Card>
 
-            <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
-              <div className="xl:col-span-3">
-                <Card className="shadow-sm border-gray-200">
-                  <CardHeader className="pb-6">
-                    <CardTitle className="text-2xl font-semibold text-gray-900">Tests Disponibles</CardTitle>
-                    <CardDescription className="text-gray-600 text-base">
-                      {searchTerm
-                        ? `${filteredTests.length} test${filteredTests.length !== 1 ? "s" : ""} encontrado${filteredTests.length !== 1 ? "s" : ""}`
-                        : "Selecciona y envía tests a tus pacientes"}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {filteredTests.length === 0 ? (
-                      <div className="text-center py-12">
-                        <div className="text-gray-400 mb-4">
-                          <Search className="h-12 w-12 mx-auto" />
-                        </div>
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron tests</h3>
-                        <p className="text-gray-600">Intenta con otros términos de búsqueda</p>
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {filteredTests.map((test) => {
-                          const IconComponent = test.icono
-                          const testSelectedPatients = selectedPatients[test.id.toString()] || []
-
-                          return (
-                            <Card
-                              key={test.id}
-                              className="cursor-pointer hover:shadow-lg transition-all duration-200 border-gray-200 hover:border-blue-300"
-                            >
-                              <CardHeader className="pb-4">
-                                <div className="flex items-start justify-between gap-4">
-                                  <div className="flex items-center gap-3">
-                                    <div className={`p-3 rounded-lg ${test.bgColor}`}>
-                                      <IconComponent className={`h-6 w-6 ${test.color}`} />
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                      <CardTitle className="text-lg font-semibold text-gray-900 leading-tight">
-                                        {test.nombre}
-                                      </CardTitle>
-                                      <CardDescription className="text-sm text-gray-600 mt-1 line-clamp-2">
-                                        {test.descripcion}
-                                      </CardDescription>
-                                    </div>
-                                  </div>
-                                  <Badge variant="outline" className="shrink-0 text-xs font-medium">
-                                    {test.categoria}
-                                  </Badge>
-                                </div>
-                              </CardHeader>
-                              <CardContent className="pt-0 space-y-4">
-                                <div className="flex items-center justify-between text-sm text-gray-600 bg-gray-50 rounded-lg p-3">
-                                  <div className="flex items-center gap-2">
-                                    <FileText className="h-4 w-4" />
-                                    <span className="font-medium">{test.preguntas} preguntas</span>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-medium">{test.duracion}</span>
-                                  </div>
-                                </div>
-                                <div className="flex gap-3">
-                                  <Button
-                                    size="sm"
-                                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
-                                    onClick={() => handleSendTest(test.id.toString())}
-                                  >
-                                    <Send className="h-4 w-4 mr-2" />
-                                    Enviar
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="px-4 border-gray-300 hover:bg-gray-50 bg-transparent"
-                                  >
-                                    <Download className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          )
-                        })}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-
-              <Card className="shadow-sm border-gray-200">
-                <CardHeader className="pb-6">
-                  <CardTitle className="text-xl font-semibold text-gray-900">Tests Enviados</CardTitle>
-                  <CardDescription className="text-gray-600">Estado de los tests enviados</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {testsEnviados.map((test) => (
-                      <div
-                        key={test.id}
-                        className="p-4 border border-gray-200 rounded-lg hover:shadow-sm transition-shadow"
-                      >
-                        <div className="flex items-center justify-between mb-3">
-                          <h4 className="font-semibold text-gray-900">{test.test}</h4>
-                          <Badge
-                            variant={test.estado === "completado" ? "default" : "secondary"}
-                            className={
-                              test.estado === "completado"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-yellow-100 text-yellow-800"
-                            }
-                          >
-                            {test.estado}
-                          </Badge>
-                        </div>
-
-                        <div className="space-y-2 mb-4">
-                          <p className="text-sm font-medium text-gray-700">{test.paciente}</p>
-                          <p className="text-xs text-gray-500">Enviado: {test.fechaEnvio}</p>
-                        </div>
-
-                        {test.estado === "completado" && (
-                          <div className="bg-gray-50 p-4 rounded-lg space-y-3">
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm font-semibold text-gray-900">Puntuación: {test.puntuacion}</span>
-                              <Button size="sm" variant="outline" className="text-xs bg-transparent">
-                                <BarChart3 className="h-3 w-3 mr-1" />
-                                Ver Resultados
-                              </Button>
-                            </div>
-                            <p className="text-xs text-gray-600 leading-relaxed">{test.interpretacion}</p>
-                          </div>
-                        )}
-
-                        {test.estado === "pendiente" && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="w-full border-gray-300 hover:bg-gray-50 bg-transparent"
-                          >
-                            Recordar al Paciente
-                          </Button>
-                        )}
-                      </div>
-                    ))}
+            <Card className="shadow-sm border-gray-200">
+              <CardHeader className="pb-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="text-xl font-semibold text-gray-900">Últimos Tests Enviados</CardTitle>
+                    <CardDescription className="text-gray-600">Actividad reciente de evaluaciones</CardDescription>
                   </div>
-                </CardContent>
-              </Card>
-            </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-blue-600 border-blue-200 hover:bg-blue-50 bg-transparent"
+                  >
+                    Ver todos
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {testsEnviados.map((test) => (
+                    <Card key={test.id} className="border border-gray-200 hover:shadow-md transition-shadow">
+                      <CardContent className="p-4">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-semibold text-gray-900 text-sm truncate">{test.test}</h4>
+                            <p className="text-sm text-gray-600 truncate">{test.paciente}</p>
+                          </div>
+                          <div className="flex items-center gap-1 ml-2">
+                            {test.estado === "completado" ? (
+                              <CheckCircle className="h-4 w-4 text-green-600" />
+                            ) : (
+                              <Clock className="h-4 w-4 text-yellow-600" />
+                            )}
+                            <Badge
+                              variant="outline"
+                              className={`text-xs ${
+                                test.estado === "completado"
+                                  ? "border-green-200 text-green-700 bg-green-50"
+                                  : "border-yellow-200 text-yellow-700 bg-yellow-50"
+                              }`}
+                            >
+                              {test.estado}
+                            </Badge>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <p className="text-xs text-gray-500">Enviado: {test.fechaEnvio}</p>
+
+                          {test.estado === "completado" && (
+                            <div className="bg-gray-50 p-3 rounded-lg">
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-xs font-medium text-gray-900">Puntuación: {test.puntuacion}</span>
+                                <Button size="sm" variant="ghost" className="h-6 px-2 text-xs">
+                                  <BarChart3 className="h-3 w-3 mr-1" />
+                                  Ver
+                                </Button>
+                              </div>
+                              <p className="text-xs text-gray-600 line-clamp-2">{test.interpretacion}</p>
+                            </div>
+                          )}
+
+                          {test.estado === "pendiente" && (
+                            <Button size="sm" variant="outline" className="w-full h-7 text-xs bg-transparent">
+                              Recordar
+                            </Button>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
 
             <Card className="shadow-sm border-gray-200">
-              <CardHeader className="pb-6">
-                <CardTitle className="text-2xl font-semibold text-gray-900">Estadísticas de Tests</CardTitle>
-                <CardDescription className="text-gray-600 text-base">
-                  Resumen de la actividad de evaluaciones
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl font-semibold text-gray-900">Tests Disponibles</CardTitle>
+                <CardDescription className="text-gray-600">
+                  {searchTerm
+                    ? `${filteredTests.length} test${filteredTests.length !== 1 ? "s" : ""} encontrado${filteredTests.length !== 1 ? "s" : ""}`
+                    : "Selecciona y envía tests a tus pacientes"}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {filteredTests.length === 0 ? (
+                  <div className="text-center py-8">
+                    <div className="text-gray-400 mb-3">
+                      <Search className="h-10 w-10 mx-auto" />
+                    </div>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No se encontraron tests</h3>
+                    <p className="text-gray-600">Intenta con otros términos de búsqueda</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredTests.map((test) => {
+                      const IconComponent = test.icono
+                      const testSelectedPatients = selectedPatients[test.id.toString()] || []
+
+                      return (
+                        <Card
+                          key={test.id}
+                          className="cursor-pointer hover:shadow-md transition-all duration-200 border-gray-200 hover:border-blue-300"
+                        >
+                          <CardHeader className="pb-3">
+                            <div className="flex items-start gap-3">
+                              <div className={`p-2 rounded-lg ${test.bgColor} shrink-0`}>
+                                <IconComponent className={`h-5 w-5 ${test.color}`} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <CardTitle className="text-base font-semibold text-gray-900 leading-tight truncate">
+                                  {test.nombre}
+                                </CardTitle>
+                                <Badge variant="outline" className="text-xs font-medium mt-1">
+                                  {test.categoria}
+                                </Badge>
+                              </div>
+                            </div>
+                          </CardHeader>
+                          <CardContent className="pt-0 space-y-3">
+                            <CardDescription className="text-sm text-gray-600 line-clamp-2">
+                              {test.descripcion}
+                            </CardDescription>
+
+                            <div className="flex items-center justify-between text-xs text-gray-600 bg-gray-50 rounded-lg p-2">
+                              <div className="flex items-center gap-1">
+                                <FileText className="h-3 w-3" />
+                                <span>{test.preguntas} preguntas</span>
+                              </div>
+                              <span>{test.duracion}</span>
+                            </div>
+
+                            <div className="flex gap-2">
+                              <Button
+                                size="sm"
+                                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white h-8 text-xs"
+                                onClick={() => handleSendTest(test.id.toString())}
+                              >
+                                <Send className="h-3 w-3 mr-1" />
+                                Enviar
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="px-3 border-gray-300 hover:bg-gray-50 h-8 bg-transparent"
+                              >
+                                <Download className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      )
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="shadow-sm border-gray-200">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-xl font-semibold text-gray-900">Estadísticas de Tests</CardTitle>
+                <CardDescription className="text-gray-600">Resumen de la actividad de evaluaciones</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                   <div className="text-center space-y-2">
-                    <div className="text-3xl font-bold text-blue-600">24</div>
-                    <p className="text-base font-medium text-gray-900">Tests Enviados</p>
-                    <p className="text-sm text-gray-500">Este mes</p>
+                    <div className="text-2xl font-bold text-blue-600">24</div>
+                    <p className="text-sm font-medium text-gray-900">Tests Enviados</p>
+                    <p className="text-xs text-gray-500">Este mes</p>
                   </div>
                   <div className="text-center space-y-2">
-                    <div className="text-3xl font-bold text-green-600">18</div>
-                    <p className="text-base font-medium text-gray-900">Completados</p>
-                    <p className="text-sm text-gray-500">75% tasa de respuesta</p>
+                    <div className="text-2xl font-bold text-green-600">18</div>
+                    <p className="text-sm font-medium text-gray-900">Completados</p>
+                    <p className="text-xs text-gray-500">75% tasa de respuesta</p>
                   </div>
                   <div className="text-center space-y-2">
-                    <div className="text-3xl font-bold text-orange-600">6</div>
-                    <p className="text-base font-medium text-gray-900">Pendientes</p>
-                    <p className="text-sm text-gray-500">Requieren seguimiento</p>
+                    <div className="text-2xl font-bold text-orange-600">6</div>
+                    <p className="text-sm font-medium text-gray-900">Pendientes</p>
+                    <p className="text-xs text-gray-500">Requieren seguimiento</p>
                   </div>
                   <div className="text-center space-y-2">
-                    <div className="text-3xl font-bold text-purple-600">PHQ-9</div>
-                    <p className="text-base font-medium text-gray-900">Más Usado</p>
-                    <p className="text-sm text-gray-500">8 veces este mes</p>
+                    <div className="text-2xl font-bold text-purple-600">PHQ-9</div>
+                    <p className="text-sm font-medium text-gray-900">Más Usado</p>
+                    <p className="text-xs text-gray-500">8 veces este mes</p>
                   </div>
                 </div>
               </CardContent>
