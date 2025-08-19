@@ -24,6 +24,8 @@ export default function TestsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({})
   const [selectedPatients, setSelectedPatients] = useState<Record<string, string[]>>({})
+  const [headerDropdownOpen, setHeaderDropdownOpen] = useState(false)
+  const [headerSelectedPatients, setHeaderSelectedPatients] = useState<string[]>([])
 
   const pacientes = [
     { id: 1, nombre: "María González", email: "maria.gonzalez@email.com", ultimaVisita: "10/01/2024" },
@@ -185,6 +187,40 @@ export default function TestsPage() {
     }
   }
 
+  const handleHeaderPatientSelection = (patientId: string, isSelected: boolean) => {
+    setHeaderSelectedPatients((prev) => {
+      if (isSelected) {
+        return [...prev, patientId]
+      } else {
+        return prev.filter((id) => id !== patientId)
+      }
+    })
+  }
+
+  const handleHeaderSendToSelectedPatients = () => {
+    if (headerSelectedPatients.length === 0) {
+      alert("Por favor selecciona al menos un paciente")
+      return
+    }
+
+    const selectedPatientNames = pacientes
+      .filter((p) => headerSelectedPatients.includes(p.id.toString()))
+      .map((p) => p.nombre)
+
+    setHeaderDropdownOpen(false)
+    setHeaderSelectedPatients([])
+
+    console.log(`[v0] Sending test from header to patients: ${headerSelectedPatients.join(", ")}`)
+    alert(`Test enviado exitosamente a: ${selectedPatientNames.join(", ")}`)
+  }
+
+  const toggleHeaderDropdown = (isOpen: boolean) => {
+    setHeaderDropdownOpen(isOpen)
+    if (!isOpen) {
+      setHeaderSelectedPatients([])
+    }
+  }
+
   return (
     <AuthGuard requiredUserType="psicologo">
       <div className="flex min-h-screen bg-gray-50">
@@ -198,6 +234,75 @@ export default function TestsPage() {
                   <h1 className="text-3xl font-bold text-gray-900">Tests Psicológicos</h1>
                   <p className="text-gray-600 text-lg">Biblioteca completa de evaluaciones psicológicas</p>
                 </div>
+                <DropdownMenu open={headerDropdownOpen} onOpenChange={toggleHeaderDropdown}>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                      <Send className="h-4 w-4 mr-2" />
+                      Enviar Test
+                      <ChevronDown className="h-4 w-4 ml-2" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-80">
+                    <DropdownMenuLabel className="text-sm font-semibold text-gray-900">
+                      Seleccionar Pacientes
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <div className="max-h-64 overflow-y-auto">
+                      {pacientes.map((paciente) => (
+                        <div
+                          key={paciente.id}
+                          className="flex items-center gap-3 p-3 hover:bg-blue-50 cursor-pointer"
+                          onClick={() => {
+                            const isSelected = headerSelectedPatients.includes(paciente.id.toString())
+                            handleHeaderPatientSelection(paciente.id.toString(), !isSelected)
+                          }}
+                        >
+                          <Checkbox
+                            checked={headerSelectedPatients.includes(paciente.id.toString())}
+                            onChange={() => {}}
+                            className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                          />
+                          <div className="p-1.5 bg-blue-100 rounded-full">
+                            <User className="h-3 w-3 text-blue-600" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 truncate">{paciente.nombre}</p>
+                            <p className="text-xs text-gray-500 truncate">Última visita: {paciente.ultimaVisita}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <DropdownMenuSeparator />
+                    {headerSelectedPatients.length > 0 && (
+                      <>
+                        <div className="p-3">
+                          <Button
+                            onClick={handleHeaderSendToSelectedPatients}
+                            className="w-full bg-green-600 hover:bg-green-700 text-white"
+                            size="sm"
+                          >
+                            <Send className="h-4 w-4 mr-2" />
+                            Enviar a {headerSelectedPatients.length} paciente
+                            {headerSelectedPatients.length > 1 ? "s" : ""}
+                          </Button>
+                        </div>
+                        <DropdownMenuSeparator />
+                      </>
+                    )}
+                    <DropdownMenuItem
+                      onClick={() => {
+                        toggleHeaderDropdown(false)
+                        handleSendTest()
+                      }}
+                      className="cursor-pointer text-blue-600 hover:bg-blue-50 focus:bg-blue-50"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Send className="h-4 w-4" />
+                        <span className="text-sm font-medium">Ver todos los pacientes</span>
+                      </div>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           </header>
