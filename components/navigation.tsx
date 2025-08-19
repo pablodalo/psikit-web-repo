@@ -51,7 +51,7 @@ export function Navigation({ userType }: NavigationProps) {
   return (
     <nav className="w-64 bg-white border-r min-h-screen">
       <div className="p-6">
-        <div className="flex items-center mb-8">
+        <div className="flex items-center justify-between mb-8">
           <Link href="/" className="flex items-center space-x-2">
             <Brain className="h-8 w-8 text-blue-600" />
             <span className="text-xl font-bold">PsiKit</span>
