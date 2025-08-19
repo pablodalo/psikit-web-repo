@@ -20,6 +20,7 @@ export default function EnviarTestPage() {
   useEffect(() => {
     const testId = searchParams.get("test")
     if (testId) {
+      console.log("[v0] Setting initial test from URL:", testId)
       setSelectedTest(testId)
     }
   }, [searchParams])
@@ -202,69 +203,73 @@ export default function EnviarTestPage() {
                 )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {testsDisponibles.map((test) => (
-                    <Card
-                      key={test.id}
-                      className={`cursor-pointer transition-all duration-200 transform hover:scale-105 ${
-                        selectedTest === test.id
-                          ? "border-blue-500 bg-blue-50 shadow-lg ring-2 ring-blue-200 scale-105"
-                          : "border-gray-200 hover:border-blue-300 hover:shadow-md"
-                      }`}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        e.stopPropagation()
-                        console.log("[v0] Selecting test:", test.id)
-                        setSelectedTest(test.id)
-                      }}
-                    >
-                      <CardContent className="p-4 relative">
-                        <div className="flex items-start gap-3">
-                          <div
-                            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mt-0.5 transition-all ${
-                              selectedTest === test.id
-                                ? "bg-blue-600 border-blue-600 scale-110"
-                                : "border-gray-300 hover:border-blue-400"
-                            }`}
-                            onClick={(e) => {
-                              e.preventDefault()
-                              e.stopPropagation()
-                              console.log("[v0] Checkbox clicked for test:", test.id)
-                              setSelectedTest(test.id)
-                            }}
-                          >
-                            {selectedTest === test.id && <Check className="h-4 w-4 text-white" />}
-                          </div>
-                          <div className="flex-1">
-                            <h3
-                              className={`font-semibold mb-1 ${
-                                selectedTest === test.id ? "text-blue-900" : "text-gray-900"
-                              }`}
-                            >
-                              {test.nombre}
-                            </h3>
-                            <p
-                              className={`text-sm mb-2 ${selectedTest === test.id ? "text-blue-700" : "text-gray-600"}`}
-                            >
-                              {test.descripcion}
-                            </p>
+                  {testsDisponibles.map((test) => {
+                    const isSelected = selectedTest === test.id
+                    console.log("[v0] Rendering test:", test.id, "Selected:", selectedTest, "IsSelected:", isSelected)
+
+                    return (
+                      <Card
+                        key={test.id}
+                        className={`cursor-pointer transition-all duration-200 transform hover:scale-105 ${
+                          isSelected
+                            ? "border-blue-500 bg-blue-50 shadow-lg ring-2 ring-blue-200 scale-105"
+                            : "border-gray-200 hover:border-blue-300 hover:shadow-md"
+                        }`}
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          console.log("[v0] Card clicked for test:", test.id, "Current selected:", selectedTest)
+                          setSelectedTest(test.id)
+                        }}
+                      >
+                        <CardContent className="p-4 relative">
+                          <div className="flex items-start gap-3">
                             <div
-                              className={`flex items-center gap-1 text-xs ${
-                                selectedTest === test.id ? "text-blue-600" : "text-gray-500"
+                              className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mt-0.5 transition-all ${
+                                isSelected
+                                  ? "bg-blue-600 border-blue-600 scale-110"
+                                  : "border-gray-300 hover:border-blue-400"
                               }`}
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                console.log(
+                                  "[v0] Checkbox clicked for test:",
+                                  test.id,
+                                  "Current selected:",
+                                  selectedTest,
+                                )
+                                setSelectedTest(test.id)
+                              }}
                             >
-                              <Clock className="h-3 w-3" />
-                              {test.duracion}
+                              {isSelected && <Check className="h-4 w-4 text-white" />}
+                            </div>
+                            <div className="flex-1">
+                              <h3 className={`font-semibold mb-1 ${isSelected ? "text-blue-900" : "text-gray-900"}`}>
+                                {test.nombre}
+                              </h3>
+                              <p className={`text-sm mb-2 ${isSelected ? "text-blue-700" : "text-gray-600"}`}>
+                                {test.descripcion}
+                              </p>
+                              <div
+                                className={`flex items-center gap-1 text-xs ${
+                                  isSelected ? "text-blue-600" : "text-gray-500"
+                                }`}
+                              >
+                                <Clock className="h-3 w-3" />
+                                {test.duracion}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        {selectedTest === test.id && (
-                          <div className="absolute top-2 right-2 bg-blue-600 text-white rounded-full p-1">
-                            <Check className="h-3 w-3" />
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-                  ))}
+                          {isSelected && (
+                            <div className="absolute top-2 right-2 bg-blue-600 text-white rounded-full p-1">
+                              <Check className="h-3 w-3" />
+                            </div>
+                          )}
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
                 </div>
 
                 {selectedTest && (
