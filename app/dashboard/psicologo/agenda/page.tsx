@@ -810,10 +810,12 @@ export default function PsicologoAgendaPage() {
             {viewMode === "list" && (
               <div className="max-w-4xl mx-auto">
                 <Card className="shadow-sm border-gray-200">
-                  <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+                  <CardHeader className="bg-white border-b border-blue-200">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <CalendarIcon className="h-5 w-5 text-blue-600" />
+                        <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100">
+                          <CalendarIcon className="h-5 w-5 text-blue-600" />
+                        </div>
                         <div>
                           <CardTitle className="text-xl font-bold text-gray-900">
                             {selectedDate
