@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo, useEffect, useRef } from "react"
-import { useSearchParams } from "next/navigation"
+import { useSearchParams, useRouter } from "next/navigation"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
 import { Button } from "@/components/ui/button"
@@ -12,6 +12,7 @@ import { ArrowLeft, Check, Search, User, Send, Clock, Mail, Phone } from "lucide
 
 export default function EnviarTestPage() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const [selectedTest, setSelectedTest] = useState<string | null>(null)
   const [selectedPatients, setSelectedPatients] = useState<string[]>([])
   const [searchTerm, setSearchTerm] = useState("")
@@ -127,7 +128,7 @@ export default function EnviarTestPage() {
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
       alert(`Test enviado exitosamente a ${selectedPatients.length} paciente(s)`)
-      window.location.href = "/dashboard/psicologo/tests"
+      router.push("/dashboard/psicologo/tests")
     } catch (error) {
       console.error("[v0] Error sending test:", error)
       alert("Error al enviar el test. Por favor, inténtalo de nuevo.")
@@ -160,7 +161,7 @@ export default function EnviarTestPage() {
                   <h1 className="text-3xl font-bold text-gray-900">Enviar Test</h1>
                   <p className="text-gray-600 text-lg">Selecciona el test y los pacientes destinatarios</p>
                 </div>
-                <Button onClick={() => window.history.back()} variant="outline" className="px-6 py-3">
+                <Button onClick={() => router.back()} variant="outline" className="px-6 py-3">
                   <ArrowLeft className="h-5 w-5 mr-2" />
                   Volver
                 </Button>

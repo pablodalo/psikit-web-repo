@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -19,6 +20,7 @@ import { Navigation } from "@/components/navigation"
 import { AuthGuard } from "@/components/auth-guard"
 
 export default function TestsPage() {
+  const router = useRouter()
   const [searchTerm, setSearchTerm] = useState("")
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({})
   const [selectedPatients, setSelectedPatients] = useState<Record<string, string[]>>({})
@@ -144,7 +146,7 @@ export default function TestsPage() {
 
   const handleSendTest = (testId?: string) => {
     const url = testId ? `/dashboard/psicologo/tests/enviar?test=${testId}` : "/dashboard/psicologo/tests/enviar"
-    window.location.href = url
+    router.push(url)
   }
 
   const handlePatientSelection = (testId: string, patientId: string, isSelected: boolean) => {
