@@ -5,12 +5,29 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Search, Send, Download, BarChart3, FileText, Brain, Heart, Zap, Shield } from "lucide-react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+  DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu"
+import { Search, Send, Download, BarChart3, FileText, Brain, Heart, Zap, Shield, ChevronDown, User } from "lucide-react"
 import { Navigation } from "@/components/navigation"
 import { AuthGuard } from "@/components/auth-guard"
 
 export default function TestsPage() {
   const [searchTerm, setSearchTerm] = useState("")
+  const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({})
+
+  const pacientes = [
+    { id: 1, nombre: "María González", email: "maria.gonzalez@email.com", ultimaVisita: "10/01/2024" },
+    { id: 2, nombre: "Carlos Rodríguez", email: "carlos.rodriguez@email.com", ultimaVisita: "12/01/2024" },
+    { id: 3, nombre: "Ana Martínez", email: "ana.martinez@email.com", ultimaVisita: "08/01/2024" },
+    { id: 4, nombre: "Luis Fernández", email: "luis.fernandez@email.com", ultimaVisita: "15/01/2024" },
+    { id: 5, nombre: "Carmen López", email: "carmen.lopez@email.com", ultimaVisita: "05/01/2024" },
+  ]
 
   const testsDisponibles = [
     {
@@ -128,6 +145,16 @@ export default function TestsPage() {
     window.location.href = url
   }
 
+  const handleSendToPatient = (testId: string, patientId: string, patientName: string) => {
+    setOpenDropdowns((prev) => ({ ...prev, [testId]: false }))
+    console.log(`[v0] Sending test ${testId} to patient ${patientId} (${patientName})`)
+    alert(`Test enviado exitosamente a ${patientName}`)
+  }
+
+  const toggleDropdown = (testId: string, isOpen: boolean) => {
+    setOpenDropdowns((prev) => ({ ...prev, [testId]: isOpen }))
+  }
+
   return (
     <AuthGuard requiredUserType="psicologo">
       <div className="flex min-h-screen bg-gray-50">
@@ -224,14 +251,64 @@ export default function TestsPage() {
                                   </div>
                                 </div>
                                 <div className="flex gap-3">
-                                  <Button
-                                    size="sm"
-                                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white"
-                                    onClick={() => handleSendTest(test.id.toString())}
+                                  <DropdownMenu
+                                    open={openDropdowns[test.id.toString()] || false}
+                                    onOpenChange={(isOpen) => toggleDropdown(test.id.toString(), isOpen)}
                                   >
-                                    <Send className="h-4 w-4 mr-2" />
-                                    Enviar
-                                  </Button>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button size="sm" className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
+                                        <Send className="h-4 w-4 mr-2" />
+                                        Enviar
+                                        <ChevronDown className="h-4 w-4 ml-2" />
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="start" className="w-64">
+                                      <DropdownMenuLabel className="text-sm font-semibold text-gray-900">
+                                        Seleccionar Paciente
+                                      </DropdownMenuLabel>
+                                      <DropdownMenuSeparator />
+                                      {pacientes.map((paciente) => (
+                                        <DropdownMenuItem
+                                          key={paciente.id}
+                                          onClick={() =>
+                                            handleSendToPatient(
+                                              test.id.toString(),
+                                              paciente.id.toString(),
+                                              paciente.nombre,
+                                            )
+                                          }
+                                          className="cursor-pointer hover:bg-blue-50 focus:bg-blue-50"
+                                        >
+                                          <div className="flex items-center gap-3 w-full">
+                                            <div className="p-1.5 bg-blue-100 rounded-full">
+                                              <User className="h-3 w-3 text-blue-600" />
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                              <p className="text-sm font-medium text-gray-900 truncate">
+                                                {paciente.nombre}
+                                              </p>
+                                              <p className="text-xs text-gray-500 truncate">
+                                                Última visita: {paciente.ultimaVisita}
+                                              </p>
+                                            </div>
+                                          </div>
+                                        </DropdownMenuItem>
+                                      ))}
+                                      <DropdownMenuSeparator />
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          toggleDropdown(test.id.toString(), false)
+                                          handleSendTest(test.id.toString())
+                                        }}
+                                        className="cursor-pointer text-blue-600 hover:bg-blue-50 focus:bg-blue-50"
+                                      >
+                                        <div className="flex items-center gap-2">
+                                          <Send className="h-4 w-4" />
+                                          <span className="text-sm font-medium">Ver todos los pacientes</span>
+                                        </div>
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
                                   <Button
                                     size="sm"
                                     variant="outline"
