@@ -1,21 +1,13 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import AuthGuard from "@/components/AuthGuard"
-import Navigation from "@/components/Navigation"
-import Button from "@/components/Button"
-import Card from "@/components/Card"
-import CardHeader from "@/components/CardHeader"
-import CardTitle from "@/components/CardTitle"
-import CardDescription from "@/components/CardDescription"
-import CardContent from "@/components/CardContent"
-import Badge from "@/components/Badge"
-import Input from "@/components/Input"
-import ArrowLeft from "@/icons/ArrowLeft"
-import Check from "@/icons/Check"
-import Search from "@/icons/Search"
-import User from "@/icons/User"
-import Send from "@/icons/Send"
+import { AuthGuard } from "@/components/auth-guard"
+import { Navigation } from "@/components/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { ArrowLeft, Check, Search, User, Send } from "lucide-react"
 
 export default function EnviarTestPage() {
   const [selectedTest, setSelectedTest] = useState<string | null>(null)
