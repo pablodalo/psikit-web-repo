@@ -111,7 +111,7 @@ function generateAppointments() {
 export default function PsicologoAgendaPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar")
+  const [viewMode, setViewMode] = useState<"day" | "week" | "month" | "list">("month")
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [isNewAppointmentOpen, setIsNewAppointmentOpen] = useState(false)
@@ -256,6 +256,44 @@ export default function PsicologoAgendaPage() {
 
   const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"]
 
+  const getWeekDays = (date: Date) => {
+    const week = []
+    const startOfWeek = new Date(date)
+    const day = startOfWeek.getDay()
+    const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1) // Monday as first day
+    startOfWeek.setDate(diff)
+
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(startOfWeek)
+      day.setDate(startOfWeek.getDate() + i)
+      week.push(day)
+    }
+    return week
+  }
+
+  const getTimeSlots = () => {
+    const slots = []
+    for (let hour = 8; hour < 20; hour++) {
+      slots.push(`${hour.toString().padStart(2, "0")}:00`)
+      slots.push(`${hour.toString().padStart(2, "0")}:30`)
+    }
+    return slots
+  }
+
+  const navigateDate = (direction: "prev" | "next") => {
+    setCurrentDate((prev) => {
+      const newDate = new Date(prev)
+      if (viewMode === "day") {
+        newDate.setDate(prev.getDate() + (direction === "next" ? 1 : -1))
+      } else if (viewMode === "week") {
+        newDate.setDate(prev.getDate() + (direction === "next" ? 7 : -7))
+      } else if (viewMode === "month") {
+        newDate.setMonth(prev.getMonth() + (direction === "next" ? 1 : -1))
+      }
+      return newDate
+    })
+  }
+
   return (
     <AuthGuard requiredUserType="psicologo">
       <div className="flex min-h-screen bg-gray-50">
@@ -266,19 +304,34 @@ export default function PsicologoAgendaPage() {
             <div className="px-8 py-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Agenda</h1>
-                  <p className="text-gray-600 mt-1">Gestiona tus citas y horarios profesionales</p>
+                  <h1 className="text-3xl font-bold text-gray-900">Mi Agenda</h1>
+                  <p className="text-gray-600 mt-1">Gestiona tus citas y horarios</p>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <div className="flex items-center border rounded-lg shadow-sm">
+                  <div className="flex items-center border rounded-lg shadow-sm bg-white">
                     <Button
-                      variant={viewMode === "calendar" ? "default" : "ghost"}
+                      variant={viewMode === "day" ? "default" : "ghost"}
                       size="sm"
-                      onClick={() => setViewMode("calendar")}
-                      className={`rounded-r-none ${viewMode === "calendar" ? "bg-blue-600 hover:bg-blue-700 text-white" : "hover:bg-gray-50"}`}
+                      onClick={() => setViewMode("day")}
+                      className={`rounded-r-none ${viewMode === "day" ? "bg-blue-600 hover:bg-blue-700 text-white" : "hover:bg-gray-50"}`}
                     >
-                      <CalendarIcon className="h-4 w-4 mr-2" />
-                      Calendario
+                      Día
+                    </Button>
+                    <Button
+                      variant={viewMode === "week" ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setViewMode("week")}
+                      className={`rounded-none border-l ${viewMode === "week" ? "bg-blue-600 hover:bg-blue-700 text-white" : "hover:bg-gray-50"}`}
+                    >
+                      Semana
+                    </Button>
+                    <Button
+                      variant={viewMode === "month" ? "default" : "ghost"}
+                      size="sm"
+                      onClick={() => setViewMode("month")}
+                      className={`rounded-none border-l ${viewMode === "month" ? "bg-blue-600 hover:bg-blue-700 text-white" : "hover:bg-gray-50"}`}
+                    >
+                      Mes
                     </Button>
                     <Button
                       variant={viewMode === "list" ? "default" : "ghost"}
@@ -295,7 +348,7 @@ export default function PsicologoAgendaPage() {
                     <DialogTrigger asChild>
                       <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm">
                         <Plus className="h-4 w-4 mr-2" />
-                        Nueva Cita
+                        Crear
                       </Button>
                     </DialogTrigger>
                     {/* ... existing dialog content ... */}
@@ -446,7 +499,7 @@ export default function PsicologoAgendaPage() {
               </div>
             </div>
 
-            {viewMode === "calendar" && (
+            {viewMode === "day" && (
               <>
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center space-x-4">
@@ -454,7 +507,7 @@ export default function PsicologoAgendaPage() {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => navigateMonth("prev")}
+                        onClick={() => navigateDate("prev")}
                         className="hover:bg-gray-50 border-gray-300"
                       >
                         <ChevronLeft className="h-4 w-4" />
@@ -470,7 +523,203 @@ export default function PsicologoAgendaPage() {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => navigateMonth("next")}
+                        onClick={() => navigateDate("next")}
+                        className="hover:bg-gray-50 border-gray-300"
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      {currentDate.toLocaleDateString("es-ES", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </h2>
+                  </div>
+                </div>
+
+                <Card className="shadow-sm border-gray-200">
+                  <CardContent className="p-0">
+                    <div className="grid grid-cols-[80px_1fr] bg-gray-50 border-b">
+                      <div className="p-4 text-center font-semibold text-gray-700 text-sm border-r bg-gradient-to-b from-gray-50 to-gray-100">
+                        Hora
+                      </div>
+                      <div className="p-4 text-center font-semibold text-gray-700 text-sm bg-gradient-to-b from-gray-50 to-gray-100">
+                        {currentDate.toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "short" })}
+                      </div>
+                    </div>
+                    <div className="max-h-96 overflow-y-auto">
+                      {getTimeSlots().map((time) => {
+                        const dateKey = formatDateKey(currentDate)
+                        const dayAppointments = appointments[dateKey] || []
+                        const appointment = dayAppointments.find((apt) => apt.hora === time)
+
+                        return (
+                          <div key={time} className="grid grid-cols-[80px_1fr] border-b hover:bg-gray-25">
+                            <div className="p-3 text-sm text-gray-600 border-r bg-gray-50 font-medium">{time}</div>
+                            <div className="p-3 min-h-[60px] relative">
+                              {appointment ? (
+                                <div
+                                  className={`p-3 rounded-lg border shadow-sm ${
+                                    appointment.tipo === "virtual"
+                                      ? "bg-blue-50 border-blue-200 text-blue-800"
+                                      : "bg-green-50 border-green-200 text-green-800"
+                                  }`}
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <div>
+                                      <p className="font-semibold">{appointment.paciente}</p>
+                                      <p className="text-sm opacity-80">{appointment.tipo}</p>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                      {appointment.tipo === "virtual" ? (
+                                        <Video className="h-4 w-4" />
+                                      ) : (
+                                        <MapPin className="h-4 w-4" />
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="h-full flex items-center text-gray-400 text-sm">Disponible</div>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+
+            {viewMode === "week" && (
+              <>
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => navigateDate("prev")}
+                        className="hover:bg-gray-50 border-gray-300"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setCurrentDate(new Date())}
+                        className="hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700"
+                      >
+                        Hoy
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => navigateDate("next")}
+                        className="hover:bg-gray-50 border-gray-300"
+                      >
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      Semana del{" "}
+                      {getWeekDays(currentDate)[0].toLocaleDateString("es-ES", { day: "numeric", month: "short" })} -{" "}
+                      {getWeekDays(currentDate)[6].toLocaleDateString("es-ES", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </h2>
+                  </div>
+                </div>
+
+                <Card className="shadow-sm border-gray-200">
+                  <CardContent className="p-0">
+                    <div className="grid grid-cols-8 bg-gray-50 border-b">
+                      <div className="p-4 text-center font-semibold text-gray-700 text-sm border-r bg-gradient-to-b from-gray-50 to-gray-100">
+                        Hora
+                      </div>
+                      {getWeekDays(currentDate).map((day, index) => {
+                        const isToday = day.toDateString() === new Date().toDateString()
+                        return (
+                          <div
+                            key={index}
+                            className={`p-4 text-center font-semibold text-sm border-r last:border-r-0 ${
+                              isToday
+                                ? "bg-blue-100 text-blue-800"
+                                : "bg-gradient-to-b from-gray-50 to-gray-100 text-gray-700"
+                            }`}
+                          >
+                            <div>{dayNames[day.getDay()]}</div>
+                            <div className="text-lg font-bold mt-1">{day.getDate()}</div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                    <div className="max-h-96 overflow-y-auto">
+                      {getTimeSlots()
+                        .slice(0, 20)
+                        .map((time) => (
+                          <div key={time} className="grid grid-cols-8 border-b hover:bg-gray-25">
+                            <div className="p-2 text-xs text-gray-600 border-r bg-gray-50 font-medium">{time}</div>
+                            {getWeekDays(currentDate).map((day, dayIndex) => {
+                              const dateKey = formatDateKey(day)
+                              const dayAppointments = appointments[dateKey] || []
+                              const appointment = dayAppointments.find((apt) => apt.hora === time)
+
+                              return (
+                                <div key={dayIndex} className="p-1 min-h-[50px] border-r last:border-r-0 relative">
+                                  {appointment && (
+                                    <div
+                                      className={`p-1 rounded text-xs truncate ${
+                                        appointment.tipo === "virtual"
+                                          ? "bg-blue-100 text-blue-800 border border-blue-200"
+                                          : "bg-green-100 text-green-800 border border-green-200"
+                                      }`}
+                                    >
+                                      <div className="font-semibold truncate">{appointment.paciente}</div>
+                                    </div>
+                                  )}
+                                </div>
+                              )
+                            })}
+                          </div>
+                        ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+
+            {viewMode === "month" && (
+              <>
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => navigateDate("prev")}
+                        className="hover:bg-gray-50 border-gray-300"
+                      >
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => setCurrentDate(new Date())}
+                        className="hover:bg-blue-50 hover:border-blue-300 hover:text-blue-700"
+                      >
+                        Hoy
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => navigateDate("next")}
                         className="hover:bg-gray-50 border-gray-300"
                       >
                         <ChevronRight className="h-4 w-4" />
@@ -529,8 +778,8 @@ export default function PsicologoAgendaPage() {
                                   key={appointment.id}
                                   className={`text-xs p-1.5 rounded-md truncate font-medium shadow-sm border transition-all hover:shadow-md ${
                                     appointment.tipo === "virtual"
-                                      ? "bg-blue-100 text-blue-800 border-blue-200"
-                                      : "bg-green-100 text-green-800 border-green-200"
+                                      ? "bg-blue-100 border-blue-200 text-blue-800"
+                                      : "bg-green-100 border-green-200 text-green-800"
                                   }`}
                                   title={`${appointment.hora} - ${appointment.paciente} (${appointment.tipo})`}
                                 >
@@ -562,9 +811,9 @@ export default function PsicologoAgendaPage() {
               <div className="max-w-4xl mx-auto">
                 <Card className="shadow-sm border-gray-200">
                   <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                    <div className="flex items-center justify-center">
+                      <div className="text-center">
+                        <CardTitle className="text-xl font-bold text-gray-900 flex items-center justify-center gap-2">
                           <CalendarIcon className="h-5 w-5 text-blue-600" />
                           {selectedDate
                             ? `${selectedDate.toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`
@@ -576,7 +825,7 @@ export default function PsicologoAgendaPage() {
                             : `${sesionesHoy.length} sesiones programadas`}
                         </CardDescription>
                       </div>
-                      <div className="flex items-center space-x-2">
+                      <div className="absolute right-6 flex items-center space-x-2">
                         {selectedDate && (
                           <Button
                             size="sm"
