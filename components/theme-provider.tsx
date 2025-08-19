@@ -68,11 +68,11 @@ export function ThemeProvider({
     applyTheme(newTheme)
   }
 
-  if (!mounted) {
-    return <div style={{ visibility: "hidden" }}>{children}</div>
-  }
-
-  return <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>{children}</ThemeContext.Provider>
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
+      <div style={{ visibility: mounted ? "visible" : "hidden" }}>{children}</div>
+    </ThemeContext.Provider>
+  )
 }
 
 export function useTheme() {
