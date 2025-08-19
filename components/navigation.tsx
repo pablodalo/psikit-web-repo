@@ -17,7 +17,7 @@ export function Navigation({ userType }: NavigationProps) {
   const { user, logout } = useAuth()
 
   const psicologoNavItems = [
-    { href: "/dashboard/psicologo", label: "Dashboard", icon: Home },
+    { href: "/dashboard/psicologo", label: "Tablero", icon: Home },
     { href: "/dashboard/psicologo/pacientes", label: "Pacientes", icon: Users },
     { href: "/dashboard/psicologo/agenda", label: "Agenda", icon: Calendar },
     { href: "/dashboard/psicologo/sesiones", label: "Sesiones", icon: Video },
