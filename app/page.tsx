@@ -27,27 +27,36 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
       {/* Header */}
-      <header className="border-b bg-white dark:bg-gray-900 dark:border-gray-800">
+      <header className="border-b bg-white dark:bg-gray-900 dark:border-gray-700 transition-colors duration-300">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Brain className="h-8 w-8 text-blue-600" />
-            <span className="text-xl font-bold dark:text-white">PsiKit</span>
+            <Brain className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+            <span className="text-xl font-bold text-gray-900 dark:text-white">PsiKit</span>
           </div>
           <div className="flex items-center space-x-4">
             <ThemeToggle />
             {user?.isAuthenticated ? (
               <Link href={user.userType === "psicologo" ? "/dashboard/psicologo" : "/dashboard/paciente"}>
-                <Button>Ir a mi perfil</Button>
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600">
+                  Ir a mi perfil
+                </Button>
               </Link>
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost">Iniciar Sesión</Button>
+                  <Button
+                    variant="ghost"
+                    className="text-gray-700 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-800"
+                  >
+                    Iniciar Sesión
+                  </Button>
                 </Link>
                 <Link href="/register">
-                  <Button className="bg-black hover:bg-gray-800 text-white">Registrarse</Button>
+                  <Button className="bg-black hover:bg-gray-800 text-white dark:bg-gray-800 dark:hover:bg-gray-700">
+                    Registrarse
+                  </Button>
                 </Link>
               </>
             )}
@@ -56,14 +65,14 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="py-20 px-4 bg-blue-50 dark:bg-gray-800">
+      <section className="py-20 px-4 bg-blue-50 dark:bg-gray-800 transition-colors duration-300">
         <div className="container mx-auto text-center">
-          <Badge className="mb-6 bg-blue-100 text-blue-800 hover:bg-blue-100 dark:bg-blue-900 dark:text-blue-200">
+          <Badge className="mb-6 bg-blue-100 text-blue-800 hover:bg-blue-100 dark:bg-blue-900 dark:text-blue-200 border-0">
             Consultorio Virtual Completo
           </Badge>
           <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-6">
             Tu consultorio psicológico
-            <span className="text-blue-600"> en cualquier lugar</span>
+            <span className="text-blue-600 dark:text-blue-400"> en cualquier lugar</span>
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-4xl mx-auto">
             Plataforma integral para psicólogos de Latinoamérica. Sesiones virtuales, gestión de pacientes, historia
@@ -72,12 +81,17 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-blue-600 hover:bg-blue-700 text-white dark:bg-blue-500 dark:hover:bg-blue-600"
               onClick={() => handleUserTypeSelection("psicologo")}
             >
               Soy Psicólogo
             </Button>
-            <Button size="lg" variant="outline" onClick={() => handleUserTypeSelection("paciente")}>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white bg-transparent"
+              onClick={() => handleUserTypeSelection("paciente")}
+            >
               Soy Paciente
             </Button>
           </div>
@@ -85,7 +99,7 @@ export default function HomePage() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-16 px-4 bg-white dark:bg-gray-900">
+      <section className="py-16 px-4 bg-white dark:bg-gray-900 transition-colors duration-300">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12 dark:text-white">Funcionalidades Principales</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -175,14 +189,14 @@ export default function HomePage() {
       </section>
 
       {/* Pricing Preview */}
-      <section className="py-16 px-4 bg-gray-50 dark:bg-gray-800">
+      <section className="py-16 px-4 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
         <div className="container mx-auto">
           <PricingSection />
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 dark:bg-black text-white py-12 px-4">
+      <footer className="bg-gray-900 dark:bg-black text-white py-12 px-4 transition-colors duration-300">
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Brain className="h-6 w-6 text-white" />

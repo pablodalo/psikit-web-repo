@@ -28,28 +28,48 @@ export function ThemeProvider({
     const savedTheme = localStorage.getItem("psikit-theme") as Theme
     if (savedTheme && (savedTheme === "light" || savedTheme === "dark")) {
       setTheme(savedTheme)
+      applyTheme(savedTheme)
     } else {
-      // Check system preference
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
       setTheme(systemTheme)
+      applyTheme(systemTheme)
     }
   }, [])
 
+  const applyTheme = (newTheme: Theme) => {
+    const root = document.documentElement
+    const body = document.body
+
+    // Remove existing theme classes
+    root.classList.remove("light", "dark")
+    body.classList.remove("light", "dark")
+
+    // Add new theme class
+    root.classList.add(newTheme)
+    body.classList.add(newTheme)
+
+    // Set data attribute for CSS targeting
+    root.setAttribute("data-theme", newTheme)
+
+    // Force style recalculation
+    root.style.colorScheme = newTheme
+  }
+
   useEffect(() => {
     if (mounted) {
-      const root = document.documentElement
-      root.classList.remove("light", "dark")
-      root.classList.add(theme)
-      root.setAttribute("data-theme", theme)
+      applyTheme(theme)
       localStorage.setItem("psikit-theme", theme)
-
-      document.body.classList.remove("light", "dark")
-      document.body.classList.add(theme)
     }
   }, [theme, mounted])
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === "light" ? "dark" : "light"))
+    const newTheme = theme === "light" ? "dark" : "light"
+    setTheme(newTheme)
+    applyTheme(newTheme)
+  }
+
+  if (!mounted) {
+    return <div style={{ visibility: "hidden" }}>{children}</div>
   }
 
   return <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>{children}</ThemeContext.Provider>
