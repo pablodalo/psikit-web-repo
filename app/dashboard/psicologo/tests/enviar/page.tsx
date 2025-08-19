@@ -210,7 +210,12 @@ export default function EnviarTestPage() {
                           ? "border-blue-500 bg-blue-50 shadow-lg ring-2 ring-blue-200 scale-105"
                           : "border-gray-200 hover:border-blue-300 hover:shadow-md"
                       }`}
-                      onClick={() => setSelectedTest(test.id)}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        console.log("[v0] Selecting test:", test.id)
+                        setSelectedTest(test.id)
+                      }}
                     >
                       <CardContent className="p-4 relative">
                         <div className="flex items-start gap-3">
@@ -220,6 +225,12 @@ export default function EnviarTestPage() {
                                 ? "bg-blue-600 border-blue-600 scale-110"
                                 : "border-gray-300 hover:border-blue-400"
                             }`}
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              console.log("[v0] Checkbox clicked for test:", test.id)
+                              setSelectedTest(test.id)
+                            }}
                           >
                             {selectedTest === test.id && <Check className="h-4 w-4 text-white" />}
                           </div>
