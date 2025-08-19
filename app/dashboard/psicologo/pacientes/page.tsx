@@ -11,13 +11,13 @@ import {
   FileText,
   Calendar,
   Phone,
-  Mail,
   MoreHorizontal,
   Filter,
   Users,
   UserCheck,
   Clock,
   AlertCircle,
+  Eye,
 } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Navigation } from "@/components/navigation"
@@ -26,6 +26,7 @@ import { useState, useMemo } from "react"
 
 export default function PacientesPage() {
   const [searchTerm, setSearchTerm] = useState("")
+  const [selectedPatient, setSelectedPatient] = useState<number | null>(null)
 
   const pacientes = [
     {
@@ -248,98 +249,27 @@ export default function PacientesPage() {
               <CardContent className="p-0">
                 <div className="divide-y divide-gray-100">
                   {filteredPacientes.map((paciente) => (
-                    <div key={paciente.id} className="p-6 hover:bg-gray-50 transition-colors">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-start space-x-4 flex-1">
-                          <Avatar className="h-12 w-12">
-                            <AvatarImage src={`/generic-placeholder-graphic.png?height=48&width=48`} />
-                            <AvatarFallback className="bg-blue-100 text-blue-700 font-semibold">
-                              {paciente.nombre
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
-
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center space-x-3 mb-2">
+                    <Card
+                      key={paciente.id}
+                      className="border border-gray-200 hover:shadow-md transition-all duration-200 hover:border-blue-300"
+                    >
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-center space-x-3">
+                            <Avatar className="h-12 w-12">
+                              <AvatarImage src={`/generic-placeholder-graphic.png?height=48&width=48`} />
+                              <AvatarFallback className="bg-blue-100 text-blue-700 font-semibold">
+                                {paciente.nombre
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
                               <h3 className="text-lg font-semibold text-gray-900">{paciente.nombre}</h3>
-                              <Badge className={`${getStatusColor(paciente.estado)} border-0 font-medium`}>
-                                {paciente.estado}
-                              </Badge>
-                              <Badge className={`${getModalidadColor(paciente.modalidad)} border-0 font-medium`}>
-                                {paciente.modalidad}
-                              </Badge>
-                              {paciente.pagosPendientes > 0 && (
-                                <Badge className="bg-red-100 text-red-800 border-0 font-medium">
-                                  {paciente.pagosPendientes} pago{paciente.pagosPendientes > 1 ? "s" : ""} pendiente
-                                  {paciente.pagosPendientes > 1 ? "s" : ""}
-                                </Badge>
-                              )}
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-3">
-                              <div className="space-y-2">
-                                <div className="flex items-center text-sm text-gray-600">
-                                  <span className="font-medium w-20">Edad:</span>
-                                  <span>{paciente.edad} años</span>
-                                </div>
-                                <div className="flex items-center text-sm text-gray-600">
-                                  <Phone className="h-4 w-4 mr-2 text-gray-400" />
-                                  <span>{paciente.telefono}</span>
-                                </div>
-                                <div className="flex items-center text-sm text-gray-600">
-                                  <Mail className="h-4 w-4 mr-2 text-gray-400" />
-                                  <span className="truncate">{paciente.email}</span>
-                                </div>
-                              </div>
-
-                              <div className="space-y-2">
-                                <div className="flex items-center text-sm text-gray-600">
-                                  <span className="font-medium w-24">Diagnóstico:</span>
-                                  <span>{paciente.diagnostico}</span>
-                                </div>
-                                <div className="flex items-center text-sm text-gray-600">
-                                  <span className="font-medium w-24">Sesiones:</span>
-                                  <span>{paciente.sesionesTotal} completadas</span>
-                                </div>
-                                <div className="flex items-center text-sm text-gray-600">
-                                  <span className="font-medium w-24">Ingreso:</span>
-                                  <span>{paciente.fechaIngreso}</span>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="flex items-center space-x-6 text-sm">
-                              <div className="flex items-center text-gray-600">
-                                <span className="font-medium mr-2">Última sesión:</span>
-                                <span>{paciente.ultimaSesion}</span>
-                              </div>
-                              <div className="flex items-center text-gray-600">
-                                <span className="font-medium mr-2">Próxima sesión:</span>
-                                <span>{paciente.proximaSesion}</span>
-                              </div>
+                              <p className="text-sm text-gray-600">{paciente.edad} años</p>
                             </div>
                           </div>
-                        </div>
-
-                        <div className="flex items-center space-x-2 ml-4">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 bg-transparent"
-                          >
-                            <FileText className="h-4 w-4 mr-2" />
-                            Historia
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="hover:bg-green-50 hover:text-green-700 hover:border-green-300 bg-transparent"
-                          >
-                            <Calendar className="h-4 w-4 mr-2" />
-                            Agendar
-                          </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button size="sm" variant="ghost" className="hover:bg-gray-100">
@@ -355,8 +285,87 @@ export default function PacientesPage() {
                             </DropdownMenuContent>
                           </DropdownMenu>
                         </div>
-                      </div>
-                    </div>
+
+                        <div className="flex flex-wrap gap-2 mb-4">
+                          <Badge className={`${getStatusColor(paciente.estado)} border-0 font-medium`}>
+                            {paciente.estado}
+                          </Badge>
+                          <Badge className={`${getModalidadColor(paciente.modalidad)} border-0 font-medium`}>
+                            {paciente.modalidad}
+                          </Badge>
+                          {paciente.pagosPendientes > 0 && (
+                            <Badge className="bg-red-100 text-red-800 border-0 font-medium">
+                              {paciente.pagosPendientes} pago{paciente.pagosPendientes > 1 ? "s" : ""} pendiente
+                              {paciente.pagosPendientes > 1 ? "s" : ""}
+                            </Badge>
+                          )}
+                        </div>
+
+                        <div className="space-y-2 mb-4">
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Phone className="h-4 w-4 mr-2 text-gray-400" />
+                            <span>{paciente.telefono}</span>
+                          </div>
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Calendar className="h-4 w-4 mr-2 text-gray-400" />
+                            <span>Próxima: {paciente.proximaSesion}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1 hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 bg-transparent"
+                            onClick={() => setSelectedPatient(selectedPatient === paciente.id ? null : paciente.id)}
+                          >
+                            <Eye className="h-4 w-4 mr-2" />
+                            Ver más
+                          </Button>
+                          <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                            <Calendar className="h-4 w-4 mr-2" />
+                            Agendar
+                          </Button>
+                        </div>
+
+                        {selectedPatient === paciente.id && (
+                          <div className="mt-4 pt-4 border-t border-gray-200 space-y-3">
+                            <div className="grid grid-cols-2 gap-3 text-sm">
+                              <div>
+                                <span className="font-medium text-gray-700">Email:</span>
+                                <p className="text-gray-600 truncate">{paciente.email}</p>
+                              </div>
+                              <div>
+                                <span className="font-medium text-gray-700">Diagnóstico:</span>
+                                <p className="text-gray-600">{paciente.diagnostico}</p>
+                              </div>
+                              <div>
+                                <span className="font-medium text-gray-700">Sesiones:</span>
+                                <p className="text-gray-600">{paciente.sesionesTotal} completadas</p>
+                              </div>
+                              <div>
+                                <span className="font-medium text-gray-700">Ingreso:</span>
+                                <p className="text-gray-600">{paciente.fechaIngreso}</p>
+                              </div>
+                              <div>
+                                <span className="font-medium text-gray-700">Última sesión:</span>
+                                <p className="text-gray-600">{paciente.ultimaSesion}</p>
+                              </div>
+                            </div>
+                            <div className="flex gap-2 pt-2">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="flex-1 hover:bg-green-50 hover:text-green-700 hover:border-green-300 bg-transparent"
+                              >
+                                <FileText className="h-4 w-4 mr-2" />
+                                Historia
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
                   ))}
                 </div>
 
