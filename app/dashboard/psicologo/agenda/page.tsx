@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -15,20 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {
-  CalendarIcon,
-  Clock,
-  Plus,
-  Video,
-  ChevronLeft,
-  ChevronRight,
-  List,
-  MapPin,
-  Search,
-  TrendingUp,
-  CheckCircle,
-  AlertCircle,
-} from "lucide-react"
+import { CalendarIcon, Clock, Plus, Video, ChevronLeft, ChevronRight, List, MapPin } from "lucide-react"
 import Link from "next/link"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
@@ -58,20 +46,18 @@ function generateAppointments() {
   // Generate appointments for current month
   for (let day = 1; day <= 31; day++) {
     const date = new Date(currentYear, currentMonth, day)
-    if (date.getMonth() !== currentMonth) break // Stop if we've moved to next month
+    if (date.getMonth() !== currentMonth) break
 
     const dateKey = date.toISOString().split("T")[0]
     const dayOfWeek = date.getDay()
 
-    // Skip weekends for most appointments
     if (dayOfWeek === 0 || dayOfWeek === 6) continue
 
-    // Randomly generate 1-4 appointments per day
     const numAppointments = Math.floor(Math.random() * 4) + 1
     const dayAppointments = []
 
     for (let i = 0; i < numAppointments; i++) {
-      const hour = 9 + Math.floor(Math.random() * 8) // 9 AM to 4 PM
+      const hour = 9 + Math.floor(Math.random() * 8)
       const minute = Math.random() > 0.5 ? "00" : "30"
       const patient = patients[Math.floor(Math.random() * patients.length)]
       const tipo = Math.random() > 0.3 ? "virtual" : "presencial"
@@ -86,7 +72,6 @@ function generateAppointments() {
       })
     }
 
-    // Sort appointments by time
     dayAppointments.sort((a, b) => a.hora.localeCompare(b.hora))
     appointments[dateKey] = dayAppointments
   }
@@ -124,25 +109,20 @@ function generateAppointments() {
 }
 
 export default function PsicologoAgendaPage() {
-  const [viewMode, setViewMode] = useState<"month" | "week" | "day" | "list">("month")
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [viewMode, setViewMode] = useState<"calendar" | "list">("calendar")
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [isNewAppointmentOpen, setIsNewAppointmentOpen] = useState(false)
   const [appointments, setAppointments] = useState(() => generateAppointments())
-  const [searchTerm, setSearchTerm] = useState("")
 
-  const filteredAppointments = (dateKey: string) => {
-    const dayAppointments = appointments[dateKey] || []
-    if (!searchTerm.trim()) return dayAppointments
-
-    const searchLower = searchTerm.toLowerCase()
-    return dayAppointments.filter(
-      (appointment) =>
-        appointment.paciente.toLowerCase().includes(searchLower) ||
-        appointment.tipo.toLowerCase().includes(searchLower) ||
-        appointment.estado.toLowerCase().includes(searchLower),
-    )
-  }
+  useEffect(() => {
+    const view = searchParams.get("view")
+    if (view === "list") {
+      setViewMode("list")
+    }
+  }, [searchParams])
 
   const [newAppointment, setNewAppointment] = useState({
     paciente: "",
@@ -159,12 +139,18 @@ export default function PsicologoAgendaPage() {
     { id: 4, paciente: "Luis Pérez", hora: "15:30", duracion: 50, estado: "confirmada", tipo: "virtual" },
   ]
 
+  const proximosDias = [
+    { dia: "Mañana", fecha: "15 Nov", sesiones: 3, disponibles: 2 },
+    { dia: "Miércoles", fecha: "16 Nov", sesiones: 4, disponibles: 1 },
+    { dia: "Jueves", fecha: "17 Nov", sesiones: 2, disponibles: 3 },
+    { dia: "Viernes", fecha: "18 Nov", sesiones: 5, disponibles: 0 },
+  ]
+
   const getAvailableTimeSlots = (date: string) => {
     const timeSlots = []
     const dayAppointments = appointments[date] || []
     const bookedTimes = dayAppointments.map((apt) => apt.hora)
 
-    // Generate time slots from 9:00 to 17:00 (5 PM)
     for (let hour = 9; hour < 17; hour++) {
       for (let minute = 0; minute < 60; minute += 30) {
         const timeString = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`
@@ -193,7 +179,6 @@ export default function PsicologoAgendaPage() {
       estado: "confirmada" as const,
     }
 
-    // Update appointments state
     setAppointments((prev) => ({
       ...prev,
       [newAppointment.fecha]: [...(prev[newAppointment.fecha] || []), newApt].sort((a, b) =>
@@ -201,7 +186,6 @@ export default function PsicologoAgendaPage() {
       ),
     }))
 
-    // Reset form and close modal
     setNewAppointment({
       paciente: "",
       fecha: "",
@@ -222,12 +206,10 @@ export default function PsicologoAgendaPage() {
 
     const days = []
 
-    // Add empty cells for days before the first day of the month
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null)
     }
 
-    // Add days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       days.push(new Date(year, month, day))
     }
@@ -239,16 +221,10 @@ export default function PsicologoAgendaPage() {
     return date.toISOString().split("T")[0]
   }
 
-  const navigateDate = (direction: "prev" | "next") => {
+  const navigateMonth = (direction: "prev" | "next") => {
     setCurrentDate((prev) => {
       const newDate = new Date(prev)
-      if (viewMode === "month") {
-        newDate.setMonth(prev.getMonth() + (direction === "next" ? 1 : -1))
-      } else if (viewMode === "week") {
-        newDate.setDate(prev.getDate() + (direction === "next" ? 7 : -7))
-      } else if (viewMode === "day") {
-        newDate.setDate(prev.getDate() + (direction === "next" ? 1 : -1))
-      }
+      newDate.setMonth(prev.getMonth() + (direction === "next" ? 1 : -1))
       return newDate
     })
   }
@@ -258,18 +234,8 @@ export default function PsicologoAgendaPage() {
     setViewMode("list")
   }
 
-  const getSessionsForDate = (date: Date) => {
-    const dateKey = formatDateKey(date)
-    const dayAppointments = appointments[dateKey] || []
-
-    return dayAppointments.map((appointment, index) => ({
-      id: `${dateKey}-${index}`,
-      paciente: appointment.paciente,
-      hora: appointment.hora,
-      duracion: 50,
-      estado: appointment.estado,
-      tipo: appointment.tipo,
-    }))
+  const handleProximosDiasClick = (proximoDia: any) => {
+    setViewMode("list")
   }
 
   const monthNames = [
@@ -289,74 +255,35 @@ export default function PsicologoAgendaPage() {
 
   const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"]
 
-  const getWeekDays = (date: Date) => {
-    const week = []
-    const startOfWeek = new Date(date)
-    const day = startOfWeek.getDay()
-    const diff = startOfWeek.getDate() - day
-    startOfWeek.setDate(diff)
-
-    for (let i = 0; i < 7; i++) {
-      const day = new Date(startOfWeek)
-      day.setDate(startOfWeek.getDate() + i)
-      week.push(day)
-    }
-    return week
-  }
-
-  const getTimeSlots = () => {
-    const slots = []
-    for (let hour = 8; hour < 20; hour++) {
-      slots.push(`${hour.toString().padStart(2, "0")}:00`)
-      slots.push(`${hour.toString().padStart(2, "0")}:30`)
-    }
-    return slots
-  }
-
   return (
     <AuthGuard requiredUserType="psicologo">
       <div className="flex min-h-screen bg-gray-50">
         <Navigation userType="psicologo" />
 
         <div className="flex-1">
-          <header className="bg-white border-b border-gray-200 shadow-sm">
+          <header className="bg-white border-b border-gray-200">
             <div className="px-8 py-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900">Mi Agenda</h1>
-                  <p className="text-gray-600 mt-1">Gestiona tus citas y horarios</p>
+                  <h1 className="text-2xl font-bold text-gray-900">Agenda</h1>
+                  <p className="text-gray-600">Gestiona tus citas y horarios</p>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="flex items-center border rounded-lg">
                     <Button
-                      variant={viewMode === "day" ? "default" : "ghost"}
+                      variant={viewMode === "calendar" ? "default" : "ghost"}
                       size="sm"
-                      onClick={() => setViewMode("day")}
+                      onClick={() => setViewMode("calendar")}
                       className="rounded-r-none"
                     >
-                      Día
-                    </Button>
-                    <Button
-                      variant={viewMode === "week" ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => setViewMode("week")}
-                      className="rounded-none border-x"
-                    >
-                      Semana
-                    </Button>
-                    <Button
-                      variant={viewMode === "month" ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => setViewMode("month")}
-                      className="rounded-none border-x"
-                    >
-                      Mes
+                      <CalendarIcon className="h-4 w-4 mr-2" />
+                      Calendario
                     </Button>
                     <Button
                       variant={viewMode === "list" ? "default" : "ghost"}
                       size="sm"
                       onClick={() => setViewMode("list")}
-                      className="rounded-l-none"
+                      className="rounded-l-none border-l"
                     >
                       <List className="h-4 w-4 mr-2" />
                       Lista
@@ -365,9 +292,9 @@ export default function PsicologoAgendaPage() {
 
                   <Dialog open={isNewAppointmentOpen} onOpenChange={setIsNewAppointmentOpen}>
                     <DialogTrigger asChild>
-                      <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm">
+                      <Button className="bg-blue-600 hover:bg-blue-700">
                         <Plus className="h-4 w-4 mr-2" />
-                        Crear Cita
+                        Nueva Cita
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-[500px]">
@@ -488,392 +415,207 @@ export default function PsicologoAgendaPage() {
           </header>
 
           <div className="p-8 space-y-8">
-            <div className="max-w-md">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  placeholder="Buscar citas..."
-                  className="pl-10 h-10 border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                    <TrendingUp className="h-5 w-5 text-green-600" />
-                    Próximas Citas
-                  </h2>
-                  <p className="text-sm text-gray-600 mt-1">Citas programadas para hoy y mañana</p>
+            {viewMode === "calendar" && (
+              <>
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex items-center space-x-2">
+                      <Button size="sm" variant="outline" onClick={() => navigateMonth("prev")}>
+                        <ChevronLeft className="h-4 w-4" />
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => setCurrentDate(new Date())}>
+                        Hoy
+                      </Button>
+                      <Button size="sm" variant="outline" onClick={() => navigateMonth("next")}>
+                        <ChevronRight className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <h2 className="text-xl font-semibold text-gray-900">
+                      {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
+                    </h2>
+                  </div>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-green-700 border-green-300 hover:bg-green-50 bg-transparent"
-                >
-                  Ver todas
-                </Button>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {sesionesHoy.map((sesion) => (
-                  <Card key={sesion.id} className="hover:shadow-md transition-shadow duration-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-semibold text-gray-900 truncate">{sesion.paciente}</h4>
-                          <p className="text-sm text-gray-600">
-                            {sesion.hora} - {sesion.duracion} min
-                          </p>
+                <Card>
+                  <CardContent className="p-0">
+                    <div className="grid grid-cols-7 bg-gray-50 border-b">
+                      {dayNames.map((day) => (
+                        <div
+                          key={day}
+                          className="p-4 text-center font-medium text-gray-600 text-sm border-r last:border-r-0"
+                        >
+                          {day}
                         </div>
-                        <div className="flex items-center gap-2 ml-2">
-                          {sesion.estado === "confirmada" ? (
-                            <CheckCircle className="h-4 w-4 text-green-600" />
-                          ) : (
-                            <AlertCircle className="h-4 w-4 text-amber-600" />
-                          )}
-                          <Badge
-                            variant="outline"
-                            className={`text-xs ${
-                              sesion.estado === "confirmada"
-                                ? "border-green-200 text-green-800 bg-green-50"
-                                : "border-amber-200 text-amber-800 bg-amber-50"
-                            }`}
+                      ))}
+                    </div>
+                    <div className="grid grid-cols-7">
+                      {getDaysInMonth(currentDate).map((day, index) => {
+                        if (!day) {
+                          return <div key={index} className="h-32 border-r border-b last:border-r-0"></div>
+                        }
+
+                        const dateKey = formatDateKey(day)
+                        const dayAppointments = appointments[dateKey] || []
+                        const isToday = day.toDateString() === new Date().toDateString()
+                        const isCurrentMonth = day.getMonth() === currentDate.getMonth()
+
+                        return (
+                          <div
+                            key={index}
+                            onClick={() => handleDayClick(day)}
+                            className={`h-32 p-2 border-r border-b last:border-r-0 relative overflow-hidden cursor-pointer transition-all hover:bg-opacity-80 ${
+                              isToday ? "bg-blue-50 border-blue-200" : "bg-white hover:bg-gray-50"
+                            } ${!isCurrentMonth ? "opacity-40" : ""}`}
                           >
-                            {sesion.estado}
-                          </Badge>
+                            <div
+                              className={`text-sm font-semibold mb-1 ${isToday ? "text-blue-600" : "text-gray-900"}`}
+                            >
+                              {day.getDate()}
+                            </div>
+
+                            <div className="space-y-1 h-20 overflow-hidden">
+                              {dayAppointments.slice(0, 2).map((appointment, idx) => (
+                                <div
+                                  key={appointment.id}
+                                  className={`text-xs p-1.5 rounded-md truncate font-medium ${
+                                    appointment.tipo === "virtual"
+                                      ? "bg-blue-100 text-blue-800"
+                                      : "bg-green-100 text-green-800"
+                                  }`}
+                                  title={`${appointment.hora} - ${appointment.paciente} (${appointment.tipo})`}
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <span className="font-medium">{appointment.hora}</span>
+                                    {appointment.tipo === "virtual" && <Video className="h-3 w-3" />}
+                                  </div>
+                                  <div className="truncate text-xs opacity-90">{appointment.paciente}</div>
+                                </div>
+                              ))}
+
+                              {dayAppointments.length > 2 && (
+                                <div className="absolute bottom-1 right-1 bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full font-medium border">
+                                  +{dayAppointments.length - 2}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            )}
+
+            {viewMode === "list" && (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2">
+                  <Card>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle>
+                            {selectedDate
+                              ? `${selectedDate.toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`
+                              : `Hoy - ${new Date().toLocaleDateString()}`}
+                          </CardTitle>
+                          <CardDescription>
+                            {selectedDate
+                              ? `${(appointments[formatDateKey(selectedDate)] || []).length} sesiones programadas`
+                              : `${sesionesHoy.length} sesiones programadas`}
+                          </CardDescription>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          {selectedDate && (
+                            <Button size="sm" variant="outline" onClick={() => setSelectedDate(null)}>
+                              Ver Hoy
+                            </Button>
+                          )}
+                          <Button size="sm" variant="outline">
+                            <ChevronLeft className="h-4 w-4" />
+                          </Button>
+                          <Button size="sm" variant="outline">
+                            <ChevronRight className="h-4 w-4" />
+                          </Button>
                         </div>
                       </div>
-
-                      <div className="space-y-2">
-                        <Badge variant={sesion.tipo === "virtual" ? "default" : "secondary"} className="text-xs">
-                          {sesion.tipo === "virtual" ? (
-                            <>
-                              <Video className="h-3 w-3 mr-1" />
-                              Virtual
-                            </>
-                          ) : (
-                            <>
-                              <MapPin className="h-3 w-3 mr-1" />
-                              Presencial
-                            </>
-                          )}
-                        </Badge>
-
-                        {sesion.tipo === "virtual" && sesion.estado === "confirmada" && (
-                          <Link href={`/sesion/${sesion.id}`}>
-                            <Button size="sm" className="w-full h-8 text-xs bg-green-600 hover:bg-green-700">
-                              <Video className="h-3 w-3 mr-1" />
-                              Iniciar Sesión
-                            </Button>
-                          </Link>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {(selectedDate ? appointments[formatDateKey(selectedDate)] || [] : sesionesHoy).map(
+                          (sesion) => (
+                            <div key={sesion.id} className="flex items-center justify-between p-4 border rounded-lg">
+                              <div className="flex items-center space-x-4">
+                                <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
+                                  <Clock className="h-6 w-6 text-blue-600" />
+                                </div>
+                                <div>
+                                  <p className="font-medium">{sesion.paciente}</p>
+                                  <p className="text-sm text-gray-600">
+                                    {sesion.hora} - {sesion.duracion || 50} min
+                                  </p>
+                                  <div className="flex items-center space-x-2 mt-1">
+                                    <Badge variant={sesion.tipo === "virtual" ? "default" : "secondary"}>
+                                      {sesion.tipo}
+                                    </Badge>
+                                    <Badge variant={sesion.estado === "confirmada" ? "default" : "secondary"}>
+                                      {sesion.estado}
+                                    </Badge>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                {sesion.tipo === "virtual" && (
+                                  <Link href={`/sesion/${sesion.id}`}>
+                                    <Button size="sm" className="bg-green-600 hover:bg-green-700">
+                                      <Video className="h-4 w-4 mr-1" />
+                                      Iniciar
+                                    </Button>
+                                  </Link>
+                                )}
+                                <Button size="sm" variant="outline">
+                                  Editar
+                                </Button>
+                              </div>
+                            </div>
+                          ),
                         )}
                       </div>
                     </CardContent>
                   </Card>
-                ))}
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <Button size="sm" variant="outline" onClick={() => navigateDate("prev")}>
-                    <ChevronLeft className="h-4 w-4" />
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={() => setCurrentDate(new Date())}>
-                    Hoy
-                  </Button>
-                  <Button size="sm" variant="outline" onClick={() => navigateDate("next")}>
-                    <ChevronRight className="h-4 w-4" />
-                  </Button>
                 </div>
-                <h2 className="text-xl font-semibold text-gray-900">
-                  {viewMode === "month" && `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`}
-                  {viewMode === "week" && `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`}
-                  {viewMode === "day" &&
-                    currentDate.toLocaleDateString("es-ES", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                </h2>
-              </div>
-            </div>
 
-            {/* Existing calendar views */}
-            {viewMode === "month" && (
-              <Card>
-                <CardContent className="p-0">
-                  <div className="grid grid-cols-7 bg-gray-50 border-b">
-                    {dayNames.map((day) => (
-                      <div
-                        key={day}
-                        className="p-4 text-center font-medium text-gray-600 text-sm border-r last:border-r-0"
-                      >
-                        {day}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="grid grid-cols-7">
-                    {getDaysInMonth(currentDate).map((day, index) => {
-                      if (!day) {
-                        return <div key={index} className="h-32 border-r border-b last:border-r-0"></div>
-                      }
-
-                      const dateKey = formatDateKey(day)
-                      const dayAppointments = filteredAppointments(dateKey)
-                      const isToday = day.toDateString() === new Date().toDateString()
-                      const isCurrentMonth = day.getMonth() === currentDate.getMonth()
-
-                      return (
-                        <div
-                          key={index}
-                          onClick={() => handleDayClick(day)}
-                          className={`h-32 p-2 border-r border-b last:border-r-0 relative overflow-hidden cursor-pointer transition-all hover:bg-opacity-80 ${
-                            isToday ? "bg-blue-50 border-blue-200" : "bg-white hover:bg-gray-50"
-                          } ${!isCurrentMonth ? "opacity-40" : ""}`}
-                        >
-                          <div className={`text-sm font-semibold mb-1 ${isToday ? "text-blue-600" : "text-gray-900"}`}>
-                            {day.getDate()}
-                          </div>
-
-                          <div className="space-y-1 h-20 overflow-hidden">
-                            {dayAppointments.slice(0, 2).map((appointment, idx) => (
-                              <div
-                                key={appointment.id}
-                                className={`text-xs p-1.5 rounded-md truncate font-medium ${
-                                  appointment.tipo === "virtual"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : "bg-green-100 text-green-800"
-                                }`}
-                                title={`${appointment.hora} - ${appointment.paciente} (${appointment.tipo})`}
-                              >
-                                <div className="flex items-center justify-between">
-                                  <span className="font-medium">{appointment.hora}</span>
-                                  {appointment.tipo === "virtual" && <Video className="h-3 w-3" />}
-                                </div>
-                                <div className="truncate text-xs opacity-90">{appointment.paciente}</div>
+                <div>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Próximos Días</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-4">
+                        {proximosDias.map((dia, index) => (
+                          <div
+                            key={index}
+                            onClick={() => handleProximosDiasClick(dia)}
+                            className="p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                          >
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <p className="font-medium">{dia.dia}</p>
+                                <p className="text-sm text-gray-600">{dia.fecha}</p>
                               </div>
-                            ))}
-
-                            {dayAppointments.length > 2 && (
-                              <div className="absolute bottom-1 right-1 bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full font-medium border">
-                                +{dayAppointments.length - 2}
+                              <div className="text-right">
+                                <p className="text-sm font-medium">{dia.sesiones} sesiones</p>
+                                <p className="text-xs text-gray-500">{dia.disponibles} disponibles</p>
                               </div>
-                            )}
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {viewMode === "week" && (
-              <Card>
-                <CardContent className="p-0">
-                  <div className="grid grid-cols-8 bg-gray-50 border-b">
-                    <div className="p-4 border-r"></div>
-                    {getWeekDays(currentDate).map((day, index) => {
-                      const isToday = day.toDateString() === new Date().toDateString()
-                      return (
-                        <div key={index} className={`p-4 text-center border-r last:border-r-0`}>
-                          <div className="text-sm text-gray-600">
-                            {day.toLocaleDateString("es-ES", { weekday: "short" })}
-                          </div>
-                          <div className={`text-lg font-semibold ${isToday ? "text-blue-600" : "text-gray-900"}`}>
-                            {day.getDate()}
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-
-                  <div className="max-h-96 overflow-y-auto">
-                    {getTimeSlots().map((time) => (
-                      <div key={time} className={`grid grid-cols-8 border-b`}>
-                        <div className={`p-2 text-xs text-gray-500 bg-gray-50 border-r font-medium`}>{time}</div>
-                        {getWeekDays(currentDate).map((day, dayIndex) => {
-                          const dateKey = formatDateKey(day)
-                          const dayAppointments = filteredAppointments(dateKey)
-                          const timeAppointment = dayAppointments.find((apt) => apt.hora === time)
-
-                          return (
-                            <div
-                              key={dayIndex}
-                              className={`p-2 h-12 border-r last:border-r-0 hover:bg-gray-50 cursor-pointer transition-colors`}
-                            >
-                              {timeAppointment && (
-                                <div
-                                  className={`text-xs p-1 rounded truncate ${
-                                    timeAppointment.tipo === "virtual"
-                                      ? "bg-blue-100 text-blue-800"
-                                      : "bg-green-100 text-green-800"
-                                  }`}
-                                >
-                                  {timeAppointment.paciente}
-                                </div>
-                              )}
-                            </div>
-                          )
-                        })}
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {viewMode === "day" && (
-              <Card>
-                <CardContent className="p-0">
-                  <div className="max-h-96 overflow-y-auto">
-                    {getTimeSlots().map((time) => {
-                      const dateKey = formatDateKey(currentDate)
-                      const dayAppointments = filteredAppointments(dateKey)
-                      const timeAppointment = dayAppointments.find((apt) => apt.hora === time)
-
-                      return (
-                        <div key={time} className={`flex border-b`}>
-                          <div className={`w-20 p-3 text-sm text-gray-500 bg-gray-50 border-r font-medium`}>{time}</div>
-                          <div className={`flex-1 p-3 h-16 hover:bg-gray-50 cursor-pointer transition-colors`}>
-                            {timeAppointment && (
-                              <div
-                                className={`p-2 rounded-lg h-full flex items-center ${
-                                  timeAppointment.tipo === "virtual"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : "bg-green-100 text-green-800"
-                                }`}
-                              >
-                                <div className="flex items-center space-x-2">
-                                  {timeAppointment.tipo === "virtual" && <Video className="h-4 w-4" />}
-                                  <div>
-                                    <div className="font-medium">{timeAppointment.paciente}</div>
-                                    <div className="text-xs opacity-75">{timeAppointment.tipo}</div>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {viewMode === "list" && (
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle>
-                        {selectedDate
-                          ? `${selectedDate.toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`
-                          : `Hoy - ${new Date().toLocaleDateString()}`}
-                      </CardTitle>
-                      <CardDescription>
-                        {selectedDate
-                          ? `${getSessionsForDate(selectedDate).length} sesiones programadas`
-                          : `${sesionesHoy.length} sesiones programadas`}
-                      </CardDescription>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      {selectedDate && (
-                        <Button size="sm" variant="outline" onClick={() => setSelectedDate(null)}>
-                          Ver Hoy
-                        </Button>
-                      )}
-                      <Button size="sm" variant="outline">
-                        <ChevronLeft className="h-4 w-4" />
-                      </Button>
-                      <Button size="sm" variant="outline">
-                        <ChevronRight className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {(selectedDate ? getSessionsForDate(selectedDate) : sesionesHoy).map((sesion) => (
-                      <div key={sesion.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="flex items-center space-x-4">
-                          <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
-                            <Clock className="h-6 w-6 text-blue-600" />
-                          </div>
-                          <div>
-                            <p className="font-medium">{sesion.paciente}</p>
-                            <p className="text-sm text-gray-600">
-                              {sesion.hora} - {sesion.duracion} min
-                            </p>
-                            <div className="flex items-center space-x-2 mt-1">
-                              <Badge variant={sesion.tipo === "virtual" ? "default" : "secondary"}>{sesion.tipo}</Badge>
-                              <Badge variant={sesion.estado === "confirmada" ? "default" : "secondary"}>
-                                {sesion.estado}
-                              </Badge>
                             </div>
                           </div>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {sesion.tipo === "virtual" && (
-                            <Link href={`/sesion/${sesion.id}`}>
-                              <Button size="sm" className="bg-green-600 hover:bg-green-700">
-                                <Video className="h-4 w-4 mr-1" />
-                                Iniciar
-                              </Button>
-                            </Link>
-                          )}
-                          <Button size="sm" variant="outline">
-                            Editar
-                          </Button>
-                        </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            <Card>
-              <CardHeader className="pb-4">
-                <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                  <CalendarIcon className="h-5 w-5 text-purple-600" />
-                  Estadísticas de Agenda
-                </CardTitle>
-                <CardDescription>Resumen de tu actividad de citas</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-                  <div className="text-center space-y-2 p-4 bg-blue-50 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">24</div>
-                    <p className="text-sm font-medium text-gray-900">Pacientes Activos</p>
-                    <p className="text-xs text-gray-500">Este mes</p>
-                  </div>
-                  <div className="text-center space-y-2 p-4 bg-green-50 rounded-lg">
-                    <div className="text-2xl font-bold text-green-600">18</div>
-                    <p className="text-sm font-medium text-gray-900">Sesiones Esta Semana</p>
-                    <p className="text-xs text-gray-500">85% confirmadas</p>
-                  </div>
-                  <div className="text-center space-y-2 p-4 bg-orange-50 rounded-lg">
-                    <div className="text-2xl font-bold text-orange-600">4.5</div>
-                    <p className="text-sm font-medium text-gray-900">Horas Promedio/Día</p>
-                    <p className="text-xs text-gray-500">Tiempo de consulta</p>
-                  </div>
-                  <div className="text-center space-y-2 p-4 bg-purple-50 rounded-lg">
-                    <div className="text-2xl font-bold text-purple-600">85%</div>
-                    <p className="text-sm font-medium text-gray-900">Sesiones Virtuales</p>
-                    <p className="text-xs text-gray-500">Modalidad preferida</p>
-                  </div>
+                    </CardContent>
+                  </Card>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            )}
           </div>
         </div>
       </div>
