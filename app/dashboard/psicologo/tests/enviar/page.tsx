@@ -178,43 +178,95 @@ export default function EnviarTestPage() {
                     1
                   </div>
                   Seleccionar Test
+                  {selectedTest && (
+                    <Badge className="bg-green-100 text-green-800 border-green-200 ml-2">Test seleccionado</Badge>
+                  )}
                 </CardTitle>
-                <CardDescription className="text-gray-600">Elige el test psicológico que deseas enviar</CardDescription>
+                <CardDescription className="text-gray-600">
+                  {selectedTest
+                    ? "Puedes cambiar tu selección haciendo clic en otro test"
+                    : "Elige el test psicológico que deseas enviar"}
+                </CardDescription>
               </CardHeader>
               <CardContent>
+                {selectedTest && (
+                  <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-center gap-2 text-blue-800">
+                      <Check className="h-5 w-5" />
+                      <span className="font-medium">
+                        Test actual: {testsDisponibles.find((t) => t.id === selectedTest)?.nombre}
+                      </span>
+                    </div>
+                    <p className="text-blue-600 text-sm mt-1">Haz clic en cualquier otro test para cambiarlo</p>
+                  </div>
+                )}
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {testsDisponibles.map((test) => (
                     <Card
                       key={test.id}
-                      className={`cursor-pointer transition-all duration-200 ${
+                      className={`cursor-pointer transition-all duration-200 transform hover:scale-105 ${
                         selectedTest === test.id
-                          ? "border-blue-500 bg-blue-50 shadow-md ring-2 ring-blue-200"
-                          : "border-gray-200 hover:border-blue-300 hover:shadow-sm"
+                          ? "border-blue-500 bg-blue-50 shadow-lg ring-2 ring-blue-200 scale-105"
+                          : "border-gray-200 hover:border-blue-300 hover:shadow-md"
                       }`}
                       onClick={() => setSelectedTest(test.id)}
                     >
-                      <CardContent className="p-4">
+                      <CardContent className="p-4 relative">
                         <div className="flex items-start gap-3">
                           <div
-                            className={`w-5 h-5 rounded-full border-2 flex items-center justify-center mt-0.5 ${
-                              selectedTest === test.id ? "bg-blue-600 border-blue-600" : "border-gray-300"
+                            className={`w-6 h-6 rounded-full border-2 flex items-center justify-center mt-0.5 transition-all ${
+                              selectedTest === test.id
+                                ? "bg-blue-600 border-blue-600 scale-110"
+                                : "border-gray-300 hover:border-blue-400"
                             }`}
                           >
-                            {selectedTest === test.id && <Check className="h-3 w-3 text-white" />}
+                            {selectedTest === test.id && <Check className="h-4 w-4 text-white" />}
                           </div>
                           <div className="flex-1">
-                            <h3 className="font-semibold text-gray-900 mb-1">{test.nombre}</h3>
-                            <p className="text-sm text-gray-600 mb-2">{test.descripcion}</p>
-                            <div className="flex items-center gap-1 text-xs text-gray-500">
+                            <h3
+                              className={`font-semibold mb-1 ${
+                                selectedTest === test.id ? "text-blue-900" : "text-gray-900"
+                              }`}
+                            >
+                              {test.nombre}
+                            </h3>
+                            <p
+                              className={`text-sm mb-2 ${selectedTest === test.id ? "text-blue-700" : "text-gray-600"}`}
+                            >
+                              {test.descripcion}
+                            </p>
+                            <div
+                              className={`flex items-center gap-1 text-xs ${
+                                selectedTest === test.id ? "text-blue-600" : "text-gray-500"
+                              }`}
+                            >
                               <Clock className="h-3 w-3" />
                               {test.duracion}
                             </div>
                           </div>
                         </div>
+                        {selectedTest === test.id && (
+                          <div className="absolute top-2 right-2 bg-blue-600 text-white rounded-full p-1">
+                            <Check className="h-3 w-3" />
+                          </div>
+                        )}
                       </CardContent>
                     </Card>
                   ))}
                 </div>
+
+                {selectedTest && (
+                  <div className="mt-4 text-center">
+                    <Button
+                      variant="outline"
+                      onClick={() => setSelectedTest(null)}
+                      className="text-gray-600 hover:text-gray-800"
+                    >
+                      Limpiar selección
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -232,7 +284,6 @@ export default function EnviarTestPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
-                {/* Search Bar and Controls */}
                 <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
                   <div className="relative flex-1 max-w-md">
                     <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -256,7 +307,6 @@ export default function EnviarTestPage() {
                   )}
                 </div>
 
-                {/* Patients List */}
                 <div className="space-y-3">
                   {filteredPatients.map((paciente) => (
                     <Card
