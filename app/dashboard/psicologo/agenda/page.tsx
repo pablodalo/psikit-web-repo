@@ -811,21 +811,23 @@ export default function PsicologoAgendaPage() {
               <div className="max-w-4xl mx-auto">
                 <Card className="shadow-sm border-gray-200">
                   <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
-                    <div className="flex items-center justify-center">
-                      <div className="text-center">
-                        <CardTitle className="text-xl font-bold text-gray-900 flex items-center justify-center gap-2">
-                          <CalendarIcon className="h-5 w-5 text-blue-600" />
-                          {selectedDate
-                            ? `${selectedDate.toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`
-                            : `Hoy - ${new Date().toLocaleDateString()}`}
-                        </CardTitle>
-                        <CardDescription className="text-gray-600 mt-1">
-                          {selectedDate
-                            ? `${(appointments[formatDateKey(selectedDate)] || []).length} sesiones programadas`
-                            : `${sesionesHoy.length} sesiones programadas`}
-                        </CardDescription>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <CalendarIcon className="h-5 w-5 text-blue-600" />
+                        <div>
+                          <CardTitle className="text-xl font-bold text-gray-900">
+                            {selectedDate
+                              ? `${selectedDate.toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`
+                              : `Hoy - ${new Date().toLocaleDateString()}`}
+                          </CardTitle>
+                          <CardDescription className="text-gray-600 mt-1">
+                            {selectedDate
+                              ? `${(appointments[formatDateKey(selectedDate)] || []).length} sesiones programadas`
+                              : `${sesionesHoy.length} sesiones programadas`}
+                          </CardDescription>
+                        </div>
                       </div>
-                      <div className="absolute right-6 flex items-center space-x-2">
+                      <div className="flex items-center space-x-2">
                         {selectedDate && (
                           <Button
                             size="sm"
@@ -836,10 +838,28 @@ export default function PsicologoAgendaPage() {
                             Ver Hoy
                           </Button>
                         )}
-                        <Button size="sm" variant="outline" className="hover:bg-gray-50 bg-transparent">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="hover:bg-gray-50 bg-white border-gray-300 h-8 w-8 p-0"
+                          onClick={() => {
+                            const newDate = new Date(selectedDate || new Date())
+                            newDate.setDate(newDate.getDate() - 1)
+                            setSelectedDate(newDate)
+                          }}
+                        >
                           <ChevronLeft className="h-4 w-4" />
                         </Button>
-                        <Button size="sm" variant="outline" className="hover:bg-gray-50 bg-transparent">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="hover:bg-gray-50 bg-white border-gray-300 h-8 w-8 p-0"
+                          onClick={() => {
+                            const newDate = new Date(selectedDate || new Date())
+                            newDate.setDate(newDate.getDate() + 1)
+                            setSelectedDate(newDate)
+                          }}
+                        >
                           <ChevronRight className="h-4 w-4" />
                         </Button>
                       </div>
