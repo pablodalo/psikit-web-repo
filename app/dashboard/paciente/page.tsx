@@ -11,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ThemeToggle } from "@/components/theme-toggle"
 import {
   Calendar,
   Video,
@@ -78,7 +77,6 @@ export default function PacienteDashboard() {
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                <ThemeToggle />
                 <Button variant="outline" size="sm">
                   <Bell className="h-4 w-4 mr-2" />
                   Notificaciones

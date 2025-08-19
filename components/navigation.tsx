@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Calendar, Users, FileText, CreditCard, Video, Home, Brain } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
-import { ThemeToggle } from "@/components/theme-toggle"
 
 interface NavigationProps {
   userType: "psicologo" | "paciente"
@@ -50,28 +49,25 @@ export function Navigation({ userType }: NavigationProps) {
   }
 
   return (
-    <nav className="w-64 bg-white dark:bg-gray-900 border-r dark:border-gray-800 min-h-screen">
+    <nav className="w-64 bg-white border-r min-h-screen">
       <div className="p-6">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center mb-8">
           <Link href="/" className="flex items-center space-x-2">
             <Brain className="h-8 w-8 text-blue-600" />
-            <span className="text-xl font-bold dark:text-white">PsiKit</span>
+            <span className="text-xl font-bold">PsiKit</span>
           </Link>
-          <ThemeToggle />
         </div>
 
         {user && (
-          <div className="mb-6 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <div className="mb-6 p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center space-x-3">
               <Avatar className="h-10 w-10">
                 <AvatarImage src="/placeholder.svg?height=40&width=40" />
                 <AvatarFallback className="bg-blue-100 text-blue-600">{getUserInitials(user.name)}</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{user.name}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  {user.userType === "psicologo" ? "Psicólogo" : "Paciente"}
-                </p>
+                <p className="text-sm font-medium text-gray-900 truncate">{user.name}</p>
+                <p className="text-xs text-gray-500">{user.userType === "psicologo" ? "Psicólogo" : "Paciente"}</p>
               </div>
             </div>
           </div>

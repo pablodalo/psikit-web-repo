@@ -79,30 +79,18 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
 
   return (
     <>
-      <section className={`py-12 px-4 ${compact ? "bg-transparent" : "bg-white dark:bg-gray-900"}`}>
+      <section className={`py-12 px-4 ${compact ? "bg-transparent" : "bg-white"}`}>
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Membresías Flexibles</h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">Planes diseñados para profesionales</p>
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">Membresías Flexibles</h2>
+            <p className="text-lg text-gray-600 mb-8">Planes diseñados para profesionales</p>
 
             {/* Toggle Anual/Mensual */}
             <div className="flex items-center justify-center space-x-4 mb-8">
-              <span
-                className={`text-sm ${!isAnnual ? "font-medium text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400"}`}
-              >
-                Mensual
-              </span>
+              <span className={`text-sm ${!isAnnual ? "font-medium text-gray-900" : "text-gray-500"}`}>Mensual</span>
               <Switch checked={isAnnual} onCheckedChange={setIsAnnual} />
-              <span
-                className={`text-sm ${isAnnual ? "font-medium text-gray-900 dark:text-white" : "text-gray-500 dark:text-gray-400"}`}
-              >
-                Anual
-              </span>
-              {isAnnual && (
-                <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 ml-2">
-                  Ahorra 20%
-                </Badge>
-              )}
+              <span className={`text-sm ${isAnnual ? "font-medium text-gray-900" : "text-gray-500"}`}>Anual</span>
+              {isAnnual && <Badge className="bg-green-100 text-green-800 ml-2">Ahorra 20%</Badge>}
             </div>
           </div>
 
@@ -113,10 +101,10 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
               return (
                 <Card
                   key={plan.id}
-                  className={`relative cursor-pointer transition-all duration-300 hover:shadow-2xl transform border-0 shadow-lg dark:shadow-gray-800 ${
+                  className={`relative cursor-pointer transition-all duration-300 hover:shadow-2xl transform border-0 shadow-lg ${
                     plan.popular
-                      ? "ring-2 ring-blue-500 scale-105 bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/20 dark:to-gray-800"
-                      : "hover:scale-102 bg-white dark:bg-gray-800 hover:shadow-xl dark:hover:shadow-gray-700"
+                      ? "ring-2 ring-blue-500 scale-105 bg-gradient-to-br from-blue-50 to-white"
+                      : "hover:scale-102 bg-white hover:shadow-xl"
                   } rounded-2xl overflow-hidden group`}
                   onClick={() => handlePlanClick(plan)}
                 >
@@ -130,20 +118,18 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
                   )}
 
                   <CardHeader className="text-center pb-6 pt-12 relative z-10">
-                    <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{plan.name}</CardTitle>
-                    <CardDescription className="text-gray-600 dark:text-gray-300 text-base text-center">
+                    <CardTitle className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</CardTitle>
+                    <CardDescription className="text-gray-600 text-base text-center">
                       {plan.description}
                     </CardDescription>
 
                     <div className="py-6 text-center">
-                      <div className="text-4xl font-bold text-gray-900 dark:text-white mb-2">{pricing.price}</div>
+                      <div className="text-4xl font-bold text-gray-900 mb-2">{pricing.price}</div>
                       {pricing.originalPrice && (
-                        <div className="text-sm text-gray-500 dark:text-gray-400 text-center">
+                        <div className="text-sm text-gray-500 text-center">
                           <span className="line-through">{pricing.originalPrice}</span>
                           {pricing.savings && (
-                            <span className="text-green-600 dark:text-green-400 ml-2 font-medium">
-                              Ahorras {pricing.savings}
-                            </span>
+                            <span className="text-green-600 ml-2 font-medium">Ahorras {pricing.savings}</span>
                           )}
                         </div>
                       )}
@@ -154,14 +140,14 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
                     <ul className="space-y-4 mb-8 text-left">
                       {plan.features.slice(0, 4).map((feature, index) => (
                         <li key={index} className="flex items-start space-x-3">
-                          <div className="flex-shrink-0 w-5 h-5 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mt-0.5">
-                            <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
+                          <div className="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mt-0.5">
+                            <Check className="h-3 w-3 text-green-600" />
                           </div>
-                          <span className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">{feature}</span>
+                          <span className="text-gray-700 text-sm leading-relaxed">{feature}</span>
                         </li>
                       ))}
                       {plan.features.length > 4 && (
-                        <li className="text-sm text-blue-600 dark:text-blue-400 font-medium text-center">
+                        <li className="text-sm text-blue-600 font-medium text-center">
                           +{plan.features.length - 4} características más
                         </li>
                       )}
@@ -171,7 +157,7 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
                       <Button
                         className={`w-full h-12 text-base font-medium transition-all duration-200 rounded-xl ${
                           plan.buttonVariant === "outline"
-                            ? "border-2 border-gray-200 dark:border-gray-600 hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-gray-900 dark:text-white"
+                            ? "border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 text-gray-900"
                             : "bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl"
                         }`}
                         variant={plan.buttonVariant}
@@ -186,7 +172,7 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="w-full text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 rounded-xl"
+                        className="w-full text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-all duration-200 rounded-xl"
                         onClick={(e) => {
                           e.stopPropagation()
                           handlePlanClick(plan)
@@ -206,29 +192,27 @@ export function PricingSection({ showRegionalPricing = true, compact = false }: 
           <div className="text-center mt-16">
             <div className="grid md:grid-cols-3 gap-8 max-w-2xl mx-auto">
               <div className="flex items-center justify-center space-x-3">
-                <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-                  <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <Check className="h-4 w-4 text-green-600" />
                 </div>
-                <span className="text-gray-700 dark:text-gray-300 font-medium">Sin permanencia</span>
+                <span className="text-gray-700 font-medium">Sin permanencia</span>
               </div>
               <div className="flex items-center justify-center space-x-3">
-                <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-                  <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <Check className="h-4 w-4 text-green-600" />
                 </div>
-                <span className="text-gray-700 dark:text-gray-300 font-medium">Cancela cuando quieras</span>
+                <span className="text-gray-700 font-medium">Cancela cuando quieras</span>
               </div>
               <div className="flex items-center justify-center space-x-3">
-                <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-                  <Check className="h-4 w-4 text-green-600 dark:text-green-400" />
+                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <Check className="h-4 w-4 text-green-600" />
                 </div>
-                <span className="text-gray-700 dark:text-gray-300 font-medium">Soporte incluido</span>
+                <span className="text-gray-700 font-medium">Soporte incluido</span>
               </div>
             </div>
 
             {showRegionalPricing && (
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-8">
-                Precios exhibidos en moneda local Argentina
-              </p>
+              <p className="text-sm text-gray-500 mt-8">Precios exhibidos en moneda local Argentina</p>
             )}
           </div>
         </div>

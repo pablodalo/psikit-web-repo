@@ -2,7 +2,6 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { AuthProvider } from "@/contexts/auth-context"
-import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
 
 const inter = Inter({
@@ -24,10 +23,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} antialiased`} suppressHydrationWarning>
-      <body className="min-h-screen transition-colors duration-300">
-        <ThemeProvider defaultTheme="light">
-          <AuthProvider>{children}</AuthProvider>
-        </ThemeProvider>
+      <body className="min-h-screen">
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   )
