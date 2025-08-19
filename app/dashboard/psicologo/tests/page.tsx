@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,6 +21,7 @@ import { AuthGuard } from "@/components/auth-guard"
 export default function TestsPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [openDropdowns, setOpenDropdowns] = useState<Record<string, boolean>>({})
+  const [selectedPatients, setSelectedPatients] = useState<Record<string, string[]>>({})
 
   const pacientes = [
     { id: 1, nombre: "María González", email: "maria.gonzalez@email.com", ultimaVisita: "10/01/2024" },
@@ -145,14 +147,40 @@ export default function TestsPage() {
     window.location.href = url
   }
 
-  const handleSendToPatient = (testId: string, patientId: string, patientName: string) => {
+  const handlePatientSelection = (testId: string, patientId: string, isSelected: boolean) => {
+    setSelectedPatients((prev) => {
+      const currentSelected = prev[testId] || []
+      if (isSelected) {
+        return { ...prev, [testId]: [...currentSelected, patientId] }
+      } else {
+        return { ...prev, [testId]: currentSelected.filter((id) => id !== patientId) }
+      }
+    })
+  }
+
+  const handleSendToSelectedPatients = (testId: string) => {
+    const selectedPatientIds = selectedPatients[testId] || []
+    if (selectedPatientIds.length === 0) {
+      alert("Por favor selecciona al menos un paciente")
+      return
+    }
+
+    const selectedPatientNames = pacientes
+      .filter((p) => selectedPatientIds.includes(p.id.toString()))
+      .map((p) => p.nombre)
+
     setOpenDropdowns((prev) => ({ ...prev, [testId]: false }))
-    console.log(`[v0] Sending test ${testId} to patient ${patientId} (${patientName})`)
-    alert(`Test enviado exitosamente a ${patientName}`)
+    setSelectedPatients((prev) => ({ ...prev, [testId]: [] }))
+
+    console.log(`[v0] Sending test ${testId} to patients: ${selectedPatientIds.join(", ")}`)
+    alert(`Test enviado exitosamente a: ${selectedPatientNames.join(", ")}`)
   }
 
   const toggleDropdown = (testId: string, isOpen: boolean) => {
     setOpenDropdowns((prev) => ({ ...prev, [testId]: isOpen }))
+    if (!isOpen) {
+      setSelectedPatients((prev) => ({ ...prev, [testId]: [] }))
+    }
   }
 
   return (
@@ -168,10 +196,6 @@ export default function TestsPage() {
                   <h1 className="text-3xl font-bold text-gray-900">Tests Psicológicos</h1>
                   <p className="text-gray-600 text-lg">Biblioteca completa de evaluaciones psicológicas</p>
                 </div>
-                <Button onClick={() => handleSendTest()} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3">
-                  <Send className="h-5 w-5 mr-2" />
-                  Enviar Test
-                </Button>
               </div>
             </div>
           </header>
@@ -215,6 +239,8 @@ export default function TestsPage() {
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {filteredTests.map((test) => {
                           const IconComponent = test.icono
+                          const testSelectedPatients = selectedPatients[test.id.toString()] || []
+
                           return (
                             <Card
                               key={test.id}
@@ -262,24 +288,30 @@ export default function TestsPage() {
                                         <ChevronDown className="h-4 w-4 ml-2" />
                                       </Button>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="start" className="w-64">
+                                    <DropdownMenuContent align="start" className="w-80">
                                       <DropdownMenuLabel className="text-sm font-semibold text-gray-900">
-                                        Seleccionar Paciente
+                                        Seleccionar Pacientes
                                       </DropdownMenuLabel>
                                       <DropdownMenuSeparator />
-                                      {pacientes.map((paciente) => (
-                                        <DropdownMenuItem
-                                          key={paciente.id}
-                                          onClick={() =>
-                                            handleSendToPatient(
-                                              test.id.toString(),
-                                              paciente.id.toString(),
-                                              paciente.nombre,
-                                            )
-                                          }
-                                          className="cursor-pointer hover:bg-blue-50 focus:bg-blue-50"
-                                        >
-                                          <div className="flex items-center gap-3 w-full">
+                                      <div className="max-h-64 overflow-y-auto">
+                                        {pacientes.map((paciente) => (
+                                          <div
+                                            key={paciente.id}
+                                            className="flex items-center gap-3 p-3 hover:bg-blue-50 cursor-pointer"
+                                            onClick={() => {
+                                              const isSelected = testSelectedPatients.includes(paciente.id.toString())
+                                              handlePatientSelection(
+                                                test.id.toString(),
+                                                paciente.id.toString(),
+                                                !isSelected,
+                                              )
+                                            }}
+                                          >
+                                            <Checkbox
+                                              checked={testSelectedPatients.includes(paciente.id.toString())}
+                                              onChange={() => {}}
+                                              className="data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
+                                            />
                                             <div className="p-1.5 bg-blue-100 rounded-full">
                                               <User className="h-3 w-3 text-blue-600" />
                                             </div>
@@ -292,9 +324,25 @@ export default function TestsPage() {
                                               </p>
                                             </div>
                                           </div>
-                                        </DropdownMenuItem>
-                                      ))}
+                                        ))}
+                                      </div>
                                       <DropdownMenuSeparator />
+                                      {testSelectedPatients.length > 0 && (
+                                        <>
+                                          <div className="p-3">
+                                            <Button
+                                              onClick={() => handleSendToSelectedPatients(test.id.toString())}
+                                              className="w-full bg-green-600 hover:bg-green-700 text-white"
+                                              size="sm"
+                                            >
+                                              <Send className="h-4 w-4 mr-2" />
+                                              Enviar a {testSelectedPatients.length} paciente
+                                              {testSelectedPatients.length > 1 ? "s" : ""}
+                                            </Button>
+                                          </div>
+                                          <DropdownMenuSeparator />
+                                        </>
+                                      )}
                                       <DropdownMenuItem
                                         onClick={() => {
                                           toggleDropdown(test.id.toString(), false)
