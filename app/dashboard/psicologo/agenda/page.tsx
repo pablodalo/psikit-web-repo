@@ -16,18 +16,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import {
-  CalendarIcon,
-  Plus,
-  Video,
-  ChevronLeft,
-  ChevronRight,
-  List,
-  MapPin,
-  Search,
-  TrendingUp,
-  Users,
-} from "lucide-react"
+import { CalendarIcon, Plus, Video, ChevronLeft, ChevronRight, List, MapPin, Search } from "lucide-react"
 import Link from "next/link"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
@@ -441,18 +430,18 @@ export default function PsicologoAgendaPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-4">
-                <div className="text-center space-y-1 p-3 bg-blue-50 rounded-lg">
-                  <div className="text-lg font-bold text-blue-600">12</div>
-                  <p className="text-xs font-medium text-gray-900">Hoy</p>
+              <div className="grid grid-cols-3 gap-6">
+                <div className="text-center space-y-2 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                  <div className="text-2xl font-bold text-blue-600">12</div>
+                  <p className="text-sm font-medium text-gray-700">Hoy</p>
                 </div>
-                <div className="text-center space-y-1 p-3 bg-green-50 rounded-lg">
-                  <div className="text-lg font-bold text-green-600">45</div>
-                  <p className="text-xs font-medium text-gray-900">Esta semana</p>
+                <div className="text-center space-y-2 p-4 bg-green-50 rounded-xl border border-green-100">
+                  <div className="text-2xl font-bold text-green-600">45</div>
+                  <p className="text-sm font-medium text-gray-700">Esta semana</p>
                 </div>
-                <div className="text-center space-y-1 p-3 bg-purple-50 rounded-lg">
-                  <div className="text-lg font-bold text-purple-600">89%</div>
-                  <p className="text-xs font-medium text-gray-900">Asistencia</p>
+                <div className="text-center space-y-2 p-4 bg-purple-50 rounded-xl border border-purple-100">
+                  <div className="text-2xl font-bold text-purple-600">89%</div>
+                  <p className="text-sm font-medium text-gray-700">Asistencia</p>
                 </div>
               </div>
             </div>
@@ -570,150 +559,109 @@ export default function PsicologoAgendaPage() {
             )}
 
             {viewMode === "list" && (
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2">
-                  <Card className="shadow-sm border-gray-200">
-                    <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                            <CalendarIcon className="h-5 w-5 text-blue-600" />
-                            {selectedDate
-                              ? `${selectedDate.toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`
-                              : `Hoy - ${new Date().toLocaleDateString()}`}
-                          </CardTitle>
-                          <CardDescription className="text-gray-600 mt-1">
-                            {selectedDate
-                              ? `${(appointments[formatDateKey(selectedDate)] || []).length} sesiones programadas`
-                              : `${sesionesHoy.length} sesiones programadas`}
-                          </CardDescription>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          {selectedDate && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => setSelectedDate(null)}
-                              className="bg-white hover:bg-blue-50 border-blue-200 text-blue-700"
-                            >
-                              Ver Hoy
-                            </Button>
-                          )}
-                          <Button size="sm" variant="outline" className="hover:bg-gray-50 bg-transparent">
-                            <ChevronLeft className="h-4 w-4" />
-                          </Button>
-                          <Button size="sm" variant="outline" className="hover:bg-gray-50 bg-transparent">
-                            <ChevronRight className="h-4 w-4" />
-                          </Button>
-                        </div>
+              <div className="max-w-4xl mx-auto">
+                <Card className="shadow-sm border-gray-200">
+                  <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <CardTitle className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                          <CalendarIcon className="h-5 w-5 text-blue-600" />
+                          {selectedDate
+                            ? `${selectedDate.toLocaleDateString("es-ES", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}`
+                            : `Hoy - ${new Date().toLocaleDateString()}`}
+                        </CardTitle>
+                        <CardDescription className="text-gray-600 mt-1">
+                          {selectedDate
+                            ? `${(appointments[formatDateKey(selectedDate)] || []).length} sesiones programadas`
+                            : `${sesionesHoy.length} sesiones programadas`}
+                        </CardDescription>
                       </div>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <div className="space-y-4">
-                        {(selectedDate ? appointments[formatDateKey(selectedDate)] || [] : sesionesHoy).map(
-                          (sesion) => (
+                      <div className="flex items-center space-x-2">
+                        {selectedDate && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setSelectedDate(null)}
+                            className="bg-white hover:bg-blue-50 border-blue-200 text-blue-700"
+                          >
+                            Ver Hoy
+                          </Button>
+                        )}
+                        <Button size="sm" variant="outline" className="hover:bg-gray-50 bg-transparent">
+                          <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <Button size="sm" variant="outline" className="hover:bg-gray-50 bg-transparent">
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      {(selectedDate ? appointments[formatDateKey(selectedDate)] || [] : sesionesHoy).map((sesion) => (
+                        <div
+                          key={sesion.id}
+                          className="flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-all duration-200 hover:border-blue-200 bg-white"
+                        >
+                          <div className="flex items-center space-x-4">
                             <div
-                              key={sesion.id}
-                              className="flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-all duration-200 hover:border-blue-200 bg-white"
+                              className={`flex items-center justify-center w-12 h-12 rounded-full ${
+                                sesion.tipo === "virtual" ? "bg-blue-100" : "bg-green-100"
+                              }`}
                             >
-                              <div className="flex items-center space-x-4">
-                                <div
-                                  className={`flex items-center justify-center w-12 h-12 rounded-full ${
-                                    sesion.tipo === "virtual" ? "bg-blue-100" : "bg-green-100"
+                              {sesion.tipo === "virtual" ? (
+                                <Video className="h-6 w-6 text-blue-600" />
+                              ) : (
+                                <MapPin className="h-6 w-6 text-green-600" />
+                              )}
+                            </div>
+                            <div>
+                              <p className="font-semibold text-gray-900">{sesion.paciente}</p>
+                              <p className="text-sm text-gray-600">
+                                {sesion.hora} - {sesion.duracion || 50} min
+                              </p>
+                              <div className="flex items-center space-x-2 mt-1">
+                                <Badge
+                                  variant="outline"
+                                  className={`text-xs ${
+                                    sesion.tipo === "virtual"
+                                      ? "border-blue-200 text-blue-800 bg-blue-50"
+                                      : "border-green-200 text-green-800 bg-green-50"
                                   }`}
                                 >
-                                  {sesion.tipo === "virtual" ? (
-                                    <Video className="h-6 w-6 text-blue-600" />
-                                  ) : (
-                                    <MapPin className="h-6 w-6 text-green-600" />
-                                  )}
-                                </div>
-                                <div>
-                                  <p className="font-semibold text-gray-900">{sesion.paciente}</p>
-                                  <p className="text-sm text-gray-600">
-                                    {sesion.hora} - {sesion.duracion || 50} min
-                                  </p>
-                                  <div className="flex items-center space-x-2 mt-1">
-                                    <Badge
-                                      variant="outline"
-                                      className={`text-xs ${
-                                        sesion.tipo === "virtual"
-                                          ? "border-blue-200 text-blue-800 bg-blue-50"
-                                          : "border-green-200 text-green-800 bg-green-50"
-                                      }`}
-                                    >
-                                      {sesion.tipo}
-                                    </Badge>
-                                    <Badge
-                                      variant="outline"
-                                      className={`text-xs ${
-                                        sesion.estado === "confirmada"
-                                          ? "border-green-200 text-green-800 bg-green-50"
-                                          : "border-amber-200 text-amber-800 bg-amber-50"
-                                      }`}
-                                    >
-                                      {sesion.estado}
-                                    </Badge>
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="flex items-center space-x-2">
-                                {sesion.tipo === "virtual" && (
-                                  <Link href={`/sesion/${sesion.id}`}>
-                                    <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white shadow-sm">
-                                      <Video className="h-4 w-4 mr-1" />
-                                      Iniciar
-                                    </Button>
-                                  </Link>
-                                )}
-                                <Button size="sm" variant="outline" className="hover:bg-gray-50 bg-transparent">
-                                  Editar
-                                </Button>
-                              </div>
-                            </div>
-                          ),
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <div>
-                  <Card className="shadow-sm border-gray-200">
-                    <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 border-b">
-                      <CardTitle className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                        <TrendingUp className="h-5 w-5 text-purple-600" />
-                        Próximos Días
-                      </CardTitle>
-                      <CardDescription className="text-gray-600">Vista rápida de tu agenda</CardDescription>
-                    </CardHeader>
-                    <CardContent className="p-4">
-                      <div className="space-y-3">
-                        {proximosDias.map((dia, index) => (
-                          <div
-                            key={index}
-                            onClick={() => handleProximosDiasClick(dia)}
-                            className="p-4 border rounded-lg cursor-pointer hover:shadow-md transition-all duration-200 hover:border-purple-200 bg-white hover:bg-purple-25"
-                          >
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <p className="font-semibold text-gray-900">{dia.dia}</p>
-                                <p className="text-sm text-gray-600">{dia.fecha}</p>
-                              </div>
-                              <div className="text-right">
-                                <div className="flex items-center gap-2">
-                                  <Users className="h-4 w-4 text-purple-600" />
-                                  <p className="text-sm font-semibold text-gray-900">{dia.sesiones}</p>
-                                </div>
-                                <p className="text-xs text-gray-500">{dia.disponibles} disponibles</p>
+                                  {sesion.tipo}
+                                </Badge>
+                                <Badge
+                                  variant="outline"
+                                  className={`text-xs ${
+                                    sesion.estado === "confirmada"
+                                      ? "border-green-200 text-green-800 bg-green-50"
+                                      : "border-amber-200 text-amber-800 bg-amber-50"
+                                  }`}
+                                >
+                                  {sesion.estado}
+                                </Badge>
                               </div>
                             </div>
                           </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
+                          <div className="flex items-center space-x-2">
+                            {sesion.tipo === "virtual" && (
+                              <Link href={`/sesion/${sesion.id}`}>
+                                <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white shadow-sm">
+                                  <Video className="h-4 w-4 mr-1" />
+                                  Iniciar
+                                </Button>
+                              </Link>
+                            )}
+                            <Button size="sm" variant="outline" className="hover:bg-gray-50 bg-transparent">
+                              Editar
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             )}
           </div>
