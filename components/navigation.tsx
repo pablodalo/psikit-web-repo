@@ -86,7 +86,6 @@ export function Navigation({ userType }: NavigationProps) {
                 >
                   <IconComponent className="h-4 w-4 mr-3" />
                   {item.label}
-                  {item.href.includes("/agenda") && <span className="ml-auto text-xs">📅</span>}
                 </Button>
               </Link>
             )
