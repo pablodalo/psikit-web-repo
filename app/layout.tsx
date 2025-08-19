@@ -23,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} antialiased`}>
-      <body>
+    <html lang="en" className={`${inter.variable} antialiased`} suppressHydrationWarning>
+      <body className="min-h-screen bg-background text-foreground transition-colors duration-300">
         <ThemeProvider defaultTheme="light">
           <AuthProvider>{children}</AuthProvider>
         </ThemeProvider>
