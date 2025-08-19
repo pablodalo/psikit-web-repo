@@ -30,6 +30,7 @@ import {
   MailOpen,
 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
 import { useAuth } from "@/contexts/auth-context"
@@ -37,6 +38,7 @@ import { useState, useEffect } from "react"
 
 export default function PsicologoDashboard() {
   const { logout } = useAuth()
+  const router = useRouter()
 
   const [notificaciones, setNotificaciones] = useState([
     {
@@ -81,21 +83,19 @@ export default function PsicologoDashboard() {
   const handleNotificationClick = (notif: any) => {
     setNotificaciones((prev) => prev.map((n) => (n.id === notif.id ? { ...n, leida: true } : n)))
 
-    setTimeout(() => {
-      switch (notif.tipo) {
-        case "sesion":
-          window.location.href = "/dashboard/psicologo/agenda?view=list"
-          break
-        case "pago":
-          window.location.href = "/dashboard/psicologo/pagos?patient=carlos-rodriguez&view=history"
-          break
-        case "documento":
-          window.location.href = "/dashboard/psicologo/pacientes"
-          break
-        default:
-          window.location.href = "/dashboard/psicologo/notificaciones"
-      }
-    }, 100)
+    switch (notif.tipo) {
+      case "sesion":
+        router.push("/dashboard/psicologo/agenda?view=list")
+        break
+      case "pago":
+        router.push("/dashboard/psicologo/pagos?patient=carlos-rodriguez&view=history")
+        break
+      case "documento":
+        router.push("/dashboard/psicologo/pacientes")
+        break
+      default:
+        router.push("/dashboard/psicologo/notificaciones")
+    }
   }
 
   const toggleNotificationStatus = (notifId: number, event: React.MouseEvent) => {
