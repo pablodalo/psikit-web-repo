@@ -89,20 +89,20 @@ export default function HomePage() {
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12 dark:text-white">Funcionalidades Principales</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <Card className="text-center">
+            <Card className="text-center dark:bg-gray-800 dark:border-gray-700">
               <CardHeader>
                 <Video className="h-12 w-12 text-sky-500 mx-auto mb-4" />
-                <CardTitle>Sesiones Virtuales</CardTitle>
+                <CardTitle className="dark:text-white">Sesiones Virtuales</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 dark:text-gray-300">Integración con Google Meet y sala de espera virtual</p>
               </CardContent>
             </Card>
 
-            <Card className="text-center">
+            <Card className="text-center dark:bg-gray-800 dark:border-gray-700">
               <CardHeader>
                 <Calendar className="h-12 w-12 text-green-600 mx-auto mb-4" />
-                <CardTitle>Agenda Inteligente</CardTitle>
+                <CardTitle className="dark:text-white">Agenda Inteligente</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 dark:text-gray-300">
@@ -111,60 +111,60 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            <Card className="text-center">
+            <Card className="text-center dark:bg-gray-800 dark:border-gray-700">
               <CardHeader>
                 <Users className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-                <CardTitle>Gestión de Pacientes</CardTitle>
+                <CardTitle className="dark:text-white">Gestión de Pacientes</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 dark:text-gray-300">Historia clínica digital y fichas de admisión</p>
               </CardContent>
             </Card>
 
-            <Card className="text-center">
+            <Card className="text-center dark:bg-gray-800 dark:border-gray-700">
               <CardHeader>
                 <CreditCard className="h-12 w-12 text-orange-600 mx-auto mb-4" />
-                <CardTitle>Pagos Integrados</CardTitle>
+                <CardTitle className="dark:text-white">Pagos Integrados</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 dark:text-gray-300">Gestión de pagos con Mercado Pago y facturación</p>
               </CardContent>
             </Card>
 
-            <Card className="text-center">
+            <Card className="text-center dark:bg-gray-800 dark:border-gray-700">
               <CardHeader>
                 <FileText className="h-12 w-12 text-red-600 mx-auto mb-4" />
-                <CardTitle>Test Psicológicos</CardTitle>
+                <CardTitle className="dark:text-white">Test Psicológicos</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 dark:text-gray-300">PHQ-9, GAD-7, MMSE y más tests disponibles</p>
               </CardContent>
             </Card>
 
-            <Card className="text-center">
+            <Card className="text-center dark:bg-gray-800 dark:border-gray-700">
               <CardHeader>
                 <Shield className="h-12 w-12 text-indigo-600 mx-auto mb-4" />
-                <CardTitle>Consentimiento Digital</CardTitle>
+                <CardTitle className="dark:text-white">Consentimiento Digital</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 dark:text-gray-300">Consentimientos informados seguros y legales</p>
               </CardContent>
             </Card>
 
-            <Card className="text-center">
+            <Card className="text-center dark:bg-gray-800 dark:border-gray-700">
               <CardHeader>
                 <Globe className="h-12 w-12 text-teal-600 mx-auto mb-4" />
-                <CardTitle>Catálogo de Profesionales</CardTitle>
+                <CardTitle className="dark:text-white">Catálogo de Profesionales</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 dark:text-gray-300">Directorio público para encontrar psicólogos</p>
               </CardContent>
             </Card>
 
-            <Card className="text-center">
+            <Card className="text-center dark:bg-gray-800 dark:border-gray-700">
               <CardHeader>
                 <Heart className="h-12 w-12 text-pink-600 mx-auto mb-4" />
-                <CardTitle>Comunidad Profesional</CardTitle>
+                <CardTitle className="dark:text-white">Comunidad Profesional</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 dark:text-gray-300">Red de intercambio entre profesionales</p>
