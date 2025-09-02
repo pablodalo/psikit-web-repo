@@ -85,7 +85,10 @@ export default function PsicologoDashboard() {
 
     switch (notif.tipo) {
       case "sesion":
-        router.push("/dashboard/psicologo/agenda?view=list")
+        const today = new Date().toISOString().split("T")[0]
+        router.push(
+          `/dashboard/psicologo/agenda?view=list&date=${today}&patient=${encodeURIComponent("María González")}`,
+        )
         break
       case "pago":
         router.push("/dashboard/psicologo/pagos?patient=carlos-rodriguez&view=history")
