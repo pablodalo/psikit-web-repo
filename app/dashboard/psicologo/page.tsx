@@ -266,7 +266,6 @@ export default function PsicologoDashboard() {
                     <div>
                       <p className="text-sm font-medium text-blue-700 mb-1">Pacientes Activos</p>
                       <p className="text-3xl font-bold text-blue-900">24</p>
-                      <p className="text-xs text-blue-600 mt-1">+2 este mes</p>
                     </div>
                     <div className="h-12 w-12 bg-blue-200 rounded-full flex items-center justify-center">
                       <Users className="h-6 w-6 text-blue-700" />
@@ -281,7 +280,6 @@ export default function PsicologoDashboard() {
                     <div>
                       <p className="text-sm font-medium text-green-700 mb-1">Sesiones Hoy</p>
                       <p className="text-3xl font-bold text-green-900">6</p>
-                      <p className="text-xs text-green-600 mt-1">3 completadas</p>
                     </div>
                     <div className="h-12 w-12 bg-green-200 rounded-full flex items-center justify-center">
                       <Calendar className="h-6 w-6 text-green-700" />
@@ -296,7 +294,6 @@ export default function PsicologoDashboard() {
                     <div>
                       <p className="text-sm font-medium text-purple-700 mb-1">Ingresos del Mes</p>
                       <p className="text-3xl font-bold text-purple-900">$2,450</p>
-                      <p className="text-xs text-purple-600 mt-1">+12% vs mes anterior</p>
                     </div>
                     <div className="h-12 w-12 bg-purple-200 rounded-full flex items-center justify-center">
                       <DollarSign className="h-6 w-6 text-purple-700" />
@@ -311,7 +308,6 @@ export default function PsicologoDashboard() {
                     <div>
                       <p className="text-sm font-medium text-orange-700 mb-1">Pagos Pendientes</p>
                       <p className="text-3xl font-bold text-orange-900">3</p>
-                      <p className="text-xs text-orange-600 mt-1">$450 total</p>
                     </div>
                     <div className="h-12 w-12 bg-orange-200 rounded-full flex items-center justify-center">
                       <AlertTriangle className="h-6 w-6 text-orange-700" />
