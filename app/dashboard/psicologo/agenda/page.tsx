@@ -136,7 +136,7 @@ export default function PsicologoAgendaPage() {
         setTimeout(() => setHighlightedPatient(null), 5000)
       }
     }
-  }, [searchParams])
+  }, [searchParams.get("view"), searchParams.get("date"), searchParams.get("patient")])
 
   const [newAppointment, setNewAppointment] = useState({
     paciente: "",
