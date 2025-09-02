@@ -39,6 +39,8 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  /* Added Inter font as the default sans-serif font */
+  --font-inter: "Inter", sans-serif;
 }
 
 .dark {
@@ -114,8 +116,9 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
-  /* Added Inter font as the default sans-serif font */
-  --font-sans: var(--font-inter);
+  /* Ensure font-sans consistently uses Inter font */
+  --font-sans:
+    var(--font-inter), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 @layer base {
@@ -123,11 +126,10 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
-    /* Explicitly set font-family to ensure Inter is always used */
-    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    @apply bg-background text-foreground font-sans;
+    /* Removed explicit font-family to prevent conflicts with Tailwind font-sans */
   }
-  /* Ensure all text elements inherit the correct font */
+  /* Ensure all text elements consistently inherit font-sans */
   h1,
   h2,
   h3,
@@ -140,7 +142,17 @@
   button,
   input,
   textarea,
+  select,
+  a,
+  label {
+    @apply font-sans;
+  }
+
+  /* Force font consistency on all interactive elements */
+  button,
+  input,
+  textarea,
   select {
-    font-family: inherit;
+    font-family: inherit !important;
   }
 }
