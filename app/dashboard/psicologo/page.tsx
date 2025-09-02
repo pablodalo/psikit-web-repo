@@ -269,10 +269,12 @@ export default function PsicologoDashboard() {
                   </div>
                   <div className="pr-12">
                     <p className="text-sm font-medium text-blue-700 mb-1">Pacientes Activos</p>
-                    <p className="text-3xl font-bold text-blue-900 mb-2">24</p>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-green-600 font-medium">+2 este mes</span>
-                      <span className="text-blue-600">18 regulares</span>
+                    <p className="text-3xl font-bold text-blue-900 mb-3">24</p>
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-blue-600">Nuevos este mes:</span>
+                        <span className="text-green-600 font-medium">+2</span>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -287,10 +289,12 @@ export default function PsicologoDashboard() {
                   </div>
                   <div className="pr-12">
                     <p className="text-sm font-medium text-green-700 mb-1">Sesiones Hoy</p>
-                    <p className="text-3xl font-bold text-green-900 mb-2">6</p>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-green-600 font-medium">3 completadas</span>
-                      <span className="text-green-600">2 virtuales</span>
+                    <p className="text-3xl font-bold text-green-900 mb-3">6</p>
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-green-600">Completadas:</span>
+                        <span className="text-green-600 font-medium">3 de 6</span>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -305,10 +309,12 @@ export default function PsicologoDashboard() {
                   </div>
                   <div className="pr-12">
                     <p className="text-sm font-medium text-purple-700 mb-1">Ingresos del Mes</p>
-                    <p className="text-3xl font-bold text-purple-900 mb-2">$2,450</p>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-green-600 font-medium">+15% vs anterior</span>
-                      <span className="text-purple-600">$450 pendiente</span>
+                    <p className="text-3xl font-bold text-purple-900 mb-3">$2,450</p>
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-purple-600">vs mes anterior:</span>
+                        <span className="text-green-600 font-medium">+15%</span>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -323,10 +329,12 @@ export default function PsicologoDashboard() {
                   </div>
                   <div className="pr-12">
                     <p className="text-sm font-medium text-orange-700 mb-1">Pagos Pendientes</p>
-                    <p className="text-3xl font-bold text-orange-900 mb-2">3</p>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="text-red-600 font-medium">$750 total</span>
-                      <span className="text-orange-600">2 vencidos</span>
+                    <p className="text-3xl font-bold text-orange-900 mb-3">3</p>
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="text-orange-600">Total adeudado:</span>
+                        <span className="text-red-600 font-medium">$750</span>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
