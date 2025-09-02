@@ -260,57 +260,73 @@ export default function PsicologoDashboard() {
 
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-md transition-shadow">
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-md transition-shadow relative overflow-hidden">
                 <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-blue-700 mb-1">Pacientes Activos</p>
-                      <p className="text-3xl font-bold text-blue-900">24</p>
+                  <div className="absolute top-4 right-4">
+                    <div className="h-10 w-10 bg-blue-200 rounded-full flex items-center justify-center">
+                      <Users className="h-5 w-5 text-blue-700" />
                     </div>
-                    <div className="h-12 w-12 bg-blue-200 rounded-full flex items-center justify-center">
-                      <Users className="h-6 w-6 text-blue-700" />
+                  </div>
+                  <div className="pr-12">
+                    <p className="text-sm font-medium text-blue-700 mb-1">Pacientes Activos</p>
+                    <p className="text-3xl font-bold text-blue-900 mb-2">24</p>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-green-600 font-medium">+2 este mes</span>
+                      <span className="text-blue-600">18 regulares</span>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-sm bg-gradient-to-br from-green-50 to-green-100 hover:shadow-md transition-shadow">
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-green-50 to-green-100 hover:shadow-md transition-shadow relative overflow-hidden">
                 <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-green-700 mb-1">Sesiones Hoy</p>
-                      <p className="text-3xl font-bold text-green-900">6</p>
+                  <div className="absolute top-4 right-4">
+                    <div className="h-10 w-10 bg-green-200 rounded-full flex items-center justify-center">
+                      <Calendar className="h-5 w-5 text-green-700" />
                     </div>
-                    <div className="h-12 w-12 bg-green-200 rounded-full flex items-center justify-center">
-                      <Calendar className="h-6 w-6 text-green-700" />
+                  </div>
+                  <div className="pr-12">
+                    <p className="text-sm font-medium text-green-700 mb-1">Sesiones Hoy</p>
+                    <p className="text-3xl font-bold text-green-900 mb-2">6</p>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-green-600 font-medium">3 completadas</span>
+                      <span className="text-green-600">2 virtuales</span>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-sm bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-md transition-shadow">
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-md transition-shadow relative overflow-hidden">
                 <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-purple-700 mb-1">Ingresos del Mes</p>
-                      <p className="text-3xl font-bold text-purple-900">$2,450</p>
+                  <div className="absolute top-4 right-4">
+                    <div className="h-10 w-10 bg-purple-200 rounded-full flex items-center justify-center">
+                      <DollarSign className="h-5 w-5 text-purple-700" />
                     </div>
-                    <div className="h-12 w-12 bg-purple-200 rounded-full flex items-center justify-center">
-                      <DollarSign className="h-6 w-6 text-purple-700" />
+                  </div>
+                  <div className="pr-12">
+                    <p className="text-sm font-medium text-purple-700 mb-1">Ingresos del Mes</p>
+                    <p className="text-3xl font-bold text-purple-900 mb-2">$2,450</p>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-green-600 font-medium">+15% vs anterior</span>
+                      <span className="text-purple-600">$450 pendiente</span>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-sm bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-md transition-shadow">
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-md transition-shadow relative overflow-hidden">
                 <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-orange-700 mb-1">Pagos Pendientes</p>
-                      <p className="text-3xl font-bold text-orange-900">3</p>
+                  <div className="absolute top-4 right-4">
+                    <div className="h-10 w-10 bg-orange-200 rounded-full flex items-center justify-center">
+                      <AlertTriangle className="h-5 w-5 text-orange-700" />
                     </div>
-                    <div className="h-12 w-12 bg-orange-200 rounded-full flex items-center justify-center">
-                      <AlertTriangle className="h-6 w-6 text-orange-700" />
+                  </div>
+                  <div className="pr-12">
+                    <p className="text-sm font-medium text-orange-700 mb-1">Pagos Pendientes</p>
+                    <p className="text-3xl font-bold text-orange-900 mb-2">3</p>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-red-600 font-medium">$750 total</span>
+                      <span className="text-orange-600">2 vencidos</span>
                     </div>
                   </div>
                 </CardContent>
