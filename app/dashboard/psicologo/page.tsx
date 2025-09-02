@@ -260,55 +260,63 @@ export default function PsicologoDashboard() {
 
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <Card className="hover:shadow-md transition-shadow duration-200">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-900">Pacientes Activos</CardTitle>
-                  <div className="p-2 rounded-lg bg-blue-50">
-                    <Users className="h-4 w-4 text-blue-600" />
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-md transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-blue-700 mb-1">Pacientes Activos</p>
+                      <p className="text-3xl font-bold text-blue-900">24</p>
+                      <p className="text-xs text-blue-600 mt-1">+2 este mes</p>
+                    </div>
+                    <div className="h-12 w-12 bg-blue-200 rounded-full flex items-center justify-center">
+                      <Users className="h-6 w-6 text-blue-700" />
+                    </div>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-blue-600">24</div>
-                  <p className="text-xs text-gray-500">+2 este mes</p>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-md transition-shadow duration-200">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-900">Sesiones Hoy</CardTitle>
-                  <div className="p-2 rounded-lg bg-green-50">
-                    <Calendar className="h-4 w-4 text-green-600" />
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-green-50 to-green-100 hover:shadow-md transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-green-700 mb-1">Sesiones Hoy</p>
+                      <p className="text-3xl font-bold text-green-900">6</p>
+                      <p className="text-xs text-green-600 mt-1">3 completadas</p>
+                    </div>
+                    <div className="h-12 w-12 bg-green-200 rounded-full flex items-center justify-center">
+                      <Calendar className="h-6 w-6 text-green-700" />
+                    </div>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-green-600">6</div>
-                  <p className="text-xs text-gray-500">3 completadas</p>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-md transition-shadow duration-200">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-900">Ingresos del Mes</CardTitle>
-                  <div className="p-2 rounded-lg bg-purple-50">
-                    <DollarSign className="h-4 w-4 text-purple-600" />
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-md transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-purple-700 mb-1">Ingresos del Mes</p>
+                      <p className="text-3xl font-bold text-purple-900">$2,450</p>
+                      <p className="text-xs text-purple-600 mt-1">+12% vs mes anterior</p>
+                    </div>
+                    <div className="h-12 w-12 bg-purple-200 rounded-full flex items-center justify-center">
+                      <DollarSign className="h-6 w-6 text-purple-700" />
+                    </div>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-purple-600">$2,450</div>
-                  <p className="text-xs text-gray-500">+12% vs mes anterior</p>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-md transition-shadow duration-200">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-gray-900">Pagos Pendientes</CardTitle>
-                  <div className="p-2 rounded-lg bg-orange-50">
-                    <AlertTriangle className="h-4 w-4 text-orange-600" />
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-md transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-orange-700 mb-1">Pagos Pendientes</p>
+                      <p className="text-3xl font-bold text-orange-900">3</p>
+                      <p className="text-xs text-orange-600 mt-1">$450 total</p>
+                    </div>
+                    <div className="h-12 w-12 bg-orange-200 rounded-full flex items-center justify-center">
+                      <AlertTriangle className="h-6 w-6 text-orange-700" />
+                    </div>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-orange-600">3</div>
-                  <p className="text-xs text-gray-500">$450 total</p>
                 </CardContent>
               </Card>
             </div>
