@@ -26,6 +26,17 @@ export default function LoginPage() {
   useEffect(() => {
     setMounted(true)
 
+    // Read intended user type from localStorage first
+    if (typeof window !== "undefined") {
+      const intendedUserType = localStorage.getItem("intendedUserType")
+      console.log("[v0] Intended user type from localStorage:", intendedUserType)
+      if (intendedUserType === "paciente" || intendedUserType === "psicologo") {
+        setUserType(intendedUserType)
+        console.log("[v0] Setting userType to:", intendedUserType)
+      }
+    }
+
+    // Then check if user is already authenticated
     if (user?.isAuthenticated) {
       console.log("[v0] User already authenticated:", user.userType)
       if (user.userType === "psicologo") {
@@ -34,18 +45,6 @@ export default function LoginPage() {
         router.push("/dashboard/paciente")
       }
       return
-    }
-
-    if (typeof window !== "undefined") {
-      const intendedUserType = localStorage.getItem("intendedUserType")
-      console.log("[v0] Intended user type from localStorage:", intendedUserType)
-      if (intendedUserType === "paciente") {
-        setUserType("paciente")
-        console.log("[v0] Setting userType to paciente")
-      } else if (intendedUserType === "psicologo") {
-        setUserType("psicologo")
-        console.log("[v0] Setting userType to psicologo")
-      }
     }
   }, [user, router])
 

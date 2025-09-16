@@ -14,14 +14,18 @@ export default function HomePage() {
   const router = useRouter()
 
   const handleUserTypeSelection = (userType: "psicologo" | "paciente") => {
-    console.log("Selected user type:", userType)
+    console.log("[v0] Selected user type:", userType)
+
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("intendedUserType")
+      localStorage.setItem("intendedUserType", userType)
+      console.log("[v0] Stored in localStorage:", localStorage.getItem("intendedUserType"))
+    }
 
     if (user?.isAuthenticated) {
       logout()
     }
 
-    localStorage.setItem("intendedUserType", userType)
-    console.log("Stored in localStorage:", localStorage.getItem("intendedUserType"))
     router.push("/login")
   }
 
