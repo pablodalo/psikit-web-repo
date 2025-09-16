@@ -21,8 +21,7 @@ import {
   Bell,
   Plus,
   Clock,
-  DollarSign,
-  AlertTriangle,
+  TrendingUp,
   User,
   Settings,
   LogOut,
@@ -296,7 +295,7 @@ export default function PsicologoDashboard() {
                       <p className="text-xs text-purple-600 mt-1">+12% vs anterior</p>
                     </div>
                     <div className="h-12 w-12 bg-purple-200 rounded-full flex items-center justify-center">
-                      <DollarSign className="h-6 w-6 text-purple-700" />
+                      <TrendingUp className="h-6 w-6 text-purple-700" />
                     </div>
                   </div>
                 </CardContent>
@@ -311,7 +310,7 @@ export default function PsicologoDashboard() {
                       <p className="text-xs text-orange-600 mt-1">$450 total</p>
                     </div>
                     <div className="h-12 w-12 bg-orange-200 rounded-full flex items-center justify-center">
-                      <AlertTriangle className="h-6 w-6 text-orange-700" />
+                      <Clock className="h-6 w-6 text-orange-700" />
                     </div>
                   </div>
                 </CardContent>
