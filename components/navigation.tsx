@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Calendar, Users, FileText, CreditCard, Video, Home, Brain } from "lucide-react"
+import { Calendar, Users, FileText, CreditCard, Video, Home, Brain, LogOut, UserCheck } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 
 interface NavigationProps {
@@ -48,9 +48,15 @@ export function Navigation({ userType }: NavigationProps) {
     console.log(`Navigation clicked: ${label} -> ${href}`)
   }
 
+  const handleProfileSwitch = () => {
+    const newUserType = userType === "psicologo" ? "paciente" : "psicologo"
+    localStorage.setItem("intendedUserType", newUserType)
+    logout()
+  }
+
   return (
-    <nav className="w-64 bg-white border-r min-h-screen">
-      <div className="p-6">
+    <nav className="w-64 bg-white border-r min-h-screen flex flex-col">
+      <div className="p-6 flex-1">
         <div className="flex items-center justify-between mb-8">
           <Link href="/" className="flex items-center space-x-2">
             <Brain className="h-8 w-8 text-blue-600" />
@@ -91,6 +97,21 @@ export function Navigation({ userType }: NavigationProps) {
             )
           })}
         </div>
+      </div>
+
+      <div className="p-6 border-t space-y-2">
+        <Button
+          variant="ghost"
+          className="w-full justify-start text-gray-600 hover:text-gray-900"
+          onClick={handleProfileSwitch}
+        >
+          <UserCheck className="h-4 w-4 mr-3" />
+          Cambiar a {userType === "psicologo" ? "Paciente" : "Psicólogo"}
+        </Button>
+        <Button variant="ghost" className="w-full justify-start text-gray-600 hover:text-gray-900" onClick={logout}>
+          <LogOut className="h-4 w-4 mr-3" />
+          Cerrar Sesión
+        </Button>
       </div>
     </nav>
   )
