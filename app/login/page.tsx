@@ -34,8 +34,9 @@ export default function LoginPage() {
       setUserType(typeFromUrl)
       console.log("[v0] Setting userType to:", typeFromUrl)
     }
+  }, []) // Remove searchParams dependency to prevent re-running
 
-    // Then check if user is already authenticated
+  useEffect(() => {
     if (user?.isAuthenticated) {
       console.log("[v0] User already authenticated:", user.userType)
       if (user.userType === "psicologo") {
@@ -45,7 +46,7 @@ export default function LoginPage() {
       }
       return
     }
-  }, [user, router, searchParams])
+  }, [user, router])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -72,6 +73,11 @@ export default function LoginPage() {
 
       setIsLoading(false)
     }, 1500)
+  }
+
+  const handleToggleChange = (value: string) => {
+    console.log("[v0] Toggle clicked, changing to:", value)
+    setUserType(value as "psicologo" | "paciente")
   }
 
   if (!mounted) {
@@ -109,7 +115,7 @@ export default function LoginPage() {
             <CardDescription>Selecciona tu tipo de usuario e ingresa tus credenciales</CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs value={userType} onValueChange={(value) => setUserType(value as "psicologo" | "paciente")}>
+            <Tabs value={userType} onValueChange={handleToggleChange}>
               <TabsList className="grid w-full grid-cols-2 mb-6">
                 <TabsTrigger value="psicologo" className="flex items-center space-x-2">
                   <Stethoscope className="h-4 w-4" />
