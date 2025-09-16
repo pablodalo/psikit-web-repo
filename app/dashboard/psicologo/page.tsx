@@ -21,12 +21,13 @@ import {
   Bell,
   Plus,
   Clock,
-  TrendingUp,
   User,
   Settings,
   LogOut,
   Mail,
   MailOpen,
+  DollarSign,
+  AlertTriangle,
 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -289,13 +290,13 @@ export default function PsicologoDashboard() {
               <Card className="border-0 shadow-sm bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="flex-1 pr-4">
                       <p className="text-sm font-medium text-purple-700 mb-1">Ingresos del Mes</p>
                       <p className="text-3xl font-bold text-purple-900">$2,450</p>
                       <p className="text-xs text-purple-600 mt-1">+12% vs anterior</p>
                     </div>
-                    <div className="h-12 w-12 bg-purple-200 rounded-full flex items-center justify-center">
-                      <TrendingUp className="h-6 w-6 text-purple-700" />
+                    <div className="h-12 w-12 bg-purple-200 rounded-full flex items-center justify-center ml-4">
+                      <DollarSign className="h-6 w-6 text-purple-700" />
                     </div>
                   </div>
                 </CardContent>
@@ -304,13 +305,13 @@ export default function PsicologoDashboard() {
               <Card className="border-0 shadow-sm bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
-                    <div>
+                    <div className="flex-1 pr-4">
                       <p className="text-sm font-medium text-orange-700 mb-1">Pagos Pendientes</p>
                       <p className="text-3xl font-bold text-orange-900">3</p>
                       <p className="text-xs text-orange-600 mt-1">$450 total</p>
                     </div>
-                    <div className="h-12 w-12 bg-orange-200 rounded-full flex items-center justify-center">
-                      <Clock className="h-6 w-6 text-orange-700" />
+                    <div className="h-12 w-12 bg-orange-200 rounded-full flex items-center justify-center ml-4">
+                      <AlertTriangle className="h-6 w-6 text-orange-700" />
                     </div>
                   </div>
                 </CardContent>
