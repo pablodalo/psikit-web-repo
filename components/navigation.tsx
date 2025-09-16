@@ -28,7 +28,6 @@ export function Navigation({ userType }: NavigationProps) {
   const pacienteNavItems = [
     { href: "/dashboard/paciente", label: "Inicio", icon: Home },
     { href: "/dashboard/paciente/sesiones", label: "Mis Sesiones", icon: Video },
-    { href: "/dashboard/paciente/agenda", label: "Mi Agenda", icon: Calendar },
     { href: "/dashboard/paciente/documentos", label: "Documentos", icon: FileText },
     { href: "/dashboard/paciente/pagos", label: "Pagos", icon: CreditCard },
   ]
