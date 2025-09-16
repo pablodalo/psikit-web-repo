@@ -19,13 +19,15 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [userType, setUserType] = useState<"psicologo" | "paciente">("psicologo")
+  const [mounted, setMounted] = useState(false)
   const router = useRouter()
   const { login, user } = useAuth()
 
   useEffect(() => {
-    // If already authenticated, redirect to dashboard
+    setMounted(true)
+
     if (user?.isAuthenticated) {
-      console.log("User already authenticated:", user.userType)
+      console.log("[v0] User already authenticated:", user.userType)
       if (user.userType === "psicologo") {
         router.push("/dashboard/psicologo")
       } else {
@@ -34,16 +36,17 @@ export default function LoginPage() {
       return
     }
 
-    const intendedUserType = localStorage.getItem("intendedUserType")
-    console.log("Intended user type from localStorage:", intendedUserType)
-    if (intendedUserType === "paciente") {
-      setUserType("paciente")
-      console.log("Setting userType to paciente")
-    } else {
-      setUserType("psicologo")
-      console.log("Setting userType to psicologo (default)")
+    if (typeof window !== "undefined") {
+      const intendedUserType = localStorage.getItem("intendedUserType")
+      console.log("[v0] Intended user type from localStorage:", intendedUserType)
+      if (intendedUserType === "paciente") {
+        setUserType("paciente")
+        console.log("[v0] Setting userType to paciente")
+      } else if (intendedUserType === "psicologo") {
+        setUserType("psicologo")
+        console.log("[v0] Setting userType to psicologo")
+      }
     }
-    // Don't remove from localStorage yet - keep it until login is successful
   }, [user, router])
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -51,7 +54,6 @@ export default function LoginPage() {
 
     setIsLoading(true)
 
-    // Simulate login process
     setTimeout(() => {
       const userData = {
         email,
@@ -60,13 +62,14 @@ export default function LoginPage() {
         isAuthenticated: true,
       }
 
-      console.log("Logging in with userData:", userData)
+      console.log("[v0] Logging in with userData:", userData)
       login(userData)
 
-      localStorage.removeItem("intendedUserType")
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("intendedUserType")
+      }
 
-      // Redirect to appropriate dashboard
-      console.log("Redirecting to dashboard for:", userType)
+      console.log("[v0] Redirecting to dashboard for:", userType)
       if (userType === "psicologo") {
         router.push("/dashboard/psicologo")
       } else {
@@ -75,6 +78,22 @@ export default function LoginPage() {
 
       setIsLoading(false)
     }, 1500)
+  }
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <Link href="/" className="inline-flex items-center space-x-2 mb-4">
+              <Brain className="h-8 w-8 text-blue-600" />
+              <span className="text-2xl font-bold text-gray-900">PsiKit</span>
+            </Link>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Cargando...</h1>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
