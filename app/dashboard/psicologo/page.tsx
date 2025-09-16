@@ -28,7 +28,6 @@ import {
   LogOut,
   Mail,
   MailOpen,
-  Zap,
 } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -86,10 +85,7 @@ export default function PsicologoDashboard() {
 
     switch (notif.tipo) {
       case "sesion":
-        const today = new Date().toISOString().split("T")[0]
-        router.push(
-          `/dashboard/psicologo/agenda?view=list&date=${today}&patient=${encodeURIComponent("María González")}`,
-        )
+        router.push("/dashboard/psicologo/agenda?view=list")
         break
       case "pago":
         router.push("/dashboard/psicologo/pagos?patient=carlos-rodriguez&view=history")
@@ -259,76 +255,76 @@ export default function PsicologoDashboard() {
           </header>
 
           <div className="p-6">
+            {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-md transition-shadow relative overflow-hidden">
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
-                  <div className="absolute top-4 right-4">
-                    <div className="h-10 w-10 bg-blue-200 rounded-full flex items-center justify-center">
-                      <Users className="h-5 w-5 text-blue-700" />
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-blue-700 mb-1">Pacientes Activos</p>
+                      <p className="text-3xl font-bold text-blue-900">24</p>
+                      <p className="text-xs text-blue-600 mt-1">+2 este mes</p>
                     </div>
-                  </div>
-                  <div className="pr-12">
-                    <p className="text-sm font-medium text-blue-700 mb-1">Pacientes Activos</p>
-                    <p className="text-3xl font-bold text-blue-900">24</p>
+                    <div className="h-12 w-12 bg-blue-200 rounded-full flex items-center justify-center">
+                      <Users className="h-6 w-6 text-blue-700" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-sm bg-gradient-to-br from-green-50 to-green-100 hover:shadow-md transition-shadow relative overflow-hidden">
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-green-50 to-green-100 hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
-                  <div className="absolute top-4 right-4">
-                    <div className="h-10 w-10 bg-green-200 rounded-full flex items-center justify-center">
-                      <Calendar className="h-5 w-5 text-green-700" />
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-green-700 mb-1">Sesiones Hoy</p>
+                      <p className="text-3xl font-bold text-green-900">6</p>
+                      <p className="text-xs text-green-600 mt-1">3 completadas</p>
                     </div>
-                  </div>
-                  <div className="pr-12">
-                    <p className="text-sm font-medium text-green-700 mb-1">Sesiones Hoy</p>
-                    <p className="text-3xl font-bold text-green-900">6</p>
+                    <div className="h-12 w-12 bg-green-200 rounded-full flex items-center justify-center">
+                      <Calendar className="h-6 w-6 text-green-700" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-sm bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-md transition-shadow relative overflow-hidden">
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
-                  <div className="absolute top-4 right-4">
-                    <div className="h-10 w-10 bg-purple-200 rounded-full flex items-center justify-center">
-                      <DollarSign className="h-5 w-5 text-purple-700" />
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-purple-700 mb-1">Ingresos del Mes</p>
+                      <p className="text-3xl font-bold text-purple-900">$2,450</p>
+                      <p className="text-xs text-purple-600 mt-1">+12% vs anterior</p>
                     </div>
-                  </div>
-                  <div className="pr-12">
-                    <p className="text-sm font-medium text-purple-700 mb-1">Ingresos del Mes</p>
-                    <p className="text-3xl font-bold text-purple-900">$2,450</p>
+                    <div className="h-12 w-12 bg-purple-200 rounded-full flex items-center justify-center">
+                      <DollarSign className="h-6 w-6 text-purple-700" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-sm bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-md transition-shadow relative overflow-hidden">
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
-                  <div className="absolute top-4 right-4">
-                    <div className="h-10 w-10 bg-orange-200 rounded-full flex items-center justify-center">
-                      <AlertTriangle className="h-5 w-5 text-orange-700" />
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-orange-700 mb-1">Pagos Pendientes</p>
+                      <p className="text-3xl font-bold text-orange-900">3</p>
+                      <p className="text-xs text-orange-600 mt-1">$450 total</p>
                     </div>
-                  </div>
-                  <div className="pr-12">
-                    <p className="text-sm font-medium text-orange-700 mb-1">Pagos Pendientes</p>
-                    <p className="text-3xl font-bold text-orange-900">3</p>
+                    <div className="h-12 w-12 bg-orange-200 rounded-full flex items-center justify-center">
+                      <AlertTriangle className="h-6 w-6 text-orange-700" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <Card className="lg:col-span-2 hover:shadow-md transition-shadow duration-200">
-                <CardHeader className="pb-4">
+              {/* Próximas Sesiones */}
+              <Card className="lg:col-span-2 border-0 shadow-sm">
+                <CardHeader>
                   <div className="flex items-center justify-between">
-                    <div>
-                      <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                        <Clock className="h-5 w-5 text-blue-600" />
-                        Próximas Sesiones
-                      </CardTitle>
-                      <p className="text-sm text-gray-600 mt-1">Sesiones programadas para hoy</p>
-                    </div>
-                    <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm">
+                    <CardTitle className="text-xl font-semibold text-gray-900">Próximas Sesiones</CardTitle>
+                    <Button size="sm" variant="outline" className="bg-transparent">
                       <Plus className="h-4 w-4 mr-2" />
                       Nueva Sesión
                     </Button>
@@ -339,32 +335,25 @@ export default function PsicologoDashboard() {
                     {proximasSesiones.map((sesion) => (
                       <div
                         key={sesion.id}
-                        className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:shadow-sm transition-shadow"
+                        className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-center space-x-4">
-                          <div className="flex items-center justify-center w-10 h-10 bg-blue-50 rounded-lg">
+                          <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
                             <Clock className="h-5 w-5 text-blue-600" />
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-900">{sesion.paciente}</p>
+                            <p className="font-medium text-gray-900">{sesion.paciente}</p>
                             <p className="text-sm text-gray-600">
                               {sesion.hora} - {sesion.tipo}
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center space-x-3">
-                          <Badge
-                            variant="outline"
-                            className={`${
-                              sesion.estado === "confirmada"
-                                ? "border-green-200 text-green-800 bg-green-50"
-                                : "border-amber-200 text-amber-800 bg-amber-50"
-                            }`}
-                          >
+                        <div className="flex items-center space-x-2">
+                          <Badge variant={sesion.estado === "confirmada" ? "default" : "secondary"}>
                             {sesion.estado}
                           </Badge>
                           <Link href={`/sesion/${sesion.id}`}>
-                            <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white shadow-sm">
+                            <Button size="sm" className="bg-green-600 hover:bg-green-700">
                               <Video className="h-4 w-4 mr-1" />
                               {sesion.estadoSesion === "en-curso" ? "Unirse" : "Iniciar"}
                             </Button>
@@ -376,13 +365,10 @@ export default function PsicologoDashboard() {
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-md transition-shadow duration-200">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                    <Bell className="h-5 w-5 text-orange-600" />
-                    Alertas
-                  </CardTitle>
-                  <p className="text-sm text-gray-600 mt-1">Notificaciones importantes</p>
+              {/* Alertas y Notificaciones */}
+              <Card className="border-0 shadow-sm">
+                <CardHeader>
+                  <CardTitle className="text-xl font-semibold text-gray-900">Alertas</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -392,7 +378,7 @@ export default function PsicologoDashboard() {
                         className="flex items-start space-x-3 p-3 border border-gray-200 rounded-lg hover:shadow-sm transition-shadow"
                       >
                         <div
-                          className={`w-3 h-3 rounded-full mt-1.5 ${
+                          className={`w-2 h-2 rounded-full mt-2 ${
                             alerta.urgencia === "alta"
                               ? "bg-red-500"
                               : alerta.urgencia === "media"
@@ -401,19 +387,7 @@ export default function PsicologoDashboard() {
                           }`}
                         />
                         <div className="flex-1">
-                          <p className="text-sm font-medium text-gray-900">{alerta.mensaje}</p>
-                          <Badge
-                            variant="outline"
-                            className={`text-xs mt-2 ${
-                              alerta.urgencia === "alta"
-                                ? "border-red-200 text-red-800 bg-red-50"
-                                : alerta.urgencia === "media"
-                                  ? "border-yellow-200 text-yellow-800 bg-yellow-50"
-                                  : "border-blue-200 text-blue-800 bg-blue-50"
-                            }`}
-                          >
-                            {alerta.urgencia === "alta" ? "Urgente" : alerta.urgencia === "media" ? "Moderada" : "Baja"}
-                          </Badge>
+                          <p className="text-sm text-gray-900">{alerta.mensaje}</p>
                         </div>
                       </div>
                     ))}
@@ -422,59 +396,42 @@ export default function PsicologoDashboard() {
               </Card>
             </div>
 
+            {/* Quick Actions */}
             <div className="mt-8">
-              <div className="mb-6">
-                <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
-                  <Zap className="h-5 w-5 text-purple-600" />
-                  Acciones Rápidas
-                </h2>
-                <p className="text-sm text-gray-600 mt-1">Accede rápidamente a las funciones principales</p>
-              </div>
+              <h2 className="text-lg font-semibold mb-4 text-gray-900">Acciones Rápidas</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <Link href="/dashboard/psicologo/pacientes">
-                  <Card className="cursor-pointer hover:shadow-md transition-all duration-200 hover:-translate-y-1">
+                  <Card className="cursor-pointer hover:shadow-md transition-shadow border-0 shadow-sm">
                     <CardContent className="p-6 text-center">
-                      <div className="p-3 rounded-lg bg-blue-50 w-fit mx-auto mb-3">
-                        <Users className="h-8 w-8 text-blue-600" />
-                      </div>
-                      <p className="font-semibold text-gray-900">Gestionar Pacientes</p>
-                      <p className="text-xs text-gray-500 mt-1">Ver y administrar pacientes</p>
+                      <Users className="h-8 w-8 text-blue-600 mx-auto mb-2" />
+                      <p className="font-medium text-gray-900">Gestionar Pacientes</p>
                     </CardContent>
                   </Card>
                 </Link>
 
                 <Link href="/dashboard/psicologo/agenda">
-                  <Card className="cursor-pointer hover:shadow-md transition-all duration-200 hover:-translate-y-1">
+                  <Card className="cursor-pointer hover:shadow-md transition-shadow border-0 shadow-sm">
                     <CardContent className="p-6 text-center">
-                      <div className="p-3 rounded-lg bg-green-50 w-fit mx-auto mb-3">
-                        <Calendar className="h-8 w-8 text-green-600" />
-                      </div>
-                      <p className="font-semibold text-gray-900">Ver Agenda</p>
-                      <p className="text-xs text-gray-500 mt-1">Gestionar citas y horarios</p>
+                      <Calendar className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                      <p className="font-medium text-gray-900">Ver Agenda</p>
                     </CardContent>
                   </Card>
                 </Link>
 
                 <Link href="/dashboard/psicologo/tests">
-                  <Card className="cursor-pointer hover:shadow-md transition-all duration-200 hover:-translate-y-1">
+                  <Card className="cursor-pointer hover:shadow-md transition-shadow border-0 shadow-sm">
                     <CardContent className="p-6 text-center">
-                      <div className="p-3 rounded-lg bg-purple-50 w-fit mx-auto mb-3">
-                        <FileText className="h-8 w-8 text-purple-600" />
-                      </div>
-                      <p className="font-semibold text-gray-900">Tests Psicológicos</p>
-                      <p className="text-xs text-gray-500 mt-1">Enviar y revisar evaluaciones</p>
+                      <FileText className="h-8 w-8 text-purple-600 mx-auto mb-2" />
+                      <p className="font-medium text-gray-900">Tests Psicológicos</p>
                     </CardContent>
                   </Card>
                 </Link>
 
                 <Link href="/dashboard/psicologo/pagos">
-                  <Card className="cursor-pointer hover:shadow-md transition-all duration-200 hover:-translate-y-1">
+                  <Card className="cursor-pointer hover:shadow-md transition-shadow border-0 shadow-sm">
                     <CardContent className="p-6 text-center">
-                      <div className="p-3 rounded-lg bg-orange-50 w-fit mx-auto mb-3">
-                        <CreditCard className="h-8 w-8 text-orange-600" />
-                      </div>
-                      <p className="font-semibold text-gray-900">Gestión de Pagos</p>
-                      <p className="text-xs text-gray-500 mt-1">Administrar facturación</p>
+                      <CreditCard className="h-8 w-8 text-orange-600 mx-auto mb-2" />
+                      <p className="font-medium text-gray-900">Gestión de Pagos</p>
                     </CardContent>
                   </Card>
                 </Link>

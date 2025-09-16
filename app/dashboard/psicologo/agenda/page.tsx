@@ -117,26 +117,13 @@ export default function PsicologoAgendaPage() {
   const [isNewAppointmentOpen, setIsNewAppointmentOpen] = useState(false)
   const [appointments, setAppointments] = useState(() => generateAppointments())
   const [searchTerm, setSearchTerm] = useState("")
-  const [highlightedPatient, setHighlightedPatient] = useState<string | null>(null)
 
   useEffect(() => {
     const view = searchParams.get("view")
-    const date = searchParams.get("date")
-    const patient = searchParams.get("patient")
-
     if (view === "list") {
       setViewMode("list")
-
-      if (date) {
-        setSelectedDate(new Date(date))
-      }
-
-      if (patient) {
-        setHighlightedPatient(decodeURIComponent(patient))
-        setTimeout(() => setHighlightedPatient(null), 5000)
-      }
     }
-  }, [searchParams.get("view"), searchParams.get("date"), searchParams.get("patient")])
+  }, [searchParams])
 
   const [newAppointment, setNewAppointment] = useState({
     paciente: "",
@@ -882,80 +869,67 @@ export default function PsicologoAgendaPage() {
                   </CardHeader>
                   <CardContent className="p-6">
                     <div className="space-y-4">
-                      {(selectedDate ? appointments[formatDateKey(selectedDate)] || [] : sesionesHoy).map((sesion) => {
-                        const isHighlighted = highlightedPatient && sesion.paciente === highlightedPatient
-
-                        return (
-                          <div
-                            key={sesion.id}
-                            className={`flex items-center justify-between p-4 border rounded-lg transition-all duration-200 ${
-                              isHighlighted
-                                ? "shadow-lg border-blue-300 bg-blue-50 ring-2 ring-blue-200"
-                                : "hover:shadow-md hover:border-blue-200 bg-white"
-                            }`}
-                          >
-                            <div className="flex items-center space-x-4">
-                              <div
-                                className={`flex items-center justify-center w-12 h-12 rounded-full ${
-                                  sesion.tipo === "virtual" ? "bg-blue-100" : "bg-green-100"
-                                }`}
-                              >
-                                {sesion.tipo === "virtual" ? (
-                                  <Video className="h-6 w-6 text-blue-600" />
-                                ) : (
-                                  <MapPin className="h-6 w-6 text-green-600" />
-                                )}
-                              </div>
-                              <div>
-                                <div className="flex items-center space-x-2">
-                                  <p className="font-semibold text-gray-900">{sesion.paciente}</p>
-                                  {isHighlighted && (
-                                    <Badge className="bg-blue-600 text-white text-xs animate-pulse">Notificación</Badge>
-                                  )}
-                                </div>
-                                <p className="text-sm text-gray-600">
-                                  {sesion.hora} - {sesion.duracion || 50} min
-                                </p>
-                                <div className="flex items-center space-x-2 mt-1">
-                                  <Badge
-                                    variant="outline"
-                                    className={`text-xs ${
-                                      sesion.tipo === "virtual"
-                                        ? "border-blue-200 text-blue-800 bg-blue-50"
-                                        : "border-green-200 text-green-800 bg-green-50"
-                                    }`}
-                                  >
-                                    {sesion.tipo}
-                                  </Badge>
-                                  <Badge
-                                    variant="outline"
-                                    className={`text-xs ${
-                                      sesion.estado === "confirmada"
-                                        ? "border-green-200 text-green-800 bg-green-50"
-                                        : "border-amber-200 text-amber-800 bg-amber-50"
-                                    }`}
-                                  >
-                                    {sesion.estado}
-                                  </Badge>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              {sesion.tipo === "virtual" && (
-                                <Link href={`/sesion/${sesion.id}`}>
-                                  <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white shadow-sm">
-                                    <Video className="h-4 w-4 mr-1" />
-                                    Iniciar
-                                  </Button>
-                                </Link>
+                      {(selectedDate ? appointments[formatDateKey(selectedDate)] || [] : sesionesHoy).map((sesion) => (
+                        <div
+                          key={sesion.id}
+                          className="flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-all duration-200 hover:border-blue-200 bg-white"
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div
+                              className={`flex items-center justify-center w-12 h-12 rounded-full ${
+                                sesion.tipo === "virtual" ? "bg-blue-100" : "bg-green-100"
+                              }`}
+                            >
+                              {sesion.tipo === "virtual" ? (
+                                <Video className="h-6 w-6 text-blue-600" />
+                              ) : (
+                                <MapPin className="h-6 w-6 text-green-600" />
                               )}
-                              <Button size="sm" variant="outline" className="hover:bg-gray-50 bg-transparent">
-                                Editar
-                              </Button>
+                            </div>
+                            <div>
+                              <p className="font-semibold text-gray-900">{sesion.paciente}</p>
+                              <p className="text-sm text-gray-600">
+                                {sesion.hora} - {sesion.duracion || 50} min
+                              </p>
+                              <div className="flex items-center space-x-2 mt-1">
+                                <Badge
+                                  variant="outline"
+                                  className={`text-xs ${
+                                    sesion.tipo === "virtual"
+                                      ? "border-blue-200 text-blue-800 bg-blue-50"
+                                      : "border-green-200 text-green-800 bg-green-50"
+                                  }`}
+                                >
+                                  {sesion.tipo}
+                                </Badge>
+                                <Badge
+                                  variant="outline"
+                                  className={`text-xs ${
+                                    sesion.estado === "confirmada"
+                                      ? "border-green-200 text-green-800 bg-green-50"
+                                      : "border-amber-200 text-amber-800 bg-amber-50"
+                                  }`}
+                                >
+                                  {sesion.estado}
+                                </Badge>
+                              </div>
                             </div>
                           </div>
-                        )
-                      })}
+                          <div className="flex items-center space-x-2">
+                            {sesion.tipo === "virtual" && (
+                              <Link href={`/sesion/${sesion.id}`}>
+                                <Button size="sm" className="bg-green-600 hover:bg-green-700 text-white shadow-sm">
+                                  <Video className="h-4 w-4 mr-1" />
+                                  Iniciar
+                                </Button>
+                              </Link>
+                            )}
+                            <Button size="sm" variant="outline" className="hover:bg-gray-50 bg-transparent">
+                              Editar
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </CardContent>
                 </Card>

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Calendar, Users, FileText, CreditCard, Home, Brain } from "lucide-react"
+import { Calendar, Users, FileText, CreditCard, Video, Home, Brain } from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 
 interface NavigationProps {
@@ -20,12 +20,14 @@ export function Navigation({ userType }: NavigationProps) {
     { href: "/dashboard/psicologo", label: "Consultorio", icon: Home },
     { href: "/dashboard/psicologo/pacientes", label: "Pacientes", icon: Users },
     { href: "/dashboard/psicologo/agenda", label: "Agenda", icon: Calendar },
+    { href: "/dashboard/psicologo/sesiones", label: "Sesiones", icon: Video },
     { href: "/dashboard/psicologo/tests", label: "Tests", icon: FileText },
     { href: "/dashboard/psicologo/pagos", label: "Pagos", icon: CreditCard },
   ]
 
   const pacienteNavItems = [
     { href: "/dashboard/paciente", label: "Mi Dashboard", icon: Home },
+    { href: "/dashboard/paciente/sesiones", label: "Mis Sesiones", icon: Video },
     { href: "/dashboard/paciente/agenda", label: "Mi Agenda", icon: Calendar },
     { href: "/dashboard/paciente/documentos", label: "Documentos", icon: FileText },
     { href: "/dashboard/paciente/pagos", label: "Pagos", icon: CreditCard },
