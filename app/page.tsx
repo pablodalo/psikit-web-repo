@@ -16,17 +16,11 @@ export default function HomePage() {
   const handleUserTypeSelection = (userType: "psicologo" | "paciente") => {
     console.log("[v0] Selected user type:", userType)
 
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("intendedUserType")
-      localStorage.setItem("intendedUserType", userType)
-      console.log("[v0] Stored in localStorage:", localStorage.getItem("intendedUserType"))
-    }
-
     if (user?.isAuthenticated) {
       logout()
     }
 
-    router.push("/login")
+    router.push(`/login?type=${userType}`)
   }
 
   return (

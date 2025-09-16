@@ -4,7 +4,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -21,19 +21,18 @@ export default function LoginPage() {
   const [userType, setUserType] = useState<"psicologo" | "paciente">("psicologo")
   const [mounted, setMounted] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
   const { login, user } = useAuth()
 
   useEffect(() => {
     setMounted(true)
 
-    // Read intended user type from localStorage first
-    if (typeof window !== "undefined") {
-      const intendedUserType = localStorage.getItem("intendedUserType")
-      console.log("[v0] Intended user type from localStorage:", intendedUserType)
-      if (intendedUserType === "paciente" || intendedUserType === "psicologo") {
-        setUserType(intendedUserType)
-        console.log("[v0] Setting userType to:", intendedUserType)
-      }
+    const typeFromUrl = searchParams.get("type")
+    console.log("[v0] User type from URL:", typeFromUrl)
+
+    if (typeFromUrl === "paciente" || typeFromUrl === "psicologo") {
+      setUserType(typeFromUrl)
+      console.log("[v0] Setting userType to:", typeFromUrl)
     }
 
     // Then check if user is already authenticated
@@ -46,7 +45,7 @@ export default function LoginPage() {
       }
       return
     }
-  }, [user, router])
+  }, [user, router, searchParams])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -63,10 +62,6 @@ export default function LoginPage() {
 
       console.log("[v0] Logging in with userData:", userData)
       login(userData)
-
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("intendedUserType")
-      }
 
       console.log("[v0] Redirecting to dashboard for:", userType)
       if (userType === "psicologo") {
