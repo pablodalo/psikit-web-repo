@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -5,8 +7,39 @@ import { Video, Clock, FileText, Calendar } from "lucide-react"
 import Link from "next/link"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
+import { useState } from "react"
 
 export default function PacienteSesionesPage() {
+  const [isConnected, setIsConnected] = useState(false)
+  const [isConnecting, setIsConnecting] = useState(false)
+
+  const handleGoogleCalendarConnect = async () => {
+    setIsConnecting(true)
+    try {
+      const response = await fetch("/api/google-calendar/connect", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+
+      if (response.ok) {
+        const { authUrl } = await response.json()
+        window.open(authUrl, "_blank", "width=500,height=600")
+        // Listen for the OAuth callback
+        window.addEventListener("message", (event) => {
+          if (event.data.type === "GOOGLE_CALENDAR_SUCCESS") {
+            setIsConnected(true)
+            setIsConnecting(false)
+          }
+        })
+      }
+    } catch (error) {
+      console.error("Error connecting to Google Calendar:", error)
+      setIsConnecting(false)
+    }
+  }
+
   const proximasSesiones = [
     { id: 1, fecha: "Hoy", hora: "15:00", profesional: "Dr. Roberto Silva", estado: "confirmada", puedeIngresar: true },
     {
@@ -37,9 +70,18 @@ export default function PacienteSesionesPage() {
                 <p className="text-gray-600">Gestiona tus citas de terapia</p>
               </div>
               <div className="flex items-center space-x-4">
-                <Button variant="outline">
+                <Button
+                  variant={isConnected ? "default" : "outline"}
+                  onClick={handleGoogleCalendarConnect}
+                  disabled={isConnecting}
+                  className={isConnected ? "bg-green-600 hover:bg-green-700" : ""}
+                >
                   <Calendar className="h-4 w-4 mr-2" />
-                  Ver Calendario
+                  {isConnecting
+                    ? "Conectando..."
+                    : isConnected
+                      ? "Calendario Conectado"
+                      : "Conectar con Google Calendar"}
                 </Button>
               </div>
             </div>
