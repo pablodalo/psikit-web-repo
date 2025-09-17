@@ -68,7 +68,7 @@ export default function PacienteDocumentosPage() {
       <div className="flex">
         <Navigation userType="paciente" />
         <div className="flex-1 min-h-screen bg-gray-50 dark:bg-gray-900">
-          <header className="bg-gradient-to-r from-purple-50 to-violet-50 dark:from-gray-800 dark:to-gray-700 border-b border-purple-200 dark:border-gray-600">
+          <header className="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-gray-800 dark:to-gray-700 border-b border-purple-200 dark:border-gray-600">
             <div className="px-6 py-4 flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-purple-900 dark:text-white">Mis Documentos</h1>
@@ -98,29 +98,29 @@ export default function PacienteDocumentosPage() {
 
           <div className="p-6">
             {documentosPendientes.length > 0 && (
-              <Card className="mb-6 bg-gradient-to-br from-amber-50/50 to-yellow-50/50 border-amber-200">
+              <Card className="mb-6 border-0 shadow-sm bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-md transition-shadow">
                 <CardHeader>
-                  <CardTitle className="text-amber-900">Documentos Pendientes</CardTitle>
-                  <CardDescription className="text-amber-700">Documentos que requieren tu atención</CardDescription>
+                  <CardTitle className="text-orange-900">Documentos Pendientes</CardTitle>
+                  <CardDescription className="text-orange-700">Documentos que requieren tu atención</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {documentosPendientes.map((doc) => (
                       <div
                         key={doc.id}
-                        className="flex items-center justify-between p-4 bg-yellow-100/70 border border-yellow-200 rounded-lg shadow-sm"
+                        className="flex items-center justify-between p-4 bg-white border border-orange-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-center space-x-4">
-                          <div className="flex items-center justify-center w-10 h-10 bg-yellow-200 rounded-full">
-                            <FileText className="h-5 w-5 text-yellow-700" />
+                          <div className="flex items-center justify-center w-10 h-10 bg-orange-200 rounded-full">
+                            <FileText className="h-5 w-5 text-orange-700" />
                           </div>
                           <div>
-                            <p className="font-medium text-slate-800">{doc.nombre}</p>
-                            <p className="text-sm text-slate-600">{doc.descripcion}</p>
-                            <p className="text-xs text-slate-500">Fecha límite: {doc.fechaLimite}</p>
+                            <p className="font-medium text-gray-900">{doc.nombre}</p>
+                            <p className="text-sm text-gray-600">{doc.descripcion}</p>
+                            <p className="text-xs text-gray-500">Fecha límite: {doc.fechaLimite}</p>
                           </div>
                         </div>
-                        <Button className="bg-yellow-600 hover:bg-yellow-700">Completar</Button>
+                        <Button className="bg-orange-600 hover:bg-orange-700">Completar</Button>
                       </div>
                     ))}
                   </div>
@@ -128,7 +128,7 @@ export default function PacienteDocumentosPage() {
               </Card>
             )}
 
-            <Card className="bg-gradient-to-br from-purple-50/50 to-violet-50/50 border-purple-200">
+            <Card className="border-0 shadow-sm bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-md transition-shadow">
               <CardHeader>
                 <CardTitle className="text-purple-900">Mis Documentos</CardTitle>
                 <CardDescription className="text-purple-700">Todos tus documentos disponibles</CardDescription>
@@ -138,7 +138,7 @@ export default function PacienteDocumentosPage() {
                   {documentos.map((doc) => (
                     <div
                       key={doc.id}
-                      className="bg-white/70 border border-purple-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                      className="bg-white border border-purple-200 rounded-lg p-4 hover:shadow-md transition-shadow"
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center space-x-3">
@@ -146,8 +146,8 @@ export default function PacienteDocumentosPage() {
                             <FileText className="h-5 w-5 text-purple-700" />
                           </div>
                           <div>
-                            <p className="font-medium text-sm text-slate-800">{doc.nombre}</p>
-                            <p className="text-xs text-slate-500">{doc.tamaño}</p>
+                            <p className="font-medium text-sm text-gray-900">{doc.nombre}</p>
+                            <p className="text-xs text-gray-500">{doc.tamaño}</p>
                           </div>
                         </div>
                         <Badge
@@ -160,9 +160,9 @@ export default function PacienteDocumentosPage() {
                           }
                           className={
                             doc.estado === "firmado"
-                              ? "bg-green-200 text-green-800 border-green-300"
+                              ? "bg-green-100 text-green-800 border-0"
                               : doc.estado === "disponible"
-                                ? "bg-purple-200 text-purple-800 border-purple-300"
+                                ? "bg-purple-100 text-purple-800 border-0"
                                 : ""
                           }
                         >
@@ -171,8 +171,8 @@ export default function PacienteDocumentosPage() {
                       </div>
 
                       <div className="mb-3">
-                        <p className="text-sm text-slate-600">{doc.descripcion}</p>
-                        <p className="text-xs text-slate-500 mt-1">{doc.fecha}</p>
+                        <p className="text-sm text-gray-600">{doc.descripcion}</p>
+                        <p className="text-xs text-gray-500 mt-1">{doc.fecha}</p>
                       </div>
 
                       <div className="flex items-center space-x-2">

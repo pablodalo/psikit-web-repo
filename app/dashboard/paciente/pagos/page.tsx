@@ -42,7 +42,7 @@ export default function PacientePagosPage() {
       <div className="flex">
         <Navigation userType="paciente" />
         <div className="flex-1 min-h-screen bg-gray-50 dark:bg-gray-900">
-          <header className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-gray-800 dark:to-gray-700 border-b border-green-200 dark:border-gray-600">
+          <header className="bg-gradient-to-r from-green-50 to-green-100 dark:from-gray-800 dark:to-gray-700 border-b border-green-200 dark:border-gray-600">
             <div className="px-6 py-4 flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold text-green-900 dark:text-white">Mis Pagos</h1>
@@ -59,7 +59,7 @@ export default function PacientePagosPage() {
 
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200">
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex-1 pr-4">
@@ -73,7 +73,7 @@ export default function PacientePagosPage() {
                   </div>
                 </CardContent>
               </Card>
-              <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-green-50 to-green-100 hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex-1 pr-4">
@@ -87,7 +87,7 @@ export default function PacientePagosPage() {
                   </div>
                 </CardContent>
               </Card>
-              <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex-1 pr-4">
@@ -104,36 +104,36 @@ export default function PacientePagosPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="bg-gradient-to-br from-amber-50/50 to-yellow-50/50 border-amber-200">
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-md transition-shadow">
                 <CardHeader>
-                  <CardTitle className="text-amber-900">Pagos Pendientes</CardTitle>
-                  <CardDescription className="text-amber-700">Pagos que requieren tu atención</CardDescription>
+                  <CardTitle className="text-orange-900">Pagos Pendientes</CardTitle>
+                  <CardDescription className="text-orange-700">Pagos que requieren tu atención</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {pagosPendientes.map((pago) => (
                       <div
                         key={pago.id}
-                        className="flex items-center justify-between p-4 bg-yellow-100/70 border border-yellow-200 rounded-lg shadow-sm"
+                        className="flex items-center justify-between p-4 bg-white border border-orange-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-center space-x-3">
-                          <div className="p-2 bg-yellow-200 rounded-full">
-                            <AlertTriangle className="h-5 w-5 text-yellow-700" />
+                          <div className="p-2 bg-orange-200 rounded-full">
+                            <AlertTriangle className="h-5 w-5 text-orange-700" />
                           </div>
                           <div>
-                            <p className="font-medium text-slate-800">${pago.monto}</p>
-                            <p className="text-sm text-slate-600">{pago.descripcion}</p>
-                            <p className="text-xs text-slate-500">Vence: {pago.fecha}</p>
+                            <p className="font-medium text-gray-900">${pago.monto}</p>
+                            <p className="text-sm text-gray-600">{pago.descripcion}</p>
+                            <p className="text-xs text-gray-500">Vence: {pago.fecha}</p>
                           </div>
                         </div>
-                        <Button className="bg-yellow-600 hover:bg-yellow-700">Pagar Ahora</Button>
+                        <Button className="bg-orange-600 hover:bg-orange-700">Pagar Ahora</Button>
                       </div>
                     ))}
                   </div>
                 </CardContent>
               </Card>
 
-              <Card className="bg-gradient-to-br from-green-50/50 to-emerald-50/50 border-green-200">
+              <Card className="border-0 shadow-sm bg-gradient-to-br from-green-50 to-green-100 hover:shadow-md transition-shadow">
                 <CardHeader>
                   <CardTitle className="text-green-900">Historial de Pagos</CardTitle>
                   <CardDescription className="text-green-700">Tus pagos completados</CardDescription>
@@ -143,17 +143,17 @@ export default function PacientePagosPage() {
                     {historialPagos.map((pago) => (
                       <div
                         key={pago.id}
-                        className="flex items-center justify-between p-4 bg-white/70 border border-green-200 rounded-lg shadow-sm"
+                        className="flex items-center justify-between p-4 bg-white border border-green-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                       >
                         <div>
-                          <p className="font-medium text-slate-800">${pago.monto}</p>
-                          <p className="text-sm text-slate-600">{pago.descripcion}</p>
-                          <p className="text-xs text-slate-500">
+                          <p className="font-medium text-gray-900">${pago.monto}</p>
+                          <p className="text-sm text-gray-600">{pago.descripcion}</p>
+                          <p className="text-xs text-gray-500">
                             {pago.fecha} - {pago.metodo}
                           </p>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Badge className="bg-green-200 text-green-800 border-green-300">{pago.estado}</Badge>
+                          <Badge className="bg-green-100 text-green-800 border-0">{pago.estado}</Badge>
                           <Button
                             size="sm"
                             variant="outline"
