@@ -1,18 +1,48 @@
 "use client"
 
+import type React from "react"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { User, MapPin, Phone, Mail, Calendar, Heart, Edit } from "lucide-react"
+import { User, MapPin, Phone, Mail, Calendar, Heart, Edit, Camera } from "lucide-react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
-import { useState } from "react"
+import { useState, useRef } from "react"
 
 export default function PacientePerfilPage() {
   const [isEditing, setIsEditing] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const [formData, setFormData] = useState({
+    nombre: "María González",
+    email: "maria.gonzalez@ejemplo.com",
+    telefono: "+54 11 1234-5678",
+    fechaNacimiento: "1990-05-15",
+    contactoEmergencia: "Juan González - +54 11 9876-5432",
+    ubicacion: "Buenos Aires, Argentina",
+    foto: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=96&h=96&fit=crop&crop=face",
+  })
+
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setFormData((prev) => ({ ...prev, foto: e.target?.result as string }))
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleSave = () => {
+    // Here you would typically save to backend
+    console.log("[v0] Saving profile data:", formData)
+    setIsEditing(false)
+  }
 
   const estadisticas = [
     { label: "Sesiones Completadas", valor: "12", icono: Calendar },
@@ -31,7 +61,7 @@ export default function PacientePerfilPage() {
                 <h1 className="text-2xl font-bold text-gray-900">Mi Perfil</h1>
                 <p className="text-gray-600">Administra tu información personal</p>
               </div>
-              <Button onClick={() => setIsEditing(!isEditing)}>
+              <Button onClick={isEditing ? handleSave : () => setIsEditing(true)}>
                 <Edit className="h-4 w-4 mr-2" />
                 {isEditing ? "Guardar Cambios" : "Editar Perfil"}
               </Button>
@@ -48,12 +78,39 @@ export default function PacientePerfilPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-start space-x-6 mb-6">
-                    <Avatar className="h-24 w-24">
-                      <AvatarImage src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=96&h=96&fit=crop&crop=face" />
-                      <AvatarFallback className="text-2xl">MG</AvatarFallback>
-                    </Avatar>
+                    <div className="relative">
+                      <Avatar className="h-24 w-24">
+                        <AvatarImage src={formData.foto || "/placeholder.svg"} />
+                        <AvatarFallback className="text-2xl">MG</AvatarFallback>
+                      </Avatar>
+                      {isEditing && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full p-0 bg-transparent"
+                          onClick={() => fileInputRef.current?.click()}
+                        >
+                          <Camera className="h-4 w-4" />
+                        </Button>
+                      )}
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handlePhotoUpload}
+                      />
+                    </div>
                     <div className="flex-1">
-                      <h2 className="text-2xl font-bold text-gray-900">María González</h2>
+                      {isEditing ? (
+                        <Input
+                          value={formData.nombre}
+                          onChange={(e) => setFormData((prev) => ({ ...prev, nombre: e.target.value }))}
+                          className="text-2xl font-bold mb-2"
+                        />
+                      ) : (
+                        <h2 className="text-2xl font-bold text-gray-900">{formData.nombre}</h2>
+                      )}
                       <p className="text-gray-600 mb-2">Paciente</p>
                       <div className="flex items-center space-x-4 text-sm text-gray-500">
                         <div className="flex items-center">
@@ -62,7 +119,15 @@ export default function PacientePerfilPage() {
                         </div>
                         <div className="flex items-center">
                           <MapPin className="h-4 w-4 mr-1" />
-                          Buenos Aires, Argentina
+                          {isEditing ? (
+                            <Input
+                              value={formData.ubicacion}
+                              onChange={(e) => setFormData((prev) => ({ ...prev, ubicacion: e.target.value }))}
+                              className="h-6 text-sm"
+                            />
+                          ) : (
+                            formData.ubicacion
+                          )}
                         </div>
                       </div>
                       <div className="flex items-center space-x-2 mt-3">
@@ -76,27 +141,61 @@ export default function PacientePerfilPage() {
                     <div className="space-y-4">
                       <div>
                         <Label className="text-sm font-medium text-gray-700">Email</Label>
-                        <div className="flex items-center mt-1">
-                          <Mail className="h-4 w-4 text-gray-400 mr-2" />
-                          <span className="text-sm">maria.gonzalez@ejemplo.com</span>
-                        </div>
+                        {isEditing ? (
+                          <Input
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <div className="flex items-center mt-1">
+                            <Mail className="h-4 w-4 text-gray-400 mr-2" />
+                            <span className="text-sm">{formData.email}</span>
+                          </div>
+                        )}
                       </div>
                       <div>
                         <Label className="text-sm font-medium text-gray-700">Teléfono</Label>
-                        <div className="flex items-center mt-1">
-                          <Phone className="h-4 w-4 text-gray-400 mr-2" />
-                          <span className="text-sm">+54 11 1234-5678</span>
-                        </div>
+                        {isEditing ? (
+                          <Input
+                            value={formData.telefono}
+                            onChange={(e) => setFormData((prev) => ({ ...prev, telefono: e.target.value }))}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <div className="flex items-center mt-1">
+                            <Phone className="h-4 w-4 text-gray-400 mr-2" />
+                            <span className="text-sm">{formData.telefono}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="space-y-4">
                       <div>
                         <Label className="text-sm font-medium text-gray-700">Fecha de Nacimiento</Label>
-                        <p className="text-sm mt-1">15 de Mayo, 1990</p>
+                        {isEditing ? (
+                          <Input
+                            type="date"
+                            value={formData.fechaNacimiento}
+                            onChange={(e) => setFormData((prev) => ({ ...prev, fechaNacimiento: e.target.value }))}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <p className="text-sm mt-1">15 de Mayo, 1990</p>
+                        )}
                       </div>
                       <div>
                         <Label className="text-sm font-medium text-gray-700">Contacto de Emergencia</Label>
-                        <p className="text-sm mt-1">Juan González - +54 11 9876-5432</p>
+                        {isEditing ? (
+                          <Input
+                            value={formData.contactoEmergencia}
+                            onChange={(e) => setFormData((prev) => ({ ...prev, contactoEmergencia: e.target.value }))}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <p className="text-sm mt-1">{formData.contactoEmergencia}</p>
+                        )}
                       </div>
                     </div>
                   </div>
