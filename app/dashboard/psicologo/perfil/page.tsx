@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -7,8 +9,11 @@ import { Label } from "@/components/ui/label"
 import { User, MapPin, Phone, Mail, Calendar, Award, Star, Edit } from "lucide-react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
+import { useState } from "react"
 
 export default function PsicologoPerfilPage() {
+  const [isEditing, setIsEditing] = useState(false)
+
   const estadisticas = [
     { label: "Pacientes Activos", valor: "24", icono: User },
     { label: "Sesiones Completadas", valor: "156", icono: Calendar },
@@ -27,9 +32,9 @@ export default function PsicologoPerfilPage() {
                 <h1 className="text-2xl font-bold text-gray-900">Mi Perfil</h1>
                 <p className="text-gray-600">Administra tu información profesional</p>
               </div>
-              <Button>
+              <Button onClick={() => setIsEditing(!isEditing)}>
                 <Edit className="h-4 w-4 mr-2" />
-                Editar Perfil
+                {isEditing ? "Guardar Cambios" : "Editar Perfil"}
               </Button>
             </div>
           </header>

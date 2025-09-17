@@ -138,7 +138,7 @@ export default function PacienteDashboard() {
             <div className="px-6 py-4 flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <Avatar>
-                  <AvatarImage src="/placeholder.svg?height=40&width=40" />
+                  <AvatarImage src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" />
                   <AvatarFallback>MG</AvatarFallback>
                 </Avatar>
                 <div>
@@ -318,7 +318,7 @@ export default function PacienteDashboard() {
               <CardContent>
                 <div className="flex items-center space-x-4">
                   <Avatar className="h-16 w-16 ring-2 ring-blue-200">
-                    <AvatarImage src="/placeholder.svg?height=64&width=64" />
+                    <AvatarImage src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=64&h=64&fit=crop&crop=face" />
                     <AvatarFallback className="bg-blue-100 text-blue-700">RS</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
