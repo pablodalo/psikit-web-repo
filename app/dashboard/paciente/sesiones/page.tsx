@@ -62,23 +62,19 @@ export default function PacienteSesionesPage() {
     <AuthGuard requiredUserType="paciente">
       <div className="flex">
         <Navigation userType="paciente" />
-        <div className="flex-1 min-h-screen bg-gray-50 dark:bg-gray-900">
-          <header className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-gray-800 dark:to-gray-700 border-b border-blue-200 dark:border-gray-600">
+        <div className="flex-1 min-h-screen bg-gray-50">
+          <header className="bg-white border-b">
             <div className="px-6 py-4 flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-blue-900 dark:text-white">Mis Sesiones</h1>
-                <p className="text-blue-700 dark:text-gray-300">Gestiona tus citas de terapia</p>
+                <h1 className="text-2xl font-bold text-gray-900">Mis Sesiones</h1>
+                <p className="text-gray-600">Gestiona tus citas de terapia</p>
               </div>
               <div className="flex items-center space-x-4">
                 <Button
                   variant={isConnected ? "default" : "outline"}
                   onClick={handleGoogleCalendarConnect}
                   disabled={isConnecting}
-                  className={
-                    isConnected
-                      ? "bg-green-600 hover:bg-green-700"
-                      : "border-blue-300 text-blue-700 hover:bg-blue-50 bg-transparent"
-                  }
+                  className={isConnected ? "bg-green-600 hover:bg-green-700" : "bg-transparent"}
                 >
                   <Calendar className="h-4 w-4 mr-2" />
                   {isConnecting
@@ -93,21 +89,21 @@ export default function PacienteSesionesPage() {
 
           <div className="p-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="border-0 shadow-sm bg-gradient-to-br from-blue-50 to-blue-100 hover:shadow-md transition-shadow">
+              <Card className="border-0 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="text-blue-900">Próximas Sesiones</CardTitle>
-                  <CardDescription className="text-blue-700">Tus citas programadas</CardDescription>
+                  <CardTitle className="text-gray-900">Próximas Sesiones</CardTitle>
+                  <CardDescription className="text-gray-600">Tus citas programadas</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {proximasSesiones.map((sesion) => (
                       <div
                         key={sesion.id}
-                        className="flex items-center justify-between p-4 bg-white border border-blue-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                        className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-center space-x-4">
-                          <div className="flex items-center justify-center w-10 h-10 bg-blue-200 rounded-full">
-                            <Clock className="h-5 w-5 text-blue-700" />
+                          <div className="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full">
+                            <Clock className="h-5 w-5 text-blue-600" />
                           </div>
                           <div>
                             <p className="font-medium text-gray-900">
@@ -117,10 +113,7 @@ export default function PacienteSesionesPage() {
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Badge
-                            variant={sesion.estado === "confirmada" ? "default" : "secondary"}
-                            className={sesion.estado === "confirmada" ? "bg-green-100 text-green-800 border-0" : ""}
-                          >
+                          <Badge variant={sesion.estado === "confirmada" ? "default" : "secondary"}>
                             {sesion.estado}
                           </Badge>
                           {sesion.fecha === "Hoy" && sesion.puedeIngresar && (
@@ -137,21 +130,21 @@ export default function PacienteSesionesPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-sm bg-gradient-to-br from-green-50 to-green-100 hover:shadow-md transition-shadow">
+              <Card className="border-0 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="text-green-900">Historial de Sesiones</CardTitle>
-                  <CardDescription className="text-green-700">Sesiones completadas</CardDescription>
+                  <CardTitle className="text-gray-900">Historial de Sesiones</CardTitle>
+                  <CardDescription className="text-gray-600">Sesiones completadas</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {historialSesiones.map((sesion) => (
                       <div
                         key={sesion.id}
-                        className="flex items-center justify-between p-4 bg-white border border-green-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                        className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-center space-x-4">
-                          <div className="flex items-center justify-center w-10 h-10 bg-green-200 rounded-full">
-                            <FileText className="h-5 w-5 text-green-700" />
+                          <div className="flex items-center justify-center w-10 h-10 bg-green-100 rounded-full">
+                            <FileText className="h-5 w-5 text-green-600" />
                           </div>
                           <div>
                             <p className="font-medium text-gray-900">
@@ -161,7 +154,7 @@ export default function PacienteSesionesPage() {
                             <p className="text-xs text-gray-500">{sesion.notas}</p>
                           </div>
                         </div>
-                        <Badge className="bg-green-100 text-green-800 border-0">{sesion.estado}</Badge>
+                        <Badge variant="secondary">{sesion.estado}</Badge>
                       </div>
                     ))}
                   </div>

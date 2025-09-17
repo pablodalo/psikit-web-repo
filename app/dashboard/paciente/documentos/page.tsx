@@ -68,27 +68,20 @@ export default function PacienteDocumentosPage() {
       <div className="flex">
         <Navigation userType="paciente" />
         <div className="flex-1 min-h-screen bg-gray-50 dark:bg-gray-900">
-          <header className="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-gray-800 dark:to-gray-700 border-b border-purple-200 dark:border-gray-600">
+          <header className="bg-white border-b">
             <div className="px-6 py-4 flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-purple-900 dark:text-white">Mis Documentos</h1>
-                <p className="text-purple-700 dark:text-gray-300">Accede a tus facturas, certificados y resultados</p>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Mis Documentos</h1>
+                <p className="text-gray-600 dark:text-gray-300">Accede a tus facturas, certificados y resultados</p>
               </div>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2">
-                  <Input placeholder="Buscar documentos..." className="w-64 border-purple-200" />
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-purple-300 text-purple-700 hover:bg-purple-50 bg-transparent"
-                  >
+                  <Input placeholder="Buscar documentos..." className="w-64 border-gray-300 dark:border-gray-600" />
+                  <Button size="sm" variant="outline" className="bg-transparent dark:border-gray-600">
                     <Search className="h-4 w-4" />
                   </Button>
                 </div>
-                <Button
-                  variant="outline"
-                  className="border-purple-300 text-purple-700 hover:bg-purple-50 bg-transparent"
-                >
+                <Button variant="outline" className="bg-transparent dark:border-gray-600">
                   <Upload className="h-4 w-4 mr-2" />
                   Subir Documento
                 </Button>
@@ -98,29 +91,33 @@ export default function PacienteDocumentosPage() {
 
           <div className="p-6">
             {documentosPendientes.length > 0 && (
-              <Card className="mb-6 border-0 shadow-sm bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-md transition-shadow">
+              <Card className="mb-6 border-0 shadow-sm dark:bg-gray-800 dark:text-white">
                 <CardHeader>
-                  <CardTitle className="text-orange-900">Documentos Pendientes</CardTitle>
-                  <CardDescription className="text-orange-700">Documentos que requieren tu atención</CardDescription>
+                  <CardTitle className="text-gray-900 dark:text-white">Documentos Pendientes</CardTitle>
+                  <CardDescription className="text-gray-600 dark:text-gray-300">
+                    Documentos que requieren tu atención
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {documentosPendientes.map((doc) => (
                       <div
                         key={doc.id}
-                        className="flex items-center justify-between p-4 bg-white border border-orange-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                        className="flex items-center justify-between p-4 border border-gray-200 dark:border-gray-600 rounded-lg hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-center space-x-4">
-                          <div className="flex items-center justify-center w-10 h-10 bg-orange-200 rounded-full">
-                            <FileText className="h-5 w-5 text-orange-700" />
+                          <div className="flex items-center justify-center w-10 h-10 bg-orange-100 dark:bg-gray-700 rounded-full">
+                            <FileText className="h-5 w-5 text-orange-600 dark:text-gray-300" />
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900">{doc.nombre}</p>
-                            <p className="text-sm text-gray-600">{doc.descripcion}</p>
-                            <p className="text-xs text-gray-500">Fecha límite: {doc.fechaLimite}</p>
+                            <p className="font-medium text-gray-900 dark:text-white">{doc.nombre}</p>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">{doc.descripcion}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-300">Fecha límite: {doc.fechaLimite}</p>
                           </div>
                         </div>
-                        <Button className="bg-orange-600 hover:bg-orange-700">Completar</Button>
+                        <Button className="bg-orange-600 hover:bg-orange-700 dark:bg-gray-700 dark:hover:bg-gray-800">
+                          Completar
+                        </Button>
                       </div>
                     ))}
                   </div>
@@ -128,26 +125,28 @@ export default function PacienteDocumentosPage() {
               </Card>
             )}
 
-            <Card className="border-0 shadow-sm bg-gradient-to-br from-purple-50 to-purple-100 hover:shadow-md transition-shadow">
+            <Card className="border-0 shadow-sm dark:bg-gray-800 dark:text-white">
               <CardHeader>
-                <CardTitle className="text-purple-900">Mis Documentos</CardTitle>
-                <CardDescription className="text-purple-700">Todos tus documentos disponibles</CardDescription>
+                <CardTitle className="text-gray-900 dark:text-white">Mis Documentos</CardTitle>
+                <CardDescription className="text-gray-600 dark:text-gray-300">
+                  Todos tus documentos disponibles
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {documentos.map((doc) => (
                     <div
                       key={doc.id}
-                      className="bg-white border border-purple-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                      className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 hover:shadow-md transition-shadow"
                     >
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex items-center space-x-3">
-                          <div className="flex items-center justify-center w-10 h-10 bg-purple-200 rounded-lg">
-                            <FileText className="h-5 w-5 text-purple-700" />
+                          <div className="flex items-center justify-center w-10 h-10 bg-purple-100 dark:bg-gray-700 rounded-lg">
+                            <FileText className="h-5 w-5 text-purple-600 dark:text-gray-300" />
                           </div>
                           <div>
-                            <p className="font-medium text-sm text-gray-900">{doc.nombre}</p>
-                            <p className="text-xs text-gray-500">{doc.tamaño}</p>
+                            <p className="font-medium text-sm text-gray-900 dark:text-white">{doc.nombre}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-300">{doc.tamaño}</p>
                           </div>
                         </div>
                         <Badge
@@ -158,33 +157,25 @@ export default function PacienteDocumentosPage() {
                                 ? "secondary"
                                 : "outline"
                           }
-                          className={
-                            doc.estado === "firmado"
-                              ? "bg-green-100 text-green-800 border-0"
-                              : doc.estado === "disponible"
-                                ? "bg-purple-100 text-purple-800 border-0"
-                                : ""
-                          }
                         >
                           {doc.estado}
                         </Badge>
                       </div>
 
                       <div className="mb-3">
-                        <p className="text-sm text-gray-600">{doc.descripcion}</p>
-                        <p className="text-xs text-gray-500 mt-1">{doc.fecha}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">{doc.descripcion}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-300 mt-1">{doc.fecha}</p>
                       </div>
 
                       <div className="flex items-center space-x-2">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="flex-1 border-purple-300 text-purple-700 hover:bg-purple-50 bg-transparent"
-                        >
+                        <Button size="sm" variant="outline" className="flex-1 bg-transparent dark:border-gray-600">
                           <Eye className="h-4 w-4 mr-1" />
                           Ver
                         </Button>
-                        <Button size="sm" className="flex-1 bg-purple-600 hover:bg-purple-700">
+                        <Button
+                          size="sm"
+                          className="flex-1 bg-gray-600 hover:bg-gray-700 dark:bg-gray-700 dark:hover:bg-gray-800"
+                        >
                           <Download className="h-4 w-4 mr-1" />
                           Descargar
                         </Button>

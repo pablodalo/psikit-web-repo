@@ -42,14 +42,14 @@ export default function PacientePagosPage() {
       <div className="flex">
         <Navigation userType="paciente" />
         <div className="flex-1 min-h-screen bg-gray-50 dark:bg-gray-900">
-          <header className="bg-gradient-to-r from-green-50 to-green-100 dark:from-gray-800 dark:to-gray-700 border-b border-green-200 dark:border-gray-600">
+          <header className="bg-white border-b">
             <div className="px-6 py-4 flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-green-900 dark:text-white">Mis Pagos</h1>
-                <p className="text-green-700 dark:text-gray-300">Gestiona tus pagos y facturas</p>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Mis Pagos</h1>
+                <p className="text-gray-600 dark:text-gray-300">Gestiona tus pagos y facturas</p>
               </div>
               <div className="flex items-center space-x-4">
-                <Button variant="outline" className="border-green-300 text-green-700 hover:bg-green-50 bg-transparent">
+                <Button variant="outline" className="bg-transparent dark:border-gray-600 dark:text-gray-300">
                   <Download className="h-4 w-4 mr-2" />
                   Descargar Facturas
                 </Button>
@@ -104,10 +104,10 @@ export default function PacientePagosPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="border-0 shadow-sm bg-gradient-to-br from-orange-50 to-orange-100 hover:shadow-md transition-shadow">
+              <Card className="border-0 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="text-orange-900">Pagos Pendientes</CardTitle>
-                  <CardDescription className="text-orange-700">Pagos que requieren tu atención</CardDescription>
+                  <CardTitle className="text-gray-900">Pagos Pendientes</CardTitle>
+                  <CardDescription className="text-gray-600">Pagos que requieren tu atención</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
@@ -117,8 +117,8 @@ export default function PacientePagosPage() {
                         className="flex items-center justify-between p-4 bg-white border border-orange-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
                       >
                         <div className="flex items-center space-x-3">
-                          <div className="p-2 bg-orange-200 rounded-full">
-                            <AlertTriangle className="h-5 w-5 text-orange-700" />
+                          <div className="p-2 bg-orange-100 rounded-full">
+                            <AlertTriangle className="h-5 w-5 text-orange-600" />
                           </div>
                           <div>
                             <p className="font-medium text-gray-900">${pago.monto}</p>
@@ -133,17 +133,17 @@ export default function PacientePagosPage() {
                 </CardContent>
               </Card>
 
-              <Card className="border-0 shadow-sm bg-gradient-to-br from-green-50 to-green-100 hover:shadow-md transition-shadow">
+              <Card className="border-0 shadow-sm">
                 <CardHeader>
-                  <CardTitle className="text-green-900">Historial de Pagos</CardTitle>
-                  <CardDescription className="text-green-700">Tus pagos completados</CardDescription>
+                  <CardTitle className="text-gray-900">Historial de Pagos</CardTitle>
+                  <CardDescription className="text-gray-600">Tus pagos completados</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {historialPagos.map((pago) => (
                       <div
                         key={pago.id}
-                        className="flex items-center justify-between p-4 bg-white border border-green-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
+                        className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
                       >
                         <div>
                           <p className="font-medium text-gray-900">${pago.monto}</p>
@@ -153,11 +153,16 @@ export default function PacientePagosPage() {
                           </p>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Badge className="bg-green-100 text-green-800 border-0">{pago.estado}</Badge>
+                          <Badge
+                            variant="secondary"
+                            className="bg-green-100 text-green-800 border-0 dark:bg-gray-800 dark:text-gray-300"
+                          >
+                            {pago.estado}
+                          </Badge>
                           <Button
                             size="sm"
                             variant="outline"
-                            className="border-green-300 text-green-700 hover:bg-green-50 bg-transparent"
+                            className="bg-transparent dark:border-gray-600 dark:text-gray-300"
                           >
                             <Download className="h-4 w-4" />
                           </Button>
