@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -23,14 +25,82 @@ import {
   User,
   Settings,
   LogOut,
+  Mail,
+  MailOpen,
 } from "lucide-react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
 import { useAuth } from "@/contexts/auth-context"
+import { useState, useEffect } from "react"
 
 export default function PacienteDashboard() {
   const { logout } = useAuth()
+  const router = useRouter()
+
+  const [notificaciones, setNotificaciones] = useState([
+    {
+      id: 1,
+      tipo: "sesion",
+      mensaje: "Tu sesión con Dr. Roberto Silva es en 30 minutos",
+      tiempo: "hace 5 min",
+      leida: false,
+    },
+    {
+      id: 2,
+      tipo: "documento",
+      mensaje: "Nuevo documento disponible para descarga",
+      tiempo: "hace 1 hora",
+      leida: false,
+    },
+    {
+      id: 3,
+      tipo: "test",
+      mensaje: "Test GAD-7 asignado para completar",
+      tiempo: "hace 2 horas",
+      leida: true,
+    },
+  ])
+
+  useEffect(() => {
+    const savedNotifications = localStorage.getItem("paciente-notifications")
+    if (savedNotifications) {
+      try {
+        const parsed = JSON.parse(savedNotifications)
+        setNotificaciones(parsed)
+      } catch (error) {
+        console.error("Error loading notifications from localStorage:", error)
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem("paciente-notifications", JSON.stringify(notificaciones))
+  }, [notificaciones])
+
+  const handleNotificationClick = (notif: any) => {
+    setNotificaciones((prev) => prev.map((n) => (n.id === notif.id ? { ...n, leida: true } : n)))
+
+    switch (notif.tipo) {
+      case "sesion":
+        router.push("/dashboard/paciente/sesiones")
+        break
+      case "documento":
+        router.push("/dashboard/paciente/documentos")
+        break
+      case "test":
+        router.push("/dashboard/paciente/tests")
+        break
+      default:
+        router.push("/dashboard/paciente/notificaciones")
+    }
+  }
+
+  const toggleNotificationStatus = (notifId: number, event: React.MouseEvent) => {
+    event.stopPropagation()
+    setNotificaciones((prev) => prev.map((n) => (n.id === notifId ? { ...n, leida: !n.leida } : n)))
+  }
 
   const proximasSesiones = [
     { id: 1, fecha: "Hoy", hora: "15:00", profesional: "Dr. Roberto Silva", estado: "confirmada", puedeIngresar: true },
@@ -77,10 +147,74 @@ export default function PacienteDashboard() {
                 </div>
               </div>
               <div className="flex items-center space-x-4">
-                <Button variant="outline" size="sm">
-                  <Bell className="h-4 w-4 mr-2" />
-                  Notificaciones
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="relative bg-transparent">
+                      <Bell className="h-4 w-4 mr-2" />
+                      Notificaciones
+                      {notificaciones.some((n) => !n.leida) && (
+                        <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
+                      )}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-80">
+                    <div className="p-2">
+                      <h3 className="font-semibold text-sm mb-2">Notificaciones recientes</h3>
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {notificaciones.map((notif) => (
+                          <div
+                            key={notif.id}
+                            onClick={() => handleNotificationClick(notif)}
+                            className={`p-3 rounded-lg border cursor-pointer transition-all hover:shadow-md ${
+                              !notif.leida
+                                ? "bg-blue-50 border-blue-200 hover:bg-blue-100"
+                                : "bg-gray-50 border-gray-200 hover:bg-gray-100"
+                            }`}
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-start space-x-2 flex-1">
+                                <div
+                                  className={`w-2 h-2 rounded-full mt-2 ${
+                                    notif.tipo === "sesion"
+                                      ? "bg-green-500"
+                                      : notif.tipo === "documento"
+                                        ? "bg-purple-500"
+                                        : "bg-blue-500"
+                                  }`}
+                                />
+                                <div className="flex-1">
+                                  <p className="text-sm font-medium">{notif.mensaje}</p>
+                                  <p className="text-xs text-gray-500 mt-1">{notif.tiempo}</p>
+                                  <p className="text-xs text-blue-600 mt-1 opacity-75">Click para ver detalles</p>
+                                </div>
+                              </div>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => toggleNotificationStatus(notif.id, e)}
+                                className="h-6 w-6 p-0 hover:bg-gray-200"
+                                title={notif.leida ? "Marcar como no leída" : "Marcar como leída"}
+                              >
+                                {notif.leida ? (
+                                  <MailOpen className="h-3 w-3 text-gray-500" />
+                                ) : (
+                                  <Mail className="h-3 w-3 text-blue-600" />
+                                )}
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <DropdownMenuSeparator className="my-2" />
+                      <Link href="/dashboard/paciente/notificaciones">
+                        <Button variant="outline" size="sm" className="w-full bg-transparent">
+                          Ver todas las notificaciones
+                        </Button>
+                      </Link>
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button size="sm">
