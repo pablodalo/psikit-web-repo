@@ -137,9 +137,9 @@ export default function PacienteDashboard() {
           <header className="bg-white dark:bg-gray-800 border-b dark:border-gray-700">
             <div className="px-6 py-4 flex items-center justify-between">
               <div className="flex items-center space-x-4">
-                <Avatar>
-                  <AvatarImage src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face" />
-                  <AvatarFallback>MG</AvatarFallback>
+                <Avatar className="h-12 w-12 ring-2 ring-blue-200">
+                  <AvatarImage src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=96&h=96&fit=crop&crop=face" />
+                  <AvatarFallback className="bg-blue-100 text-blue-700 text-lg font-semibold">MG</AvatarFallback>
                 </Avatar>
                 <div>
                   <h1 className="text-xl font-semibold dark:text-white">María González</h1>
