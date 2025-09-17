@@ -92,7 +92,7 @@ export default function SalaEsperaPage() {
           <CardHeader className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-4">
               <Avatar className="h-16 w-16">
-                <AvatarImage src="/placeholder.svg?height=64&width=64" />
+                <AvatarImage src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=64&h=64&fit=crop&crop=face" />
                 <AvatarFallback>RS</AvatarFallback>
               </Avatar>
               <div>
@@ -160,6 +160,7 @@ export default function SalaEsperaPage() {
                 {controles.video ? (
                   <div className="text-center text-white">
                     <Avatar className="h-20 w-20 mx-auto mb-4">
+                      <AvatarImage src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=80&h=80&fit=crop&crop=face" />
                       <AvatarFallback className="text-2xl">MG</AvatarFallback>
                     </Avatar>
                     <p className="text-lg">María González</p>
@@ -228,6 +229,7 @@ export default function SalaEsperaPage() {
             <CardContent className="p-4">
               <div className="flex items-start space-x-3">
                 <Avatar className="h-8 w-8">
+                  <AvatarImage src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=32&h=32&fit=crop&crop=face" />
                   <AvatarFallback>RS</AvatarFallback>
                 </Avatar>
                 <div className="flex-1">

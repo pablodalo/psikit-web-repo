@@ -44,7 +44,7 @@ export default function PacientePerfilPage() {
                 <CardContent>
                   <div className="flex items-start space-x-6 mb-6">
                     <Avatar className="h-24 w-24">
-                      <AvatarImage src="/placeholder.svg?height=96&width=96" />
+                      <AvatarImage src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=96&h=96&fit=crop&crop=face" />
                       <AvatarFallback className="text-2xl">MG</AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
@@ -136,7 +136,7 @@ export default function PacientePerfilPage() {
               <CardContent>
                 <div className="flex items-center space-x-4">
                   <Avatar className="h-16 w-16">
-                    <AvatarImage src="/placeholder.svg?height=64&width=64" />
+                    <AvatarImage src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=64&h=64&fit=crop&crop=face" />
                     <AvatarFallback>RS</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">

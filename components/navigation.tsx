@@ -67,7 +67,13 @@ export function Navigation({ userType }: NavigationProps) {
           <div className="mb-6 p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center space-x-3">
               <Avatar className="h-10 w-10">
-                <AvatarImage src="/placeholder.svg?height=40&width=40" />
+                <AvatarImage
+                  src={
+                    userType === "psicologo"
+                      ? "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=40&h=40&fit=crop&crop=face"
+                      : "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face"
+                  }
+                />
                 <AvatarFallback className="bg-blue-100 text-blue-600">{getUserInitials(user.name)}</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">

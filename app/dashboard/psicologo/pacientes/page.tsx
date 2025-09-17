@@ -43,6 +43,7 @@ export default function PacientesPage() {
       pagosPendientes: 0,
       diagnostico: "Ansiedad generalizada",
       fechaIngreso: "10/10/2023",
+      photo: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=48&h=48&fit=crop&crop=face",
     },
     {
       id: 2,
@@ -58,6 +59,7 @@ export default function PacientesPage() {
       pagosPendientes: 1,
       diagnostico: "Depresión leve",
       fechaIngreso: "15/11/2023",
+      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=48&h=48&fit=crop&crop=face",
     },
     {
       id: 3,
@@ -73,6 +75,7 @@ export default function PacientesPage() {
       pagosPendientes: 0,
       diagnostico: "Trastorno adaptativo",
       fechaIngreso: "05/09/2023",
+      photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=48&h=48&fit=crop&crop=face",
     },
     {
       id: 4,
@@ -88,6 +91,7 @@ export default function PacientesPage() {
       pagosPendientes: 2,
       diagnostico: "Estrés laboral",
       fechaIngreso: "20/12/2023",
+      photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=48&h=48&fit=crop&crop=face",
     },
   ]
 
@@ -257,7 +261,7 @@ export default function PacientesPage() {
                         <div className="flex items-start justify-between mb-4">
                           <div className="flex items-center space-x-3">
                             <Avatar className="h-12 w-12">
-                              <AvatarImage src={`/generic-placeholder-graphic.png?height=48&width=48`} />
+                              <AvatarImage src={paciente.photo || "/placeholder.svg"} />
                               <AvatarFallback className="bg-blue-100 text-blue-700 font-semibold">
                                 {paciente.nombre
                                   .split(" ")

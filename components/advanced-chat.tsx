@@ -174,7 +174,13 @@ export function AdvancedChat({ sessionId, currentUserId, currentUserName, curren
               >
                 {message.senderType !== "system" && (
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={`/placeholder-5wpwq.png?key=t7d4s&height=32&width=32`} />
+                    <AvatarImage
+                      src={
+                        message.senderType === "psicologo"
+                          ? "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=32&h=32&fit=crop&crop=face"
+                          : "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=32&h=32&fit=crop&crop=face"
+                      }
+                    />
                     <AvatarFallback>
                       {message.senderName
                         .split(" ")
