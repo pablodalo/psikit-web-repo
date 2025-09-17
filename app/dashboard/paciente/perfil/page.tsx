@@ -24,7 +24,7 @@ export default function PacientePerfilPage() {
     fechaNacimiento: "1990-05-15",
     contactoEmergencia: "Juan González - +54 11 9876-5432",
     ubicacion: "Buenos Aires, Argentina",
-    foto: "/images/maria-gonzalez.jpg",
+    foto: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=200&h=200&fit=crop&crop=face",
   })
 
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,6 +84,8 @@ export default function PacientePerfilPage() {
                           src={formData.foto || "/placeholder.svg"}
                           alt="María González"
                           className="object-cover"
+                          onError={() => console.log("[v0] Image failed to load:", formData.foto)}
+                          onLoad={() => console.log("[v0] Image loaded successfully:", formData.foto)}
                         />
                         <AvatarFallback className="text-2xl bg-blue-100 text-blue-600">MG</AvatarFallback>
                       </Avatar>
