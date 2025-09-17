@@ -5,7 +5,19 @@ import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Calendar, Users, FileText, CreditCard, Video, Home, Brain, LogOut, UserCheck } from "lucide-react"
+import {
+  Calendar,
+  Users,
+  FileText,
+  CreditCard,
+  Video,
+  Home,
+  Brain,
+  LogOut,
+  UserCheck,
+  Settings,
+  Bell,
+} from "lucide-react"
 import { useAuth } from "@/contexts/auth-context"
 
 interface NavigationProps {
@@ -23,6 +35,8 @@ export function Navigation({ userType }: NavigationProps) {
     { href: "/dashboard/psicologo/sesiones", label: "Sesiones", icon: Video },
     { href: "/dashboard/psicologo/tests", label: "Tests", icon: FileText },
     { href: "/dashboard/psicologo/pagos", label: "Pagos", icon: CreditCard },
+    { href: "/dashboard/psicologo/perfil", label: "Mi cuenta", icon: Settings },
+    { href: "/dashboard/psicologo/notificaciones", label: "Notificaciones", icon: Bell },
   ]
 
   const pacienteNavItems = [
@@ -30,6 +44,8 @@ export function Navigation({ userType }: NavigationProps) {
     { href: "/dashboard/paciente/sesiones", label: "Mis Sesiones", icon: Video },
     { href: "/dashboard/paciente/documentos", label: "Documentos", icon: FileText },
     { href: "/dashboard/paciente/pagos", label: "Pagos", icon: CreditCard },
+    { href: "/dashboard/paciente/perfil", label: "Mi cuenta", icon: Settings },
+    { href: "/dashboard/paciente/notificaciones", label: "Notificaciones", icon: Bell },
   ]
 
   const navItems = userType === "psicologo" ? psicologoNavItems : pacienteNavItems
