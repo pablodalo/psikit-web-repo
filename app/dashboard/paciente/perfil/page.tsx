@@ -24,7 +24,7 @@ export default function PacientePerfilPage() {
     fechaNacimiento: "1990-05-15",
     contactoEmergencia: "Juan González - +54 11 9876-5432",
     ubicacion: "Buenos Aires, Argentina",
-    foto: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=387&h=387&q=80",
+    foto: "/images/maria-gonzalez.jpg",
   })
 
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
