@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Bell, Clock, Video, FileText, CreditCard, CheckCircle, X } from "lucide-react"
+import { Bell, Clock, Video, FileText, CreditCard, AlertTriangle, CheckCircle, X } from "lucide-react"
 import { AuthGuard } from "@/components/auth-guard"
 import { Navigation } from "@/components/navigation"
 
@@ -47,6 +47,16 @@ export default function PacienteNotificacionesPage() {
       urgencia: "baja",
       icono: CheckCircle,
     },
+    {
+      id: 5,
+      tipo: "alerta",
+      titulo: "Recordatorio importante",
+      mensaje: "No olvides completar tu evaluación semanal",
+      fecha: "Hace 3 días",
+      leida: true,
+      urgencia: "media",
+      icono: AlertTriangle,
+    },
   ]
 
   const noLeidas = notificaciones.filter((n) => !n.leida).length
@@ -59,25 +69,36 @@ export default function PacienteNotificacionesPage() {
           <header className="bg-white border-b">
             <div className="px-6 py-4 flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Mis Notificaciones</h1>
+                <h1 className="text-2xl font-bold text-gray-900">Notificaciones</h1>
                 <p className="text-gray-600">
                   {noLeidas > 0 ? `${noLeidas} notificaciones sin leer` : "Todas las notificaciones están al día"}
                 </p>
               </div>
               <div className="flex items-center space-x-4">
                 <Button variant="outline">Marcar todas como leídas</Button>
+                <Button variant="outline">
+                  <X className="h-4 w-4 mr-2" />
+                  Limpiar todas
+                </Button>
               </div>
             </div>
           </header>
 
           <div className="p-6">
             {/* Resumen */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
               <Card>
                 <CardContent className="p-6 text-center">
                   <Bell className="h-8 w-8 text-blue-600 mx-auto mb-2" />
                   <p className="text-2xl font-bold">{notificaciones.length}</p>
                   <p className="text-sm text-gray-600">Total</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6 text-center">
+                  <AlertTriangle className="h-8 w-8 text-red-600 mx-auto mb-2" />
+                  <p className="text-2xl font-bold">{notificaciones.filter((n) => n.urgencia === "alta").length}</p>
+                  <p className="text-sm text-gray-600">Urgentes</p>
                 </CardContent>
               </Card>
               <Card>
@@ -100,7 +121,7 @@ export default function PacienteNotificacionesPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Todas las Notificaciones</CardTitle>
-                <CardDescription>Mantente al día con tus citas y actividades</CardDescription>
+                <CardDescription>Gestiona tus notificaciones y alertas</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -145,6 +166,17 @@ export default function PacienteNotificacionesPage() {
                                   Nueva
                                 </Badge>
                               )}
+                              <Badge
+                                variant={
+                                  notif.urgencia === "alta"
+                                    ? "destructive"
+                                    : notif.urgencia === "media"
+                                      ? "secondary"
+                                      : "outline"
+                                }
+                              >
+                                {notif.urgencia}
+                              </Badge>
                               <Button size="sm" variant="ghost">
                                 <X className="h-4 w-4" />
                               </Button>
