@@ -124,5 +124,23 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Explicitly set font-family to ensure Inter is always used */
+    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  }
+  /* Ensure all text elements inherit the correct font */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  div,
+  button,
+  input,
+  textarea,
+  select {
+    font-family: inherit;
   }
 }
